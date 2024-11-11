@@ -1,4 +1,4 @@
-package com.project.chatroom.chat;
+package com.project.chatroom.model;
 
 import lombok.*;
 

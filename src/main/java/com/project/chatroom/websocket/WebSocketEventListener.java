@@ -1,8 +1,8 @@
 // Need to refactor this to another package
-package com.project.chatroom.config;
+package com.project.chatroom.websocket;
 
-import com.project.chatroom.chat.ChatMessage;
-import com.project.chatroom.chat.MessageType;
+import com.project.chatroom.model.ChatMessage;
+import com.project.chatroom.model.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -36,23 +36,5 @@ public class WebSocketEventListener {
             messageTemplate.convertAndSend("/topic/public", chatMessage);
         }
     }
-
-/*    @EventListener
-    public void HandleWebSocketJoinListener(SessionDisconnectEvent event){
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-        if(username != null){
-            log.info("User disconnected: {}", username);
-            var chatMessage = ChatMessage.builder()
-                    .messageType(MessageType.JOIN)
-                    .sender(username)
-                    .build();
-            //inform the others a user has left
-            messageTemplate.convertAndSend("/topic/public", chatMessage);
-        }
-    }*/
-
-    // need join and sent message?
-
 
 }
