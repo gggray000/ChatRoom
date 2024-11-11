@@ -34,22 +34,6 @@ function connect(event) {
     event.preventDefault();
 }
 
-/*function disconnect(){
-    if(stompClient){
-        connecting = false;
-
-        const leaveMessage = {
-            sender: username,
-            messageType: 'LEAVE'};
-        console.log('Sending JOIN message: ', leaveMessage);
-
-        stompClient.send("/topic/public",
-            {},
-            JSON.stringify(leaveMessage)
-        );
-    }
-}*/
-
 function onConnected() {
     console.log('Connected to WebSocket!')
     //subscribe to public topic
