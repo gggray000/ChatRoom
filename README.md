@@ -2,6 +2,7 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
+0. Refactor the project structure.<br>
 1. Add the current avatar and username to the input box.<br>
 2. Add a list of users to the left of the page, updated in real-time.<br>
 3. Add a status prompt to the users in the user list when they are typing.<br>
