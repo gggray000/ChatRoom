@@ -135,7 +135,7 @@ button.accent {
     box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
     margin-top: 30px;
     height: calc(100% - 60px);
-    max-height: 600px;
+    max-height: 800px;
     position: relative;
 }
 
@@ -146,11 +146,28 @@ button.accent {
     overflow: auto;
     overflow-y: scroll;
     padding: 0 20px 0px 20px;
-    height: calc(100% - 150px);
+    height: calc(100% - 180px);
+}
+
+#messageArea {
+    border-bottom: none;
+    margin-bottom: 0;
 }
 
 #chat-page #messageForm {
-    padding: 20px;
+    padding: 10px 20px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    background: white;
+    border-top: none;
+    margin-top: 0;    /* Remove any top margin */
+}
+
+#messageForm .input-group {
+    display: flex;
+    align-items: center;
 }
 
 #chat-page ul li {
@@ -158,6 +175,10 @@ button.accent {
     padding: 10px 20px;
     margin: 0;
     border-bottom: 1px solid #f4f4f4;
+}
+
+#chat-page ul li:last-child {
+    border-bottom: none; /* Remove border from last chat message */
 }
 
 #chat-page ul li p {
@@ -210,13 +231,13 @@ button.accent {
 #messageForm .input-group input {
     float: left;
     width: calc(100% - 85px);
+    margin-right: 5px;
 }
 
 #messageForm .input-group button {
     float: left;
     width: 80px;
     height: 38px;
-    margin-left: 5px;
 }
 
 .chat-header {
@@ -237,6 +258,43 @@ button.accent {
     position: absolute;
     top: 65px;
     width: 100%;
+}
+
+#user-info {
+    padding: 10px 20px;
+    padding-left: 58px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the start horizontally */
+    min-height: 44px; /* Set a consistent height */
+    background: white;
+    border-top: 1px solid #f4f4f4;  /* Add top border as separator */
+    border-bottom: none;  /* Explicitly remove bottom border */
+    margin: 0;     /* Remove any margins */
+}
+
+#user-info .avatar {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    left: 15px;
+    vertical-align: center;
+    display: inline-block;
+    font-size: 11px;
+    line-height: 24px;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
+    font-style: normal;
+    text-transform: uppercase;
+}
+
+#user-info .username {
+    color: #333;
+    font-weight: 600;
+    line-height: 24px; /* Match the avatar height */
 }
 
 

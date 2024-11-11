@@ -7,10 +7,10 @@ var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
+var userInfoRow = document.querySelector('#user-info');
 
 var stompClient = null;
 var username = null;
-var connecting = true;
 
 //assigning colors to users
 var colors = [
@@ -23,7 +23,7 @@ var colors = [
 function connect(event) {
     username = document.querySelector('#name').value.trim();
 
-    if(username && connecting){
+    if(username){
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
@@ -49,6 +49,26 @@ function onConnected() {
         JSON.stringify(joinMessage)
     );
     connectingElement.classList.add('hidden');
+
+    const { avatarElement, usernameElement } = createUserInfo(username);
+    //userInfoRow.innerHTML = ''; // Clear existing content
+    userInfoRow.appendChild(avatarElement);
+    userInfoRow.appendChild(usernameElement);
+    userInfoRow.classList.remove('hidden');
+}
+
+function createUserInfo(sender){
+    const avatarElement = document.createElement('i');
+    avatarElement.textContent = sender[0];
+    avatarElement.style['background-color'] = getAvatarColor(sender);
+    avatarElement.classList.add('avatar');
+
+    // Create username element
+    const usernameElement = document.createElement('span');
+    usernameElement.textContent = sender;
+    usernameElement.classList.add('username');
+
+    return { avatarElement, usernameElement };
 }
 
 function onError() {
@@ -88,17 +108,10 @@ function onMessageReceived(payload) {
         message.content = message.sender + ' left!';
     } else if(message.messageType === 'CHAT'){
         messageElement.classList.add('chat-message');
-
-        var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message.sender[0]);
-        avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.sender);
-
+        // Create new avatar and username elements for each chat message
+        const { avatarElement, usernameElement } =
+            createUserInfo(message.sender);
         messageElement.appendChild(avatarElement);
-
-        var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
-        usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
     }
 
@@ -107,10 +120,9 @@ function onMessageReceived(payload) {
         var messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
+        messageArea.appendChild(messageElement);
+        messageArea.scrollTop = messageArea.scrollHeight;
     }
-
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 function getAvatarColor(messageSender) {
