@@ -15,5 +15,5 @@
 
 <h2>Update Log</h2>
 <h3>Version 0.0</h3>
-Finished prototype, based on this [YouTube video](https://www.youtube.com/watch?v=TywlS9iAZCM&list=WL&amp;index=114).
+Finished prototype based on this [**YouTube video**](https://www.youtube.com/watch?v=TywlS9iAZCM&list=WL&index=114)
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in the JS file.
