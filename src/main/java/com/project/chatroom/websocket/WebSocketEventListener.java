@@ -1,26 +1,35 @@
 // Need to refactor this to another package
 package com.project.chatroom.websocket;
 
-import com.project.chatroom.model.ChatMessage;
-import com.project.chatroom.model.MessageType;
+import com.project.chatroom.chat.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.util.ArrayList;
+
 //@RequiredArgsConstructor is a Lombok annotation that generates a constructor for all final fields in the class.
 // It’s a shorthand for defining dependency injection without manually writing the constructor.
 //This is another Lombok annotation that provides a "Simple Logging Facade for Java" logger instance.
 //With this, Lombok automatically creates a private static final Logger log = LoggerFactory.getLogger(WebSocketEventListener.class); statement.
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class WebSocketEventListener {
 
     private final SimpMessageSendingOperations messageTemplate;
+    private final ChatController chatController;
+
+    @Autowired
+    public WebSocketEventListener(SimpMessageSendingOperations messagingTemplate,
+                                  ChatController chatController) {
+        this.messageTemplate = messagingTemplate;
+        this.chatController = chatController;
+    }
 
     @EventListener
     public void HandleWebSocketDisconnectListener(SessionDisconnectEvent event){
@@ -28,12 +37,21 @@ public class WebSocketEventListener {
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if(username != null){
             log.info("User disconnected: {}", username);
-            var chatMessage = ChatMessage.builder()
-                    .messageType(MessageType.LEAVE)
-                    .sender(username)
-                    .build();
-            //inform the others a user has left
-            messageTemplate.convertAndSend("/topic/public", chatMessage);
+            messageTemplate.convertAndSend("/topic/public",
+                    ChatMessage.builder()
+                            .messageType(MessageType.LEAVE)
+                            .sender(username)
+                            .build()
+            );
+
+            // Remove user and send updated list
+            chatController.getConnectedUsers().remove(username);
+            messageTemplate.convertAndSend("/topic/public",
+                    ChatMessage.builder()
+                            .messageType(MessageType.USER_LIST)
+                            .users(new ArrayList<>(chatController.getConnectedUsers()))
+                            .build()
+            );
         }
     }
 

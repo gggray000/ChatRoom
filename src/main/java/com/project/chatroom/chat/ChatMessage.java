@@ -1,6 +1,8 @@
-package com.project.chatroom.model;
+package com.project.chatroom.chat;
 
 import lombok.*;
+
+import java.util.List;
 
 /*@Builder enables to construct objects like this:
 * User user = User.builder()
@@ -19,5 +21,6 @@ public class ChatMessage {
     private String sender;
     private String content;
     private MessageType messageType;
+    private List<String> users;
 
 }
