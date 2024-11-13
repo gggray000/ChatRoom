@@ -34,6 +34,7 @@ var colors = [
     '#009688', '#00ACC1', '#26C6DA', '#00838F', '#0097A7', '#00BFA5', '#1DE9B6'
 ];
 
+//FNV hashing algorithm
 function getAvatarColor(messageSender) {
     const PRIME = 16777619 ;
     let hash = 2166136261;
@@ -48,9 +49,22 @@ function getAvatarColor(messageSender) {
     return colors[index];
 }
 
+function createUserInfo(sender){
+    const avatarElement = document.createElement('i');
+    avatarElement.textContent = sender[0];
+    avatarElement.style['background-color'] = getAvatarColor(sender);
+    avatarElement.classList.add('avatar');
+
+    // Create username element
+    const usernameElement = document.createElement('span');
+    usernameElement.textContent = sender;
+    usernameElement.classList.add('username');
+
+    return { avatarElement, usernameElement };
+}
+
 function connect(event) {
     username = document.querySelector('#name').value.trim();
-
     if(username){
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
@@ -85,20 +99,6 @@ function onConnected() {
     userInfoRow.appendChild(avatarElement);
     userInfoRow.appendChild(usernameElement);
     userInfoRow.classList.remove('hidden');
-}
-
-function createUserInfo(sender){
-    const avatarElement = document.createElement('i');
-    avatarElement.textContent = sender[0];
-    avatarElement.style['background-color'] = getAvatarColor(sender);
-    avatarElement.classList.add('avatar');
-
-    // Create username element
-    const usernameElement = document.createElement('span');
-    usernameElement.textContent = sender;
-    usernameElement.classList.add('username');
-
-    return { avatarElement, usernameElement };
 }
 
 function onError() {
@@ -262,7 +262,6 @@ function handleTyping(event) {
     }, TYPING_TIMER_LENGTH);
 }
 
-//connect
 usernameForm.addEventListener('submit', connect, true);
 
 document.addEventListener('DOMContentLoaded', function() {

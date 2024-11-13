@@ -20,6 +20,7 @@ public class ChatController {
     private Set<String> connectedUsers = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final SimpMessageSendingOperations messageTemplate;
 
+    //injecting SimpMessageSendingOperations allows server to send messages to clients.
     @Autowired
     public ChatController(SimpMessageSendingOperations messagingTemplate) {
         this.messageTemplate = messagingTemplate;
