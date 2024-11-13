@@ -4,7 +4,7 @@ var usernamePage = document.querySelector('#username-page');
 var chatPage = document.querySelector('#chat-page');
 var usernameForm = document.querySelector('#usernameForm');
 var messageForm = document.querySelector('#messageForm');
-var messageInput = document.querySelector('#message');
+var messageInput = document.querySelector('#textArea');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 var userInfoRow = document.querySelector('#user-info');
@@ -14,6 +14,9 @@ var connectedUsers = new Map();
 
 var stompClient = null;
 var username = null;
+
+let typingTimeout;
+const TYPING_TIMER_LENGTH = 2000;
 
 //color list for the avatar
 var colors = [
@@ -111,14 +114,25 @@ function addUserToList(username) {
     if (!connectedUsers.has(username)) {
         const userElement = document.createElement('div');
         userElement.classList.add('user-list-item');
-
-        const { avatarElement,
-                usernameElement } = createUserInfo(username);
+        // Create container for username and typing indicator
+        const userInfoContainer = document.createElement('div');
+        userInfoContainer.style.position = 'relative';
+        const { avatarElement, usernameElement } = createUserInfo(username);
+        // Create typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.classList.add('typing-indicator');
+        typingIndicator.textContent = 'typing...';
+       // typingIndicator.classList.add('hidden');
         userElement.appendChild(avatarElement);
-        userElement.appendChild(usernameElement);
+        userInfoContainer.appendChild(usernameElement);
+        userInfoContainer.appendChild(typingIndicator);
+        userElement.appendChild(userInfoContainer);
 
         userListElement.appendChild(userElement);
-        connectedUsers.set(username, userElement);
+        connectedUsers.set(username, {
+            element: userElement,
+            typingIndicator: typingIndicator
+        });
         updateUserCounter();
     }
 }
@@ -179,19 +193,90 @@ function onMessageReceived(payload) {
         message.users.forEach(user => {
             addUserToList(user);
         });
-    }
+    } else if (message.messageType === 'TYPING') {
+            const user = connectedUsers.get(message.sender);
+            if (user && user.typingIndicator) {
+                user.typingIndicator.classList.add('active');
+            }
+        } else if (message.messageType === 'TYPING_STOPPED') {
+            const user = connectedUsers.get(message.sender);
+            if (user && user.typingIndicator) {
+                user.typingIndicator.classList.remove('active');
+            }
+        }
 
     if(message.content) {
         var textElement = document.createElement('p');
-        var messageText = document.createTextNode(message.content);
-        textElement.appendChild(messageText);
+        // Set white-space style to preserve line breaks
+        textElement.style.whiteSpace = 'pre-wrap';
+        // Use textContent instead of createTextNode to preserve line breaks
+        textElement.textContent = message.content;
         messageElement.appendChild(textElement);
         messageArea.appendChild(messageElement);
         messageArea.scrollTop = messageArea.scrollHeight;
     }
 }
 
+// Function to handle input box auto-resize
+function autoResizeInput(event) {
+    const input = event.target;
+    // Reset height to auto to get the correct scrollHeight
+    input.style.height = 'auto';
+    // Set new height based on scrollHeight, within limits
+    const newHeight = Math.min(Math.max(input.scrollHeight, 40), 120);
+    input.style.height = newHeight + 'px';
+}
+
+// Handle textarea key events for sending messages
+function handleKeyPress(event) {
+    // Check if it's Ctrl+Enter (or Cmd+Enter for Mac)
+    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault(); // Prevent new line
+        sendMessage(); // Send the message
+    }
+}
+
+function handleTyping(event) {
+    // Step 1: Check if this is the first keystroke
+    if (!typingTimeout) {  // If no timer running
+        // Send TYPING_START because this is the first keystroke
+        const typingMessage = {
+            sender: username,
+            messageType: 'TYPING',
+            content: null
+        };
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(typingMessage));
+    }
+    // Step 2: Clear any existing timer
+    clearTimeout(typingTimeout);  // Cancel the previous timer
+    // Step 3: Start a new timer
+    typingTimeout = setTimeout(() => {
+        // This code runs after TYPING_TIMER_LENGTH milliseconds of no typing
+        const typingMessage = {
+            sender: username,
+            messageType: 'TYPING_STOPPED',
+            content: null
+        };
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(typingMessage));
+        typingTimeout = null;  // Reset the timer ID
+    }, TYPING_TIMER_LENGTH);
+}
 
 //connect
 usernameForm.addEventListener('submit', connect, true);
-messageForm.addEventListener('submit', sendMessage, true);
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Convert input to textarea if it's not already
+    if (messageInput.tagName.toLowerCase() === 'input') {
+        const textarea = document.createElement('textarea');
+        textarea.id = 'textArea';
+        textarea.className = messageInput.className;
+        textarea.placeholder = 'Ctrl+Enter or hit send button to send message';
+        messageInput.parentNode.replaceChild(textarea, messageInput);
+        messageInput = textarea; // Update the reference
+    }
+    messageInput.addEventListener('input', autoResizeInput);
+    messageInput.addEventListener('input', handleTyping);
+    messageInput.addEventListener('keydown', handleKeyPress);
+    messageForm.addEventListener('submit', sendMessage);
+});

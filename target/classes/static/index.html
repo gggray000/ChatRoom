@@ -2,67 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chatroom Application V0.2</title>
-    <link rel="stylesheet" href="/css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room Application</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/main2.css">
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="./js/main.js" defer></script>
 </head>
 <body>
+<div id="username-page">
+    <div class="username-page-container">
+        <h1 id="type-a-username-to-enter-chatroom" class="title">Type username to enter Chatroom</h1>
 
-    <!-- create user-->
-    <div id="username-page">
-        <div class="username-page-container">
-            <h1 class="title">Type your username to enter the Chatroom</h1>
-            <form id="usernameForm" name="usernameForm">
+        <form id="usernameForm" name="usernameForm">
+            <div class="form-group">
+                <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="accent">Start Chatting</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="chat-page" class="hidden">
+    <div class="chat-container">
+        <div class="user-list-sidebar">
+            <div class="user-list-header">
+                <div id="user-count">Online Users: 0</div>
+            </div>
+            <div id="user-list"></div>
+        </div>
+
+        <div class="main-chat-area">
+            <div class="chat-header">
+                <h2>Chat Room</h2>
+            </div>
+
+            <div class="connecting">Connecting...</div>
+
+            <ul id="messageArea"></ul>
+
+            <div id="user-info" class="hidden"></div>
+
+            <form id="messageForm" name="messageForm">
                 <div class="form-group">
-                    <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="accent username-submit">Start Chatting</button>
+                    <div class="input-group clearfix">
+                        <textarea id="textArea" placeholder="Ctrl+Enter or hit send button to send message" class="form-control"></textarea>
+                        <button type="submit" class="primary">Send</button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
-
-    <!-- chat page -->
-    <div id="chat-page" class="hidden">
-        <div class="chat-container">
-            <div class="user-list-sidebar">
-                <div class="user-list-header">
-                    <div id="user-count">Online Users: 0</div>
-                </div>
-                <div id="user-list"></div>
-            </div>
-            <div class = "main-chat-area">
-                <div class="chat-header">
-                    <h2>Chat Room</h2>
-                </div>
-                <div class="connecting">
-                    Connecting...
-                </div>
-                <ul id="messageArea">
-
-                </ul>
-
-                <div id="user-info" class = "hidden">
-                    <div id="user-info-avatar"></div>
-                    <div id="user-info-username"></div>
-                </div>
-
-                <form id="messageForm" name="messageForm">
-                    <div class="form-group">
-                        <div class="input-group clearfix">
-                            <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-                            <button type="submit" class="primary">Send</button>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src="/js/main.js"></script>
+</div>
 </body>
 </html>

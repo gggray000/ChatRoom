@@ -39,13 +39,13 @@ public class ChatController {
         headerAccessor.getSessionAttributes()
                       .put("username", chatMessage.getSender());
         connectedUsers.add(chatMessage.getSender());
-
         // Send current user list to all clients
         messageTemplate.convertAndSend("/topic/public",
                 ChatMessage.builder()
                         .messageType(MessageType.USER_LIST)
                         .users(new ArrayList<>(connectedUsers))
-                        .build());
+                        .build()
+                );
         return chatMessage;
     }
 

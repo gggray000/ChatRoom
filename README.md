@@ -2,8 +2,7 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Add a status prompt to the users in the user list when they are typing.<br>
-2. Add a setup page for admin.<br>
+1. Add a setup page for admin.<br>
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
@@ -15,6 +14,9 @@
 7. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h3>v0.4</h3>
+1. Changed index.html, added main2.css, brand new UI design.<br>
+2. Added typing status tag in the user list.
 <h3>v0.3</h3>
 1. Added global user list to the chat page.<br>
 2. Refractored the project again, based on domain partition principle.
