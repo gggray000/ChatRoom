@@ -1,4 +1,4 @@
-package com.project.chatroom.chat;
+package com.chatroom.chat;
 
 public enum MessageType {
     CHAT,

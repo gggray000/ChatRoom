@@ -1,8 +1,9 @@
 // Need to refactor this to another package
-package com.project.chatroom.websocket;
+package com.chatroom.websocket;
 
-import com.project.chatroom.chat.*;
-import lombok.RequiredArgsConstructor;
+import com.chatroom.chat.ChatController;
+import com.chatroom.chat.ChatMessage;
+import com.chatroom.chat.MessageType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;

@@ -1,4 +1,4 @@
-package com.project.chatroom.websocket;
+package com.chatroom.websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

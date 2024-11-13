@@ -1,4 +1,4 @@
-package com.project.chatroom.chat;
+package com.chatroom.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -7,7 +7,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-import com.project.chatroom.websocket.WebSocketEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
