@@ -144,6 +144,7 @@ function removeUserFromList(username) {
     console.log("userElement: ",connectedUsers.get(username));
     if (userListObject) {
         //userListObject is nested inside userListObject.typingIndicator
+        // removeChild() expects a DOM node, not a plain Javascript object(userListObject)
         userListElement.removeChild(userListObject.element);
         connectedUsers.delete(username);
         updateUserCounter();
