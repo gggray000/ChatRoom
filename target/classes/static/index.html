@@ -8,10 +8,6 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/css/main2.css">
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src="/js/main.js" defer></script>
 </head>
 <body>
 <div id="username-page">
@@ -60,5 +56,17 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<script type="module" src="/js/modules/constants.js"></script>
+<script type="module" src="/js/modules/dom-elements.js"></script>
+<script type="module" src="/js/modules/avatar-service.js"></script>
+<script type="module" src="/js/modules/user-service.js"></script>
+<script type="module" src="/js/modules/websocket-service.js"></script>
+<script type="module" src="/js/modules/input-handler.js"></script>
+<script type="module" src="/js/main.js"></script>
+
 </body>
 </html>
