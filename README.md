@@ -14,20 +14,30 @@
 7. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h3>v0.4.2</h3>
+fix:<br>
+Fixed a bug where the left messages weren't displayed.
 <h3>v0.4.1</h3>
+new:<br>
 1. Refactored the application again, adding ./app for application control, deleted ./room.<br>
 2. Added admin-page prototype, more features on the way.
 <h3>v0.4</h3>
+new:<br>
 1. Changed index.html, added main2.css, brand new UI design.<br>
 2. Added typing status tag in the user list.
 <h3>v0.3</h3>
+new:<br>
 1. Added global user list to the chat page.<br>
 2. Refractored the project again, based on domain partition principle.
 <h3>v0.2</h3>
+new:<br>
 Added avatar and username above the input box.<br>
 <h3>v0.1</h3>
+new:<br>
 Refactored the project structure for future development and created a new branch "dev".<br>
 Further development will be committed to the "dev" branch now.
 <h3>v0.0</h3>
+new:<br>
 Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=TywlS9iAZCM&list=WL&index=114</URL>.<br>
+fix:<br>
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in the JS file.

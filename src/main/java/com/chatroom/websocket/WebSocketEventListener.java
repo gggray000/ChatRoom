@@ -46,15 +46,8 @@ public class WebSocketEventListener {
                             .sender(username)
                             .build()
             );
-
             // Remove user and send updated list
             chatController.getConnectedUsers().remove(username);
-            messageTemplate.convertAndSend("/topic/public",
-                    ChatMessage.builder()
-                            .messageType(MessageType.USER_LIST)
-                            .users(new ArrayList<>(chatController.getConnectedUsers()))
-                            .build()
-            );
         }
     }
 

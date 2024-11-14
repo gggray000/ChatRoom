@@ -134,13 +134,17 @@ function addUserToList(username) {
             typingIndicator: typingIndicator
         });
         updateUserCounter();
+        console.log("Actual list: ", connectedUsers.get(username));
     }
 }
 
+// userListObject:  Object { element: div.user-list-item, typingIndicator: div.typing-indicator }
 function removeUserFromList(username) {
-    const userElement = connectedUsers.get(username);
-    if (userElement) {
-        userListElement.removeChild(userElement);
+    const userListObject = connectedUsers.get(username);
+    console.log("userElement: ",connectedUsers.get(username));
+    if (userListObject) {
+        //userListObject is nested inside userListObject.typingIndicator
+        userListElement.removeChild(userListObject.element);
         connectedUsers.delete(username);
         updateUserCounter();
     }
@@ -193,15 +197,16 @@ function onMessageReceived(payload) {
         message.users.forEach(user => {
             addUserToList(user);
         });
+        console.log('Message received:', payload);
     } else if (message.messageType === 'TYPING') {
-            const user = connectedUsers.get(message.sender);
-            if (user && user.typingIndicator) {
-                user.typingIndicator.classList.add('active');
+            const userListObject = connectedUsers.get(message.sender);
+            if (userListObject && userListObject.typingIndicator) {
+                userListObject.typingIndicator.classList.add('active');
             }
         } else if (message.messageType === 'TYPING_STOPPED') {
-            const user = connectedUsers.get(message.sender);
-            if (user && user.typingIndicator) {
-                user.typingIndicator.classList.remove('active');
+            const userListObject = connectedUsers.get(message.sender);
+            if (userListObject && userListObject.typingIndicator) {
+                userListObject.typingIndicator.classList.remove('active');
             }
         }
 
