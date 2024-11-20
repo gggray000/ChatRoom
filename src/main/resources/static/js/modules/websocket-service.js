@@ -2,13 +2,14 @@ import { elements } from './dom-elements.js';
 import { createUserInfo } from './avatar-service.js';
 
 export class WebSocketService {
-    constructor(userService) {
+    constructor(userListService) {
         this.stompClient = null;
         this.username = null;
-        this.userService = userService;
+        this.userListService = userListService;
+        this.roomId = window.ROOM_ID;
     }
 
-    connect(username) {
+    connect(username, roomId) {
         this.username = username;
         const socket = new SockJS('/ws');
         this.stompClient = Stomp.over(socket);
@@ -20,17 +21,18 @@ export class WebSocketService {
 
     onConnected() {
         console.log('Connected to WebSocket!');
-        this.stompClient.subscribe('/topic/public',
+        this.stompClient.subscribe(`/topic/public/${this.roomId}`,
             (payload) => this.onMessageReceived(payload)
         );
 
         const joinMessage = {
             sender: this.username,
-            messageType: 'JOIN'
+            messageType: 'JOIN',
+            roomId: this.roomId
         };
 
-        this.userService.addUserToList(this.username);
-        this.stompClient.send("/app/chat.addUser", {}, JSON.stringify(joinMessage));
+        this.userListService.addUserToList(this.username);
+        this.stompClient.send(`/app/chat/${this.roomId}/addUser`, {}, JSON.stringify(joinMessage));
         elements.connectingElement.classList.add('hidden');
 
         const { avatarElement, usernameElement } = createUserInfo(this.username);
@@ -49,10 +51,11 @@ export class WebSocketService {
             const chatMessage = {
                 sender: this.username,
                 content: messageContent,
-                messageType: 'CHAT'
+                messageType: 'CHAT',
+                roomId: this.roomId
             };
             this.stompClient.send(
-                "/app/chat.sendMessage",
+                `/app/chat/${this.roomId}/sendMessage`,
                 {},
                 JSON.stringify(chatMessage)
             );
@@ -63,27 +66,25 @@ export class WebSocketService {
         const typingMessage = {
             sender: this.username,
             messageType: isTyping ? 'TYPING' : 'TYPING_STOPPED',
-            content: null
+            content: null,
+            roomId: this.roomId
         };
-        this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(typingMessage));
+        this.stompClient.send(`/app/chat/${this.roomId}/sendMessage`, {}, JSON.stringify(typingMessage));
     }
 
     onMessageReceived(payload) {
-        console.log('Message received:', payload);
         const message = JSON.parse(payload.body);
-        console.log('Parsed message:', message);
-
         const messageElement = document.createElement('li');
 
         switch (message.messageType) {
             case 'JOIN':
-                this.userService.addUserToList(message.sender);
+                this.userListService.addUserToList(message.sender);
                 messageElement.classList.add('event-message');
                 message.content = `${message.sender} joined!`;
                 break;
 
             case 'LEAVE':
-                this.userService.removeUserFromList(message.sender);
+                this.userListService.removeUserFromList(message.sender);
                 messageElement.classList.add('event-message');
                 message.content = `${message.sender} left!`;
                 break;
@@ -97,15 +98,15 @@ export class WebSocketService {
 
             case 'USER_LIST':
                 elements.userListElement.innerHTML = '';
-                this.userService.connectedUsers.clear();
+                this.userListService.connectedUsers.clear();
                 message.users.forEach(user => {
-                    this.userService.addUserToList(user);
+                    this.userListService.addUserToList(user);
                 });
                 break;
 
             case 'TYPING':
             case 'TYPING_STOPPED':
-                this.userService.handleTypingIndicator(message.sender, message.messageType === 'TYPING');
+                this.userListService.handleTypingIndicator(message.sender, message.messageType === 'TYPING');
                 break;
         }
 

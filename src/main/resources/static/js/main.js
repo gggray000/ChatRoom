@@ -1,11 +1,13 @@
 import { elements } from './modules/dom-elements.js';
-import { UserService } from './modules/user-service.js';
+import { UserListService } from './modules/user-list-service.js';
 import { WebSocketService } from './modules/websocket-service.js';
 import { InputHandler } from './modules/input-handler.js';
 
-const userService = new UserService();
-const webSocketService = new WebSocketService(userService);
+const userListService = new UserListService();
+const webSocketService = new WebSocketService(userListService);
 const inputHandler = new InputHandler(webSocketService);
+const roomId = window.ROOM_ID;
+const roomName = window.ROOM_NAME;
 
 function connect(event) {
     event.preventDefault();
@@ -14,7 +16,8 @@ function connect(event) {
     if (username) {
         elements.usernamePage.classList.add('hidden');
         elements.chatPage.classList.remove('hidden');
-        webSocketService.connect(username);
+        document.querySelector('.chat-header h2').textContent = roomName;
+        webSocketService.connect(username, roomId);
     }
 }
 

@@ -1,7 +1,7 @@
 import { elements } from './dom-elements.js';
 import { createUserInfo } from './avatar-service.js';
 
-export class UserService {
+export class UserListService {
     constructor() {
         this.connectedUsers = new Map();
     }
