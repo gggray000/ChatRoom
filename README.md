@@ -47,6 +47,6 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 
 <h2>Acknowledgement</h2>
 @ali-bouali<br>
-<URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL>
+<URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL><br>
 @nayuki<br>
 <URL>https://github.com/nayuki/QR-Code-generator</URL>
