@@ -44,3 +44,9 @@ Further development will be committed to the "dev" branch now.
 <h3>v0.0</h3>
 Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=TywlS9iAZCM&list=WL&index=114</URL>.<br>
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in the JS file.
+
+<h2>Acknowledgement</h2>
+@ali-bouali<br>
+<URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL>
+@nayuki<br>
+<URL>https://github.com/nayuki/QR-Code-generator</URL>
