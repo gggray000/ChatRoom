@@ -52,8 +52,8 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 @ali-bouali<br>
 <URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL><br>
 @Dheeraj Malik<br>
-<URL>https://stackoverflow.com/questions/75173568/how-to-generate-qr-code-with-some-text-using-java</URL>
+<URL>https://stackoverflow.com/questions/75173568/how-to-generate-qr-code-with-some-text-using-java</URL><br>
 @Ollama<br>
-<URL>https://github.com/ollama/ollama/blob/main/LICENSE</URL>
+<URL>https://github.com/ollama/ollama/blob/main/LICENSE</URL><br>
 @langchain4j<br>
-<URL>https://github.com/langchain4j/langchain4j?tab=Apache-2.0-1-ov-file</URL>
+<URL>https://github.com/langchain4j/langchain4j?tab=Apache-2.0-1-ov-file</URL><br>
