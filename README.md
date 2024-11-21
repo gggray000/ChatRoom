@@ -3,7 +3,7 @@
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Put the user status element back to the top of the text area.<br>
-2. AI Chatbot
+2. AI Chatbot.
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
@@ -15,7 +15,7 @@
 
 <h2>Update Log</h2>
 <h3>v0.5.2</h3>
-1. Added a ChatBot prototype, using LangChain4j, Ollama and Llama3.2 3B.
+1. Added a ChatBot prototype, using LangChain4j, Ollama and Llama3.2 3B.<br>
 2. Added a feature that allows user to click the URL generated at the admin page.
 <h3>v0.5.1</h3>
 Added QR-Code generation feature.
@@ -53,3 +53,7 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 <URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL><br>
 @Dheeraj Malik<br>
 <URL>https://stackoverflow.com/questions/75173568/how-to-generate-qr-code-with-some-text-using-java</URL>
+@Ollama<br>
+<URL>https://github.com/ollama/ollama/blob/main/LICENSE</URL>
+@langchain4j<br>
+<URL>https://github.com/langchain4j/langchain4j?tab=Apache-2.0-1-ov-file</URL>
