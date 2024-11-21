@@ -94,6 +94,29 @@
     margin: 0;
 }
 
+/* New QR Code styles */
+.admin-container .qr-code-container {
+    display: none;
+    margin: 1.5rem auto 0 auto;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.admin-container .qr-code-container img {
+    max-width: 200px;
+    height: auto;
+    margin: 1rem auto;
+    display: block;
+}
+
+.admin-container .qr-code-container h3 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
 @media screen and (max-width: 480px) {
     .admin-container {
         padding: 1rem;

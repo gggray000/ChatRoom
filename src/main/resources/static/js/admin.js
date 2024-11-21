@@ -1,12 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const successMessage = document.getElementById('successMessage');
+    const roomNameInput = document.getElementById('roomName');
+    const createRoomButton = document.getElementById('createRoom');
     const roomUrlContainer = document.getElementById('roomUrl');
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+    const successMessage = document.getElementById('successMessage');
 
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
+    createRoomButton.addEventListener('click', async function() {
+        const roomName = roomNameInput.value.trim();
 
-        const roomName = document.getElementById('roomName').value;
+        if (!roomName) {
+            alert('Please enter a room name');
+            return;
+        }
 
         try {
             const response = await fetch('/admin/create-room', {
@@ -30,14 +35,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 3000);
 
             // Display room URL
+            const roomUrlParagraph = roomUrlContainer.querySelector('p');
+            roomUrlParagraph.textContent = window.location.origin + data.url;
             roomUrlContainer.style.display = 'block';
-            roomUrlContainer.innerHTML = `
-                <h3>Room URL:</h3>
-                <p>${window.location.origin}${data.url}</p>
-            `;
 
-            // Clear the form
-            form.reset();
+            // Display QR Code
+            const qrCode = document.getElementById('qrCode');
+            const roomId = data.roomId; // Get roomId from URL
+            qrCode.src = `/admin/qrcode/${roomId}`;// Sending get request to AppController.java
+            qrCodeContainer.style.display = 'block';
+
+            // Clear input
+            roomNameInput.value = '';
 
         } catch (error) {
             console.error('Error:', error);

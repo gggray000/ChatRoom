@@ -2,9 +2,8 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. QR-Code generation, and modify the admin page design accordingly.<br>
-2. Allow user to click the URL generated in the admin page to go to the chat room directly.<br>
-3. Put the user status element back to the top of the text area.
+1. Allow user to click the URL generated in the admin page to go to the chat room directly.<br>
+2. Put the user status element back to the top of the text area.
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
@@ -16,6 +15,8 @@
 7. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h3>v0.5.1</h3>
+Added QR-Code generation feature.
 <h3>v0.5</h3>
 1. Added URL generation, redesigned the admin page. <br>
 2. Now each URL stands for a unique ChatRoom. Refactored controller and websocket code, added new directory /room to handle this.<br>
@@ -48,5 +49,5 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 <h2>Acknowledgement</h2>
 @ali-bouali<br>
 <URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL><br>
-@nayuki<br>
-<URL>https://github.com/nayuki/QR-Code-generator</URL>
+@Dheeraj Malik<br>
+<URL>https://stackoverflow.com/questions/75173568/how-to-generate-qr-code-with-some-text-using-java</URL>

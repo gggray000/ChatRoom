@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Room Configuration</title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -14,18 +12,22 @@
         Settings saved successfully!
     </div>
 
-    <form>
-        <div class="form-group">
-            <input type="text" id="roomName" class="form-control" placeholder="Room Name">
-        </div>
+    <div class="form-group">
+        <input type="text" id="roomName" class="form-control" placeholder="Enter room name">
+    </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn-primary">Create Room</button>
-        </div>
-    </form>
+    <div class="form-group">
+        <button id="createRoom" class="accent">Create Room</button>
+    </div>
 
     <div id="roomUrl" class="room-url">
         <h3>Room URL:</h3>
+        <p></p>
+    </div>
+
+    <div id="qrCodeContainer" class="qr-code-container">
+        <h3>QR Code:</h3>
+        <img id="qrCode" alt="Room QR Code" />
     </div>
 </div>
 
