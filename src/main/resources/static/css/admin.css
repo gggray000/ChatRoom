@@ -88,10 +88,17 @@
     font-size: 1.1rem;
 }
 
-.admin-container .room-url p {
+.admin-container .room-url a {
     color: #3498db;
     word-break: break-all;
     margin: 0;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.admin-container .room-url a:hover {
+    color: #2980b9;
+    text-decoration: underline;
 }
 
 /* New QR Code styles */

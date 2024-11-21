@@ -2,19 +2,21 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Allow user to click the URL generated in the admin page to go to the chat room directly.<br>
-2. Put the user status element back to the top of the text area.
+1. Put the user status element back to the top of the text area.<br>
+2. AI Chatbot
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
-2. AI Chatbot.<br>
-3. Deploy the application on the cloud.<br>
-4. JPA implementation for Room entity.<br>
-5. Database function for storing chat history.<br>
-6. Downloadable file and URL generation.<br>
-7. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
+2. Deploy the application on the cloud.<br>
+3. JPA implementation for Room entity.<br>
+4. Database function for storing chat history.<br>
+5. Downloadable file and URL generation.<br>
+6. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h3>v0.5.2</h3>
+1. Added a ChatBot prototype, using LangChain4j, Ollama and Llama3.2 3B.
+2. Added a feature that allows user to click the URL generated at the admin page.
 <h3>v0.5.1</h3>
 Added QR-Code generation feature.
 <h3>v0.5</h3>

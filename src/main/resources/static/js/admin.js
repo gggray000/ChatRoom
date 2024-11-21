@@ -35,8 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 3000);
 
             // Display room URL
-            const roomUrlParagraph = roomUrlContainer.querySelector('p');
-            roomUrlParagraph.textContent = window.location.origin + data.url;
+            const roomUrl = window.location.origin + data.url;
+            const roomUrlLink = roomUrlContainer.querySelector('a');
+            roomUrlLink.href = roomUrl;
+            roomUrlLink.textContent = roomUrl;
             roomUrlContainer.style.display = 'block';
 
             // Display QR Code
