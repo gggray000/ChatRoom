@@ -75,7 +75,7 @@ public class AppController {
             }
 
             String roomUrl = urlService.createUrl(room);  // Use urlService here
-            BufferedImage qrImage = qrCodeService.qrCodeGeneration(roomUrl, room.getName());
+            BufferedImage qrImage = qrCodeService.qrCodeGeneration("http://localhost:8080" + roomUrl, room.getName());
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(qrImage, "png", baos);
