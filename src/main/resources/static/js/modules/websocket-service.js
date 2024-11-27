@@ -31,7 +31,7 @@ export class WebSocketService {
             roomId: this.roomId
         };
 
-        this.userListService.addUserToList(this.username);
+        //this.userListService.addUserToList(this.username);
         this.stompClient.send(`/app/chat/${this.roomId}/addUser`, {}, JSON.stringify(joinMessage));
         elements.connectingElement.classList.add('hidden');
 
@@ -90,6 +90,14 @@ export class WebSocketService {
                 break;
 
             case 'CHAT':
+                if(message.content === "summary"){
+                    const endMessage = {
+                        sender: this.username,
+                        messageType: 'END',
+                        content: null,
+                    };
+                    this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage))
+                }
                 messageElement.classList.add('chat-message');
                 const { avatarElement, usernameElement } = createUserInfo(message.sender);
                 messageElement.appendChild(avatarElement);
@@ -107,6 +115,13 @@ export class WebSocketService {
             case 'TYPING':
             case 'TYPING_STOPPED':
                 this.userListService.handleTypingIndicator(message.sender, message.messageType === 'TYPING');
+                break;
+
+            case 'SUMMARY':
+                messageElement.classList.add('chat-message');
+                const { aiAvatarElement, aiNameElement } = createUserInfo(message.sender);
+                messageElement.appendChild(aiAvatarElement);
+                messageElement.appendChild(aiNameElement);
                 break;
         }
 

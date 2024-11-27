@@ -11,22 +11,50 @@ import org.springframework.stereotype.Controller;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import com.chatroom.bot.*;
 
 @Controller
 public class ChatController {
     private final Map<String, Set<String>> roomUsers = new ConcurrentHashMap<>();
     private final SimpMessageSendingOperations messageTemplate;
+    private final ChatMessageService chatMessageService;
+    private final ChatBotController chatBotController;
 
     @Autowired
-    public ChatController(SimpMessageSendingOperations messagingTemplate) {
+    public ChatController(SimpMessageSendingOperations messagingTemplate, ChatMessageService chatMessageService, ChatBotController chatBotController) {
         this.messageTemplate = messagingTemplate;
+        this.chatMessageService = chatMessageService;
+        this.chatBotController = chatBotController;
     }
 
     @MessageMapping("/chat/{roomId}/sendMessage")
     @SendTo("/topic/public/{roomId}")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage,
                                    @DestinationVariable String roomId) {
+
+        if(MessageType.CHAT.equals(chatMessage.getMessageType())){
+            TextChatMessage textChatMessage = new TextChatMessage(
+                    chatMessage.getSender(),
+                    chatMessage.getContent()
+            );
+            chatMessageService.saveTextChatMessage(textChatMessage);
+        }
         return chatMessage;
+    }
+
+    @MessageMapping("/chat/{roomId}/endDiscussion")
+    @SendTo("/topic/public/{roomId}")
+    public void endDiscussion(@Payload ChatMessage chatMessage,
+                                     @DestinationVariable String roomId,
+                                     SimpMessageHeaderAccessor headerAccessor){
+        String summary = chatBotController.chatBot(chatMessageService.exportMessages());
+        messageTemplate.convertAndSend("/topic/public/" + roomId,
+                ChatMessage.builder()
+                        .messageType(MessageType.SUMMARY)
+                        .sender("ChatBot")
+                        .content(summary)
+                        .build()
+        );
     }
 
     @MessageMapping("/chat/{roomId}/addUser")

@@ -6,5 +6,7 @@ public enum MessageType {
     LEAVE,
     USER_LIST,
     TYPING,
-    TYPING_STOPPED
+    TYPING_STOPPED,
+    END,
+    SUMMARY
 }

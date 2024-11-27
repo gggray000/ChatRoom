@@ -1,0 +1,118 @@
+ChatRoom
+|-- HELP.md
+|-- Project Structure.txt
+|-- QR_Code_Test.png
+|-- README.md
+|-- mvnw
+|-- mvnw.cmd
+|-- pom.xml
+|-- src
+|   |-- main
+|   |   |-- java
+|   |   |   `-- com
+|   |   |       `-- chatroom
+|   |   |           |-- ChatroomApplication.java
+|   |   |           |-- app
+|   |   |           |   `-- AppController.java
+|   |   |           |-- bot
+|   |   |           |   |-- ChatBot.java
+|   |   |           |   |-- ChatBotConfiguration.java
+|   |   |           |   |-- ChatBotController.java
+|   |   |           |   |-- ChatBotTools.java
+|   |   |           |   `-- TestOllamaChatBot.java
+|   |   |           |-- chat
+|   |   |           |   |-- ChatController.java
+|   |   |           |   |-- ChatMessage.java
+|   |   |           |   |-- ChatMessageService.java
+|   |   |           |   |-- MessageType.java
+|   |   |           |   `-- TextChatMessage.java
+|   |   |           |-- room
+|   |   |           |   |-- QrCodeService.java
+|   |   |           |   |-- Room.java
+|   |   |           |   |-- RoomRequest.java
+|   |   |           |   |-- RoomService.java
+|   |   |           |   `-- UrlService.java
+|   |   |           `-- websocket
+|   |   |               |-- WebSocketConfig.java
+|   |   |               `-- WebSocketEventListener.java
+|   |   `-- resources
+|   |       |-- application.properties
+|   |       |-- static
+|   |       |   |-- css
+|   |       |   |   |-- admin.css
+|   |       |   |   `-- main2.css
+|   |       |   `-- js
+|   |       |       |-- admin.js
+|   |       |       |-- main.js
+|   |       |       `-- modules
+|   |       |           |-- avatar-service.js
+|   |       |           |-- constants.js
+|   |       |           |-- dom-elements.js
+|   |       |           |-- input-handler.js
+|   |       |           |-- user-list-service.js
+|   |       |           `-- websocket-service.js
+|   |       `-- templates
+|   |           |-- admin-page.html
+|   |           `-- chat-room.html
+|   `-- test
+|       `-- java
+|           `-- com
+|               |-- chatroom
+|               |   `-- ChatroomApplicationTests.java
+|               `-- project
+`-- target
+    |-- classes
+    |   |-- application.properties
+    |   |-- com
+    |   |   `-- chatroom
+    |   |       |-- ChatroomApplication.class
+    |   |       |-- app
+    |   |       |   `-- AppController.class
+    |   |       |-- bot
+    |   |       |   |-- ChatBot.class
+    |   |       |   |-- ChatBotConfiguration.class
+    |   |       |   |-- ChatBotController.class
+    |   |       |   |-- ChatBotTools.class
+    |   |       |   |-- TestOllamaChatBot$1.class
+    |   |       |   `-- TestOllamaChatBot.class
+    |   |       |-- chat
+    |   |       |   |-- ChatController.class
+    |   |       |   |-- ChatMessage$ChatMessageBuilder.class
+    |   |       |   |-- ChatMessage.class
+    |   |       |   |-- ChatMessageService.class
+    |   |       |   |-- MessageType.class
+    |   |       |   `-- TextChatMessage.class
+    |   |       |-- room
+    |   |       |   |-- QrCodeService.class
+    |   |       |   |-- Room.class
+    |   |       |   |-- RoomRequest.class
+    |   |       |   |-- RoomService.class
+    |   |       |   `-- UrlService.class
+    |   |       `-- websocket
+    |   |           |-- WebSocketConfig.class
+    |   |           `-- WebSocketEventListener.class
+    |   |-- static
+    |   |   |-- css
+    |   |   |   |-- admin.css
+    |   |   |   `-- main2.css
+    |   |   `-- js
+    |   |       |-- admin.js
+    |   |       |-- main.js
+    |   |       `-- modules
+    |   |           |-- avatar-service.js
+    |   |           |-- constants.js
+    |   |           |-- dom-elements.js
+    |   |           |-- input-handler.js
+    |   |           |-- user-list-service.js
+    |   |           `-- websocket-service.js
+    |   `-- templates
+    |       |-- admin-page.html
+    |       `-- chat-room.html
+    |-- generated-sources
+    |   `-- annotations
+    |-- generated-test-sources
+    |   `-- test-annotations
+    `-- test-classes
+        `-- com
+            `-- chatroom
+                `-- ChatroomApplicationTests.class
