@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+// Pending to implement for now.
+
 //@Component
 public class ChatBotTools {
     //@Tool
