@@ -15,7 +15,7 @@
 5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
-<h3>0.6</h3>
+<h3>v0.6</h3>
 1. Implemented LangChain4j with Ollama, using local run Llama3.2 3B.<br>
 2. Next: fix the bug where the summary cannot be displayed at the frontend.
 <h3>v0.5.2</h3>
