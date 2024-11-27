@@ -3,7 +3,9 @@
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Put the user status element back to the top of the text area.<br>
-2. AI Chatbot implementation with LangChain4j and Ollama.
+2. Display summary at the frontend.<br>
+3. Refactor ChatController.java.<br>
+4. Add an "END" button for discussion termination. The current way of generating a summary is by just sending a "summary" message to the chat room.
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
@@ -13,15 +15,18 @@
 5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h3>0.6</h3>
+1. Implemented LangChain4j with Ollama, using local run Llama3.2 3B.<br>
+2. Next: fix the bug where the summary cannot be displayed at the frontend.
 <h3>v0.5.2</h3>
 1. Added a ChatBot prototype, using LangChain4j, Ollama and Llama3.2 3B.<br>
 2. Added a feature that allows user to click the URL generated at the admin page.
 <h3>v0.5.1</h3>
 Added QR-Code generation feature.
 <h3>v0.5</h3>
-1. Added URL generation, redesigned the admin page. <br>
-2. Now each URL stands for a unique ChatRoom. Refactored controller and websocket code, added new directory /room to handle this.<br>
-3. Fixed the bug where the chat room's name wasn't displayed in the chat page.<br>
+1. Added URL generation, and redesigned the admin page. <br>
+2. Now each URL stands for a unique ChatRoom. Refactored controller and WebSocket code, added new directory /room to handle this.<br>
+3. Fixed the bug where the chat room's name wasn't displayed on the chat page.<br>
 4. Added /.gitignore
 <h3>v0.4.3</h3>
 Refactored and modularized the main.js (the previous main.js is now main-old.js, which is kept for future reference and emergency).
@@ -34,8 +39,8 @@ Fixed a bug where the left messages weren't displayed.
 1. Changed index.html, added main2.css, brand new UI design.<br>
 2. Added typing status tag in the user list.
 <h3>v0.3</h3>
-1. Added global user list to the chat page.<br>
-2. Refractored the project again, based on domain partition principle.
+1. Added a global user list to the chat page.<br>
+2. Refractored the project again, based on the domain partition principle.
 <h3>v0.2</h3>
 Added avatar and username above the input box.<br>
 <h3>v0.1</h3>
