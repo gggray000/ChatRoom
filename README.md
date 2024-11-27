@@ -3,15 +3,14 @@
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Put the user status element back to the top of the text area.<br>
-2. AI Chatbot.
+2. AI Chatbot implementation with LangChain4j and Ollama.
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
-2. Deploy the application on the cloud.<br>
-3. JPA implementation for Room entity.<br>
-4. Database function for storing chat history.<br>
-5. Downloadable file and URL generation.<br>
-6. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
+2. JPA implementation for chat history.<br>
+3. Downloadable file and URL generation.<br>
+4. Deployment with docker container, using the virtual machine provided by the professor.<br>
+5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
 <h3>v0.5.2</h3>
@@ -26,8 +25,6 @@ Added QR-Code generation feature.
 4. Added /.gitignore
 <h3>v0.4.3</h3>
 Refactored and modularized the main.js (the previous main.js is now main-old.js, which is kept for future reference and emergency).
-<h3>v0.4.2</h3>
-Fixed a bug where the left messages weren't displayed.
 <h3>v0.4.2</h3>
 Fixed a bug where the left messages weren't displayed.
 <h3>v0.4.1</h3>
@@ -53,6 +50,8 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 <URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL><br>
 @Dheeraj Malik<br>
 <URL>https://stackoverflow.com/questions/75173568/how-to-generate-qr-code-with-some-text-using-java</URL><br>
+@E-ICEBLUE<br>
+<URL>https://www.e-iceblue.com/Download/barcode-for-java.html</URL><br>
 @Ollama<br>
 <URL>https://github.com/ollama/ollama/blob/main/LICENSE</URL><br>
 @langchain4j<br>
