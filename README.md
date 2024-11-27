@@ -5,7 +5,7 @@
 1. Put the user status element back to the top of the text area.<br>
 2. Display summary at the frontend.<br>
 3. Refactor ChatController.java.<br>
-4. Add an "END" button for discussion termination. The current way of generating a summary is by just sending a "summary" message to the chat room.
+4. Add an "END" button for discussion termination. The current way of generating a summary is just sending a "summary" message to the chat room.
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
