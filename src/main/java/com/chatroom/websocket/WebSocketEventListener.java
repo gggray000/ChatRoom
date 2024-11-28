@@ -30,8 +30,13 @@ public class WebSocketEventListener {
         String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
 
         if (username != null && roomId != null) {
+            ChatMessage leaveMessage = ChatMessage.builder()
+                    .messageType(MessageType.LEAVE)
+                    .sender(username)
+                    .build();
+            messagingTemplate.convertAndSend("/topic/public/" + roomId, leaveMessage);
             logger.info("User Disconnected: " + username);
-            chatController.removeUser(username, roomId);
+            chatController.removeUser(leaveMessage, username, roomId);
         }
     }
 }

@@ -33,6 +33,7 @@ export class WebSocketService {
 
         //this.userListService.addUserToList(this.username);
         this.stompClient.send(`/app/chat/${this.roomId}/addUser`, {}, JSON.stringify(joinMessage));
+        this.stompClient.send(`/app/chat/${this.roomId}/sendMessage`, {}, JSON.stringify(joinMessage));
         elements.connectingElement.classList.add('hidden');
 
         const { avatarElement, usernameElement } = createUserInfo(this.username);
@@ -119,9 +120,9 @@ export class WebSocketService {
 
             case 'SUMMARY':
                 messageElement.classList.add('chat-message');
-                const { aiAvatarElement, aiNameElement } = createUserInfo(message.sender);
+                const { avatarElement: aiAvatarElement, usernameElement: aiNameElement } = createUserInfo(message.sender);
                 messageElement.appendChild(aiAvatarElement);
-                messageElement.appendChild(aiNameElement);
+                messageElement.appendChild(aiAvatarElement);
                 break;
         }
 

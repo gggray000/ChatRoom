@@ -3,9 +3,8 @@
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Put the user status element back to the top of the text area.<br>
-2. Display summary at the frontend.<br>
-3. Refactor ChatController.java.<br>
-4. Add an "END" button for discussion termination. The current way of generating a summary is just sending a "summary" message to the chat room.
+2. Figure out why ChatBot sends two summaries.<br>
+3. Add an "END" button for discussion termination. The current way of generating a summary is just sending a "summary" message to the chat room.
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
@@ -15,6 +14,9 @@
 5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h3>v0.6.1</h3>
+1. Fixed the bug where summary cannot be displayed at the frontend.<br>
+2. Refactored ChatController.java.
 <h3>v0.6</h3>
 1. Implemented LangChain4j with Ollama, using local run Llama3.2 3B.<br>
 2. Next: fix the bug where the summary cannot be displayed at the frontend.

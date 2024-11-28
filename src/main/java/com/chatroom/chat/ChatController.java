@@ -16,13 +16,11 @@ import com.chatroom.bot.*;
 @Controller
 public class ChatController {
     private final Map<String, Set<String>> roomUsers = new ConcurrentHashMap<>();
-    private final SimpMessageSendingOperations messageTemplate;
     private final ChatMessageService chatMessageService;
     private final ChatBotController chatBotController;
 
     @Autowired
-    public ChatController(SimpMessageSendingOperations messagingTemplate, ChatMessageService chatMessageService, ChatBotController chatBotController) {
-        this.messageTemplate = messagingTemplate;
+    public ChatController(ChatMessageService chatMessageService, ChatBotController chatBotController) {
         this.chatMessageService = chatMessageService;
         this.chatBotController = chatBotController;
     }
@@ -44,17 +42,13 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}/endDiscussion")
     @SendTo("/topic/public/{roomId}")
-    public void endDiscussion(@Payload ChatMessage chatMessage,
-                                     @DestinationVariable String roomId,
-                                     SimpMessageHeaderAccessor headerAccessor){
+    public ChatMessage endDiscussion(){
         String summary = chatBotController.chatBot(chatMessageService.exportMessages());
-        messageTemplate.convertAndSend("/topic/public/" + roomId,
-                ChatMessage.builder()
-                        .messageType(MessageType.SUMMARY)
-                        .sender("ChatBot")
-                        .content(summary)
-                        .build()
-        );
+        return ChatMessage.builder()
+                .messageType(MessageType.SUMMARY)
+                .sender("ChatBot")
+                .content(summary)
+                .build();
     }
 
     @MessageMapping("/chat/{roomId}/addUser")
@@ -68,25 +62,16 @@ public class ChatController {
         roomUsers.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet());
         roomUsers.get(roomId).add(chatMessage.getSender());
 
-        messageTemplate.convertAndSend("/topic/public/" + roomId,
-                ChatMessage.builder()
+        return ChatMessage.builder()
                         .messageType(MessageType.USER_LIST)
                         .users(new ArrayList<>(roomUsers.get(roomId)))
-                        .build()
-        );
-
-        return chatMessage;
+                        .build();
     }
 
-    public void removeUser(String username, String roomId) {
+    @MessageMapping("/chat/{roomId}/removeUser")
+    public void removeUser(@Payload ChatMessage chatMessage, String username, String roomId) {
         if (roomId != null && roomUsers.containsKey(roomId)) {
             roomUsers.get(roomId).remove(username);
-            messageTemplate.convertAndSend("/topic/public/" + roomId,
-                    ChatMessage.builder()
-                            .messageType(MessageType.LEAVE)
-                            .sender(username)
-                            .build()
-            );
         }
     }
 
