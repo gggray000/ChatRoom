@@ -8,7 +8,6 @@
 4. Allow the admin to press the ENTER key to create a room.<br>
 5. Figure out how to implement "Role" for the admin, so that the admin is the only one who can generate a summary.<br>
 6. Rename "ChatMessage" to "WebSocketMessage", to distinguish it from "TextChatMessage", which are actually text messages sent by users.<br>
-7. Fix the bug where ChatBot's name is not displayed.
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
@@ -18,6 +17,9 @@
 5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h3>v0.6.2</h3>
+1. Fixed the bug where ChatBot's name was not displayed.<br>
+2. Added a prompt message for chat page, which will be displayed after a request for summary was received.
 <h3>v0.6.1</h3>
 1. Fixed the bug where summary cannot be displayed at the frontend.<br>
 2. Refactored ChatController.java.

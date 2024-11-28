@@ -6,7 +6,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import java.util.*;
@@ -46,7 +45,7 @@ public class ChatController {
         String summary = chatBotController.chatBot(chatMessageService.exportMessages());
         return ChatMessage.builder()
                 .messageType(MessageType.SUMMARY)
-                .sender("ChatBot")
+                .sender("ChatBot - Llama3.2 3B")
                 .content(summary)
                 .build();
     }
@@ -75,7 +74,7 @@ public class ChatController {
         }
     }
 
-    public Set<String> getRoomUsers(String roomId) {
-        return roomUsers.getOrDefault(roomId, Collections.emptySet());
-    }
+//    public Set<String> getRoomUsers(String roomId) {
+//        return roomUsers.getOrDefault(roomId, Collections.emptySet());
+//    }
 }

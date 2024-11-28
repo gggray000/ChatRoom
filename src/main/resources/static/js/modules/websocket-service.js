@@ -91,18 +91,24 @@ export class WebSocketService {
                 break;
 
             case 'CHAT':
-                if(message.content === "summary"){
+                if(message.content === "summary") {
                     const endMessage = {
                         sender: this.username,
                         messageType: 'END',
                         content: null,
                     };
-                    this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage))
+                    this.stompClient.send(`/topic/public/${this.roomId}`, {}, JSON.stringify(endMessage));
+                    this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
                 }
                 messageElement.classList.add('chat-message');
                 const { avatarElement, usernameElement } = createUserInfo(message.sender);
                 messageElement.appendChild(avatarElement);
                 messageElement.appendChild(usernameElement);
+                break;
+
+            case 'END':
+                messageElement.classList.add('event-message');
+                message.content = 'Generating discussion summary...';
                 break;
 
             case 'USER_LIST':
@@ -122,7 +128,7 @@ export class WebSocketService {
                 messageElement.classList.add('chat-message');
                 const { avatarElement: aiAvatarElement, usernameElement: aiNameElement } = createUserInfo(message.sender);
                 messageElement.appendChild(aiAvatarElement);
-                messageElement.appendChild(aiAvatarElement);
+                messageElement.appendChild(aiNameElement);
                 break;
         }
 
