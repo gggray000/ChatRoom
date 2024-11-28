@@ -18,8 +18,7 @@
 1. Fixed the bug where summary cannot be displayed at the frontend.<br>
 2. Refactored ChatController.java.
 <h3>v0.6</h3>
-1. Implemented LangChain4j with Ollama, using local run Llama3.2 3B.<br>
-2. Next: fix the bug where the summary cannot be displayed at the frontend.
+Implemented local run Llama3.2 3B in the application, using LangChain4j with with Ollama.
 <h3>v0.5.2</h3>
 1. Added a ChatBot prototype, using LangChain4j, Ollama and Llama3.2 3B.<br>
 2. Added a feature that allows user to click the URL generated at the admin page.
