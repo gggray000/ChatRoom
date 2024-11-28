@@ -6,7 +6,8 @@
 2. Figure out why ChatBot sends two summaries.<br>
 3. Add an "END" button for discussion termination. The current way of generating a summary is just sending a "summary" message to the chat room.<br>
 4. Allow the admin to press the ENTER key to create a room.<br>
-5. Figure out how to implement "Role" for the admin, so that the admin is the only one who can generate a summary.
+5. Figure out how to implement "Role" for the admin, so that the admin is the only one who can generate a summary.<br>
+6. Rename "ChatMessage" to "WebSocketMessage", to distinguish it from "TextChatMessage", which are actually text messages sent by users.
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
