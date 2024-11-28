@@ -1,28 +1,40 @@
 package com.chatroom.room;
+import com.chatroom.message.Message;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import java.util.List;
 
 @Entity
+@Table(name = "room")
 public class Room {
-
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "room_sequence")
+    @SequenceGenerator(name = "room_sequence",
+            sequenceName = "room_sequence",
+            allocationSize = 1)
+    private Integer id;
     private String name;
 
-    public Room() {
-    }
+    @OneToMany(mappedBy = "room")
+    @JsonManagedReference
+    private List<Message> messages;
 
-    public Room(String id, String name) {
-        this.id = id;
+
+    public Room(String name) {
         this.name = name;
     }
 
-    public String getId() {
+    public Room() {
+
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,5 +44,13 @@ public class Room {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }

@@ -59,9 +59,9 @@ public class AppController {
         Room room = roomService.createRoom(roomName);
         String roomUrl = urlService.createUrl(room);
 
-        return ResponseEntity.ok(Map.of(
+        return ResponseEntity.ok(Map.<String, String>of(
                 "url", roomUrl,
-                "roomId", room.getId(),
+                "roomId", room.getId().toString(),
                 "roomName", room.getName()
         ));
     }

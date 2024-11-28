@@ -18,7 +18,7 @@ public class RoomService {
     public Room createRoom(String name) {
         String roomId = UUID.randomUUID().toString();
         Room room = new Room();
-        room.setId(roomId);
+        room.setId(Integer.valueOf(roomId));
         room.setName(name);
         rooms.put(roomId, room);
         return room;
