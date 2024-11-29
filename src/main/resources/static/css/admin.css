@@ -67,11 +67,12 @@
 /* Messages */
 .admin-container .success-message {
     display: none;
-    margin: 0 auto 1.5rem auto;
     padding: 1rem;
     background: #2ecc71;
     color: white;
     border-radius: 6px;
+    text-align: center;
+    transform: translateY(10px); /* move the message a little downwards, don't know if it works */
 }
 
 .admin-container .room-url {

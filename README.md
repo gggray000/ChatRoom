@@ -5,9 +5,8 @@
 1. Put the user status element back to the top of the text area.<br>
 2. Figure out why ChatBot sends two summaries.<br>
 3. Add an "END" button for discussion termination. The current way of generating a summary is just sending a "summary" message to the chat room.<br>
-4. Allow the admin to press the ENTER key to create a room.<br>
-5. Figure out how to implement "Role" for the admin, so that the admin is the only one who can generate a summary.<br>
-6. Rename "ChatMessage" to "WebSocketMessage", to distinguish it from "TextChatMessage", which are actually text messages sent by users.<br>
+4. Figure out how to implement "Role" for the admin, so that the admin is the only one who can generate a summary.<br>
+5. Rename "ChatMessage" to "WebSocketMessage", to distinguish it from "TextChatMessage", which are actually text messages sent by users.<br>
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
@@ -17,6 +16,9 @@
 5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h3>v0.6.3</h3>
+1. Added a feature which allows the admin to press ENTER key to create a chat room.<br>
+2. Redesigned the admin page (after room creation).
 <h3>v0.6.2</h3>
 1. Fixed the bug where ChatBot's name was not displayed.<br>
 2. Added a prompt message for chat page, which will be displayed after a request for summary was received.

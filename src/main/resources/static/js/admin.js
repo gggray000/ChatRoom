@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const qrCodeContainer = document.getElementById('qrCodeContainer');
     const successMessage = document.getElementById('successMessage');
 
-    createRoomButton.addEventListener('click', async function() {
+    async function createRoom() {
         const roomName = roomNameInput.value.trim();
 
         if (!roomName) {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name: roomName })
+                body: JSON.stringify({name: roomName})
             });
 
             if (!response.ok) {
@@ -30,9 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Show success message
             successMessage.style.display = 'block';
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 3000);
+            roomNameInput.style.display = 'none';
+            createRoomButton.style.display = 'none';
+            // setTimeout(() => {
+            //     successMessage.style.display = 'none';
+            // }, 3000);
 
             // Display room URL
             const roomUrl = window.location.origin + data.url;
@@ -54,5 +56,15 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             alert('Failed to create room. Please try again.');
         }
+    }
+
+    createRoomButton.addEventListener('click', createRoom);
+    roomNameInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent form submission if inside a form
+            createRoom();
+        }
     });
 });
+
+
