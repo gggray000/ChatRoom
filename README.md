@@ -4,7 +4,7 @@
 <h3>Short-term</h3>
 1. Put the user status element back to the top of the text area.<br>
 2. Figure out why ChatBot sends two summaries.<br>
-3. Add an "END" button for discussion termination. The current way of generating a summary is just sending a "summary" message to the chat room.<br>
+3. Add an "END" button for the admin to end discussion.<br>
 4. Figure out how to implement "Role" for the admin, so that the admin is the only one who can generate a summary.<br>
 5. Rename "ChatMessage" to "WebSocketMessage", to distinguish it from "TextChatMessage", which are actually text messages sent by users.<br>
 
