@@ -45,3 +45,5 @@ Thumbs.db
 *.properties.local
 application-*.properties
 !application.propertiesld.js
+
+Project Structure.txt
