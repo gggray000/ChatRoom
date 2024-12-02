@@ -1,10 +1,10 @@
 package com.chatroom.chat;
 
-public class TextChatMessage {
+public class TextMessage {
     String userName;
     String content;
 
-    public TextChatMessage(String userName, String content) {
+    public TextMessage(String userName, String content) {
         this.userName = userName;
         this.content = content;
     }

@@ -1,12 +1,7 @@
 package com.chatroom.bot;
 
-import com.chatroom.chat.TextChatMessage;
-import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.spring.AiService;
-import org.springframework.context.annotation.ComponentScan;
-
-import java.util.List;
 
 @AiService
 public interface ChatBot {

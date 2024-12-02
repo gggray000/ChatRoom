@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ChatMessageService {
+public class TextMessageService {
 
-    public List<TextChatMessage> messageList = new ArrayList<>();
+    public List<TextMessage> messageList = new ArrayList<>();
 
-    public void saveTextChatMessage(TextChatMessage msg){
+    public void saveTextMessage(TextMessage msg){
         messageList.add(msg);
     }
 
-    public List<TextChatMessage> exportMessages(){
+    public List<TextMessage> exportMessages(){
         return new ArrayList<>(messageList);
     }
 

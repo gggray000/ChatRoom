@@ -2,12 +2,10 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Put the user status element back to the top of the text area.<br>
-2. Figure out why ChatBot sends two summaries.<br>
-3. Figure out how to set @SystemMessage for ChatBot from the admin page.<br>
-4. Figure out how to implement "Role" for the application, so that the admin is the only one who can generate a summary.<br>
-5. Add an "End Discussion" button for the admin.<br>
-6. Rename "ChatMessage" to "WebSocketMessage", to distinguish it from "TextChatMessage", which are actually text messages sent by users.<br>
+1. Figure out why ChatBot sends two summaries.<br>
+2. Figure out how to set @SystemMessage for ChatBot from the admin page.<br>
+3. Figure out how to implement "Role" for the application, so that the admin is the only one who can generate a summary.<br>
+4. Add an "End Discussion" button for the admin.<br>
 
 <h3>Long-term</h3>
 1. Migrate from JavaScript to React.<br>
@@ -17,6 +15,10 @@
 5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <h2>Update Log</h2>
+<h4>v0.6.4</h3>
+1. Redesigned the chat page, so that current user info is displayed at the left bottom.<br>
+2. Now the user list enables scrolling (haven't tested yet).<br>
+3. Renamed "ChatMessage" to "WebSocketMessage", "TextChatMessage" to "TextMessage", which are actually text messages sent by users.<br>
 <h3>v0.6.3</h3>
 1. Added a feature which allows the admin to press ENTER key to create a chat room.<br>
 2. Redesigned the admin page (after room creation).

@@ -1,7 +1,7 @@
 package com.chatroom.websocket;
 
 import com.chatroom.chat.ChatController;
-import com.chatroom.chat.ChatMessage;
+import com.chatroom.chat.WebSocketMessage;
 import com.chatroom.chat.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class WebSocketEventListener {
         String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
 
         if (username != null && roomId != null) {
-            ChatMessage leaveMessage = ChatMessage.builder()
+            WebSocketMessage leaveMessage = WebSocketMessage.builder()
                     .messageType(MessageType.LEAVE)
                     .sender(username)
                     .build();
