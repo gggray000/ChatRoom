@@ -9,7 +9,7 @@ import java.util.List;
 //@Component
 public class ChatBotTools {
     //@Tool
-    public static String parseTextChatMessages(List<TextMessage> messages) {
+    public static String parseTextMessages(List<TextMessage> messages) {
         StringBuilder chatHistory = new StringBuilder();
         if (messages != null) {
             for (TextMessage message : messages) {

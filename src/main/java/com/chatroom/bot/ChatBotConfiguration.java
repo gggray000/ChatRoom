@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class ChatBotConfiguration {
     @Bean
     ChatMemory chatMemory() {
-        return MessageWindowChatMemory.withMaxMessages(20);
+        return MessageWindowChatMemory.withMaxMessages(50);
     }
 
 }
