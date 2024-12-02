@@ -14,10 +14,10 @@
 3. Deployment with docker container, using the virtual machine provided by the professor.<br>
 4. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
-**Pending**: Migrate from JavaScript to React.<br>
+**Pending**: Migrate frontend from JavaScript to React.<br>
 
 <h2>Update Log</h2>
-<h4>v0.6.4</h3>
+<h3>v0.6.4</h3>
 1. Redesigned the chat page, so that current user info is displayed at the left bottom.<br>
 2. Now the user list enables scrolling (haven't tested yet).<br>
 3. Renamed "ChatMessage" to "WebSocketMessage", "TextChatMessage" to "TextMessage", which are actually text messages sent by users.<br>
