@@ -2,11 +2,10 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Figure out why ChatBot sends two summaries.<br>
-2. Figure out how to set @SystemMessage for ChatBot from the admin page.<br>
-3. Figure out how to implement "Role" for the application, so that the admin is the only one who can generate a summary.<br>
-4. Add an "End Discussion" button for the admin.<br>
-5. Implement FileService which generates PDF file from summary and URL for download.<br>
+1. Figure out how to set @SystemMessage for ChatBot from the admin page.<br>
+2. Figure out how to implement "Role" for the application, so that the admin is the only one who can generate a summary.<br>
+3. Add an "End Discussion" button for the admin.<br>
+4. Implement FileService which generates PDF file from summary and URL for download.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -17,6 +16,8 @@
 **Pending**: Migrate frontend from JavaScript to React.<br>
 
 <h2>Update Log</h2>
+<h3>v0.6.5</h3>
+Fixed a bug that leads to duplicated "Generating summary..." messages and summaries.
 <h3>v0.6.4</h3>
 1. Redesigned the chat page, so that current user info is displayed at the left bottom.<br>
 2. Now the user list enables scrolling (haven't tested yet).<br>

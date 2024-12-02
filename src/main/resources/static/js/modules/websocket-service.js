@@ -97,7 +97,7 @@ export class WebSocketService {
                         messageType: 'END',
                         content: null,
                     };
-                    this.stompClient.send(`/topic/public/${this.roomId}`, {}, JSON.stringify(endMessage));
+                    this.stompClient.send(`/app/chat/${this.roomId}/relayEndMessage`, {}, JSON.stringify(endMessage));
                     this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
                 }
                 messageElement.classList.add('chat-message');

@@ -39,9 +39,16 @@ public class ChatController {
         return webSocketMessage;
     }
 
+    @MessageMapping("/chat/{roomId}/relayEndMessage")
+    @SendTo("/topic/public/{roomId}")
+    public WebSocketMessage relayEndMessage(@Payload WebSocketMessage endMessage) {
+        return endMessage;
+    }
+
     @MessageMapping("/chat/{roomId}/endDiscussion")
     @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage endDiscussion(){
+    public WebSocketMessage generateSummary(){
+
         String summary = chatBotController.chatBot(textMessageService.exportMessages());
         return WebSocketMessage.builder()
                 .messageType(MessageType.SUMMARY)
@@ -52,14 +59,14 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}/addUser")
     @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage addUser(@Payload WebSocketMessage chatMessage,
+    public WebSocketMessage addUser(@Payload WebSocketMessage webSocketMessage,
                                     @DestinationVariable String roomId,
                                     SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        headerAccessor.getSessionAttributes().put("username", webSocketMessage.getSender());
         headerAccessor.getSessionAttributes().put("roomId", roomId);
 
         roomUsers.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet());
-        roomUsers.get(roomId).add(chatMessage.getSender());
+        roomUsers.get(roomId).add(webSocketMessage.getSender());
 
         return WebSocketMessage.builder()
                         .messageType(MessageType.USER_LIST)
