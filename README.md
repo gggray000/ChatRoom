@@ -20,16 +20,16 @@
 Fixed a bug that leads to duplicated "Generating summary..." messages and summaries.
 <h3>v0.6.4</h3>
 1. Redesigned the chat page, so that current user info is displayed at the left bottom.<br>
-2. Now the user list enables scrolling (haven't tested yet).<br>
-3. Renamed "ChatMessage" to "WebSocketMessage", "TextChatMessage" to "TextMessage", which are actually text messages sent by users.<br>
+2. Now the user list enables scrolling.<br>
+3. Renamed "ChatMessage" to "WebSocketMessage", and "TextChatMessage" to "TextMessage", which are actually text messages sent by users.<br>
 <h3>v0.6.3</h3>
-1. Added a feature which allows the admin to press ENTER key to create a chat room.<br>
+1. Added a feature that allows the admin to press ENTER key to create a chat room.<br>
 2. Redesigned the admin page (after room creation).
 <h3>v0.6.2</h3>
 1. Fixed the bug where ChatBot's name was not displayed.<br>
-2. Added a prompt message for chat page, which will be displayed after a request for summary was received.
+2. Added a prompt message for the chat page, which will be displayed after a request for a summary is received.
 <h3>v0.6.1</h3>
-1. Fixed the bug where summary cannot be displayed at the frontend.<br>
+1. Fixed the bug where the summary cannot be displayed at the front end.<br>
 2. Refactored ChatController.java.
 <h3>v0.6</h3>
 Implemented local run Llama3.2 3B in the application, using LangChain4j with with Ollama.
@@ -52,7 +52,7 @@ Fixed a bug where the left messages weren't displayed.
 2. Added admin-page prototype, more features on the way.
 <h3>v0.4</h3>
 1. Changed index.html, added main2.css, brand new UI design.<br>
-2. Added typing status tag in the user list.
+2. Added typing status indicator to the user list.
 <h3>v0.3</h3>
 1. Added a global user list to the chat page.<br>
 2. Refractored the project again, based on the domain partition principle.
