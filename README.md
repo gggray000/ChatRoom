@@ -6,13 +6,15 @@
 2. Figure out how to set @SystemMessage for ChatBot from the admin page.<br>
 3. Figure out how to implement "Role" for the application, so that the admin is the only one who can generate a summary.<br>
 4. Add an "End Discussion" button for the admin.<br>
+5. Implement FileService which generates PDF file from summary and URL for download.<br>
 
 <h3>Long-term</h3>
-1. Migrate from JavaScript to React.<br>
-2. JPA implementation for chat history.<br>
-3. Downloadable file and URL generation.<br>
-4. Deployment with docker container, using the virtual machine provided by the professor.<br>
-5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
+1. JPA implementation for chat history.<br>
+2. Use markdown format for the PDF file.<br>
+3. Deployment with docker container, using the virtual machine provided by the professor.<br>
+4. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
+
+**Pending**: Migrate from JavaScript to React.<br>
 
 <h2>Update Log</h2>
 <h4>v0.6.4</h3>
