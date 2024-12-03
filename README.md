@@ -2,9 +2,8 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Figure out how to set @SystemMessage for ChatBot from the admin page.<br>
-2. Use JWT to implement role distinction, so that admin is the only one who can generate a summary.<br>
-3. Redesign chat page layout on mobile device.
+1. Implement SystemMessageProvider, allowing admin to set prompt for ChatBot at admin page.<br>
+3. Redesign chat page layout on mobile devices.<br>
 4. Implement FileService which generates PDF file from summary and URL for download.<br>
 
 <h3>Long-term</h3>
@@ -16,6 +15,8 @@
 **Pending**: Migrate frontend from JavaScript to React.<br>
 
 <h2>Update Log</h2>
+<h3>v0.7</h3>
+Implemented an easy JWT service, now only the admin can generate a summary.
 <h3>v0.6.5</h3>
 Fixed a bug that leads to duplicated "Generating summary..." messages and summaries.
 <h3>v0.6.4</h3>
