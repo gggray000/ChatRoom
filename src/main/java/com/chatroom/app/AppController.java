@@ -62,7 +62,8 @@ public class AppController {
         return ResponseEntity.ok(Map.of(
                 "url", roomUrl,
                 "roomId", room.getId(),
-                "roomName", room.getName()
+                "roomName", room.getName(),
+                "adminToken", room.getAdminToken()
         ));
     }
 

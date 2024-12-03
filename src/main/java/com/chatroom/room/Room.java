@@ -9,6 +9,7 @@ public class Room {
     @Id
     private String id;
     private String name;
+    private String adminToken;
 
     public Room() {
     }
@@ -32,5 +33,13 @@ public class Room {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAdminToken() {
+        return adminToken;
+    }
+
+    public void setAdminToken(String adminToken) {
+        this.adminToken = adminToken;
     }
 }

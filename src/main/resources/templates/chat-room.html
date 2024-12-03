@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Room</title>
     <link rel="stylesheet" href="/css/main2.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
 <script th:inline="javascript">
@@ -41,6 +39,9 @@
         <div class="main-chat-area">
             <div class="chat-header">
                 <h2></h2>
+                <div class="admin-controls hidden">
+                    <button id="endDiscussionBtn" class="admin-btn">Generate Summary</button>
+                </div>
             </div>
 
             <div class="connecting">
@@ -61,6 +62,12 @@
     </div>
 </div>
 
+<script th:inline="javascript">
+    window.ROOM_ID = /*[[${roomId}]]*/ null;
+    window.ROOM_NAME = /*[[${roomName}]]*/ null;
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script type="module" src="/js/main.js"></script>
 </body>
 </html>

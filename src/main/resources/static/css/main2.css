@@ -1,4 +1,3 @@
-/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
@@ -12,7 +11,6 @@ body {
     color: #333;
 }
 
-/* Username page styles */
 #username-page {
     display: flex;
     align-items: center;
@@ -37,7 +35,6 @@ body {
     color: #2c3e50;
 }
 
-/* Form styles */
 .form-group {
     margin-bottom: 1rem;
 }
@@ -80,7 +77,6 @@ button:hover {
     opacity: 0.9;
 }
 
-/* Chat page layout */
 #chat-page {
     height: 100vh;
 }
@@ -91,7 +87,6 @@ button:hover {
     background: white;
 }
 
-/* User list sidebar */
 .user-list-sidebar {
     width: 250px;
     background: #2c3e50;
@@ -110,11 +105,10 @@ button:hover {
     flex: 1;
     padding: 1rem;
     overflow-y: auto;
-    min-height: 0; /* This is crucial for enabling scroll in flex container */
-    max-height: calc(100% - 130px); /* Subtract header and user-info heights */
+    min-height: 0;
+    max-height: calc(100% - 130px);
 }
 
-/* User info section */
 #user-info {
     padding: 1rem;
     background: #243342;
@@ -123,8 +117,8 @@ button:hover {
     align-items: center;
     gap: 0.5rem;
     margin-top: auto;
-    flex-shrink: 0; /* Prevent user-info from shrinking */
-    height: 80px; /* Fixed height for user info */
+    flex-shrink: 0;
+    height: 80px;
 }
 
 #user-info .avatar {
@@ -144,7 +138,6 @@ button:hover {
     color: white;
 }
 
-/* User list items and avatars */
 .user-list-item {
     position: relative;
     display: flex;
@@ -186,7 +179,6 @@ button:hover {
     opacity: 1;
 }
 
-/* Main chat area */
 .main-chat-area {
     flex: 1;
     display: flex;
@@ -198,11 +190,30 @@ button:hover {
     padding: 1rem;
     background: #f8f9fa;
     border-bottom: 1px solid #e1e1e1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .chat-header h2 {
     margin: 0;
     color: #2c3e50;
+}
+
+.admin-btn {
+    background: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.admin-btn:hover {
+    background: #c82333;
 }
 
 .connecting {
@@ -211,7 +222,6 @@ button:hover {
     color: #666;
 }
 
-/* Message area */
 #messageArea {
     flex: 1;
     overflow-y: auto;
@@ -219,7 +229,6 @@ button:hover {
     list-style-type: none;
 }
 
-/* Chat messages */
 .chat-message {
     position: relative;
     padding-left: 60px;
@@ -255,7 +264,6 @@ button:hover {
     color: #555;
 }
 
-/* Event messages */
 .event-message {
     text-align: center;
     color: #777;
@@ -263,7 +271,6 @@ button:hover {
     margin: 0.5rem 0;
 }
 
-/* Message form */
 #messageForm {
     padding: 1rem;
     background: #f8f9fa;
@@ -297,12 +304,10 @@ button:hover {
     flex-shrink: 0;
 }
 
-/* Utility classes */
 .hidden {
     display: none !important;
 }
 
-/* Responsive design */
 @media screen and (max-width: 768px) {
     .chat-container {
         flex-direction: column;
@@ -314,7 +319,7 @@ button:hover {
     }
 
     #user-list {
-        max-height: calc(250px - 130px); /* Adjust based on sidebar max-height minus header and user-info */
+        max-height: calc(250px - 130px);
         min-height: 0;
     }
 

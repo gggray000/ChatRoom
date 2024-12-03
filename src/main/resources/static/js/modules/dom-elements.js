@@ -8,5 +8,6 @@ export const elements = {
     connectingElement: document.querySelector('.connecting'),
     userInfoRow: document.querySelector('#user-info'),
     userListElement: document.querySelector('#user-list'),
-    userCountElement: document.querySelector('#user-count')
+    userCountElement: document.querySelector('#user-count'),
+    endButton: document.querySelector('#endDiscussionBtn')
 };

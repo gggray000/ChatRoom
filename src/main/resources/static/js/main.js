@@ -12,8 +12,13 @@ const roomName = window.ROOM_NAME;
 function connect(event) {
     event.preventDefault();
     const username = elements.usernameForm.querySelector('#name').value.trim();
+    const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
 
     if (username) {
+        const adminControls = document.querySelector('.admin-controls');
+        if (adminToken) {
+            adminControls.classList.remove('hidden');
+        }
         elements.usernamePage.classList.add('hidden');
         elements.chatPage.classList.remove('hidden');
         document.querySelector('.chat-header h2').textContent = roomName;
@@ -45,6 +50,7 @@ function initializeEventListeners() {
         elements.messageInput.addEventListener('input', () => inputHandler.handleTyping());
         elements.messageInput.addEventListener('keydown', (e) => inputHandler.handleKeyPress(e));
         elements.messageForm.addEventListener('submit', sendMessage);
+        elements.endButton.addEventListener('click',() => webSocketService.endDiscussion());
     });
 }
 

@@ -13,7 +13,11 @@ export class WebSocketService {
         this.username = username;
         const socket = new SockJS('/ws');
         this.stompClient = Stomp.over(socket);
-        this.stompClient.connect({},
+
+        const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
+        const headers = adminToken ? { 'adminToken': adminToken } : {};
+
+        this.stompClient.connect(headers,
             () => this.onConnected(),
             () => this.onError()
         );
@@ -73,6 +77,16 @@ export class WebSocketService {
         this.stompClient.send(`/app/chat/${this.roomId}/sendMessage`, {}, JSON.stringify(typingMessage));
     }
 
+    endDiscussion(){
+        const endMessage = {
+            sender: this.username,
+            messageType: 'END',
+            content: null,
+        };
+        this.stompClient.send(`/app/chat/${this.roomId}/relayEndMessage`, {}, JSON.stringify(endMessage));
+        this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
+    }
+
     onMessageReceived(payload) {
         const message = JSON.parse(payload.body);
         const messageElement = document.createElement('li');
@@ -91,15 +105,6 @@ export class WebSocketService {
                 break;
 
             case 'CHAT':
-                if(message.content === "summary") {
-                    const endMessage = {
-                        sender: this.username,
-                        messageType: 'END',
-                        content: null,
-                    };
-                    this.stompClient.send(`/app/chat/${this.roomId}/relayEndMessage`, {}, JSON.stringify(endMessage));
-                    this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
-                }
                 messageElement.classList.add('chat-message');
                 const { avatarElement, usernameElement } = createUserInfo(message.sender);
                 messageElement.appendChild(avatarElement);

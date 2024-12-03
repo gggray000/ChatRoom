@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function createRoom() {
         const roomName = roomNameInput.value.trim();
-
         if (!roomName) {
             alert('Please enter a room name');
             return;
@@ -16,42 +15,35 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch('/admin/create-room', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({name: roomName})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: roomName })
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
 
-            // Show success message
-            successMessage.style.display = 'block';
-            roomNameInput.style.display = 'none';
-            createRoomButton.style.display = 'none';
-            // setTimeout(() => {
-            //     successMessage.style.display = 'none';
-            // }, 3000);
+            if (data.adminToken && data.roomId) {
+                localStorage.setItem('roomAdminToken_' + data.roomId, data.adminToken);
 
-            // Display room URL
-            const roomUrl = window.location.origin + data.url;
-            const roomUrlLink = roomUrlContainer.querySelector('a');
-            roomUrlLink.href = roomUrl;
-            roomUrlLink.textContent = roomUrl;
-            roomUrlContainer.style.display = 'block';
+                successMessage.style.display = 'block';
+                roomNameInput.style.display = 'none';
+                createRoomButton.style.display = 'none';
 
-            // Display QR Code
-            const qrCode = document.getElementById('qrCode');
-            const roomId = data.roomId; // Get roomId from URL
-            qrCode.src = `/admin/qrcode/${roomId}`;// Sending get request to AppController.java
-            qrCodeContainer.style.display = 'block';
+                const roomUrl = window.location.origin + data.url;
+                const roomUrlLink = roomUrlContainer.querySelector('a');
+                roomUrlLink.href = roomUrl;
+                roomUrlLink.textContent = roomUrl;
+                roomUrlContainer.style.display = 'block';
 
-            // Clear input
-            roomNameInput.value = '';
-
+                const qrCodeUrl = `/admin/qrcode/${data.roomId}?roomName=${encodeURIComponent(roomName)}`;
+                const qrCodeImg = document.createElement('img');
+                qrCodeImg.src = qrCodeUrl;
+                qrCodeContainer.appendChild(qrCodeImg);
+                qrCodeContainer.style.display = 'block';
+            }
         } catch (error) {
             console.error('Error:', error);
             alert('Failed to create room. Please try again.');
@@ -59,12 +51,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     createRoomButton.addEventListener('click', createRoom);
-    roomNameInput.addEventListener('keypress', function (event) {
+    roomNameInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent form submission if inside a form
+            event.preventDefault();
             createRoom();
         }
     });
 });
-
-
