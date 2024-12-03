@@ -3,8 +3,8 @@
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Figure out how to set @SystemMessage for ChatBot from the admin page.<br>
-2. Figure out how to implement "Role" for the application, so that the admin is the only one who can generate a summary.<br>
-3. Add an "End Discussion" button for the admin.<br>
+2. Use JWT to implement role distinction, so that admin is the only one who can generate a summary.<br>
+3. Redesign chat page layout on mobile device.
 4. Implement FileService which generates PDF file from summary and URL for download.<br>
 
 <h3>Long-term</h3>
