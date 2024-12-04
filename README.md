@@ -11,7 +11,7 @@
 3. Deployment with docker container, using the virtual machine provided by the professor.<br>
 4. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
-**Pending**
+<br>**Pending**
 1. Migrate frontend from JavaScript to React.<br>
 2. Use HTTPS instead of HTTP.<br>
 
