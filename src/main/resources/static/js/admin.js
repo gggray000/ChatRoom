@@ -4,19 +4,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const roomUrlContainer = document.getElementById('roomUrl');
     const qrCodeContainer = document.getElementById('qrCodeContainer');
     const successMessage = document.getElementById('successMessage');
+    const systemPromptInput = document.getElementById('systemPrompt');
 
     async function createRoom() {
         const roomName = roomNameInput.value.trim();
+        const systemPrompt = systemPromptInput ? systemPromptInput.value.trim() : '';
         if (!roomName) {
             alert('Please enter a room name');
             return;
         }
 
         try {
+            if (systemPrompt) {
+                await fetch('/admin/set-system-prompt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: systemPrompt })
+                });
+            }
             const response = await fetch('/admin/create-room', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: roomName })
+                body: JSON.stringify({
+                    name: roomName,
+                    systemPrompt: systemPrompt
+                })
             });
 
             if (!response.ok) {
@@ -30,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 successMessage.style.display = 'block';
                 roomNameInput.style.display = 'none';
+                systemPromptInput.style.display = 'none';
                 createRoomButton.style.display = 'none';
 
                 const roomUrl = window.location.origin + data.url;

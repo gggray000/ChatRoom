@@ -2,9 +2,8 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Implement SystemMessageProvider, allowing admin to set prompt for ChatBot at admin page.<br>
-3. Redesign chat page layout on mobile devices.<br>
-4. Implement FileService which generates PDF file from summary and URL for download.<br>
+1. Redesign chat page layout on mobile devices.<br>
+2. Implement FileService which generates PDF file from summary and URL for download.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -17,6 +16,8 @@
 2. Use HTTPS instead of HTTP.<br>
 
 <h2>Update Log</h2>
+<h3>v0.7.2</h3>
+Added a feature that admin can provide instruction to ChatBot at the admin page<br>
 <h3>v0.7.1</h3>
 Enhanced security by implementing server-side JWT validation, and protecting frontend admin operation.
 <h3>v0.7</h3>

@@ -1,12 +1,13 @@
 package com.chatroom.bot;
 
 import com.chatroom.chat.TextMessage;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 // Pending to implement for now.
 
-//@Component
+@Component
 public class ChatBotTools {
     //@Tool
     public static String parseTextMessages(List<TextMessage> messages) {
@@ -20,4 +21,5 @@ public class ChatBotTools {
         }
         return chatHistory.toString();
     }
+
 }

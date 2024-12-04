@@ -42,8 +42,9 @@
 /* Button */
 .admin-container .form-control,
 .admin-container button {
-    width: 100%; /* Matches their widths */
-    box-sizing: border-box; /* Includes padding and border in width calculation */
+    display: block;
+    width: 90%;
+    margin: 1rem auto;
 }
 
 .admin-container button {

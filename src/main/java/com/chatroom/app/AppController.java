@@ -1,5 +1,8 @@
 package com.chatroom.app;
 
+import com.chatroom.bot.ChatBotConfiguration;
+import com.chatroom.bot.ChatBotController;
+import com.chatroom.bot.ChatBotTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +30,9 @@ public class AppController {
 
     @Autowired
     private QrCodeService qrCodeService;
+
+    @Autowired
+    private ChatBotConfiguration chatBotConfiguration;
 
     @GetMapping("/")
     public String home() {
