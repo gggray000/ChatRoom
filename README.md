@@ -12,9 +12,13 @@
 3. Deployment with docker container, using the virtual machine provided by the professor.<br>
 4. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
-**Pending**: Migrate frontend from JavaScript to React.<br>
+**Pending**
+1. Migrate frontend from JavaScript to React.<br>
+2. Use HTTPS instead of HTTP.<br>
 
 <h2>Update Log</h2>
+<h3>v0.7.1</h3>
+Enhanced security by implementing server-side JWT validation, and protecting frontend admin operation.
 <h3>v0.7</h3>
 Implemented an easy JWT service, now only the admin can generate a summary.
 <h3>v0.6.5</h3>

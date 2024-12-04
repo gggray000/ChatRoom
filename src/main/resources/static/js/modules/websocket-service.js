@@ -15,11 +15,21 @@ export class WebSocketService {
         this.stompClient = Stomp.over(socket);
 
         const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
-        const headers = adminToken ? { 'adminToken': adminToken } : {};
+        const headers = adminToken ? {
+            'adminToken': adminToken,
+            'roomId': roomId
+        } : {};
 
         this.stompClient.connect(headers,
             () => this.onConnected(),
-            () => this.onError()
+            () => {
+                this.onError();
+                if (error.includes("Invalid admin token")) {
+                    // Clear invalid token
+                    localStorage.removeItem('roomAdminToken_' + roomId);
+                    // Handle invalid token error (e.g., show message to user)
+                }
+            }
         );
     }
 

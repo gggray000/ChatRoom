@@ -13,9 +13,13 @@ public class JwtService {
     private String secret;
 
     public String generateToken(String roomId) {
+        long expirationInMs = 60 * 60 * 1000; // 1 hour in milliseconds
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expirationInMs);
         return Jwts.builder()
                 .setSubject(roomId)
                 .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }

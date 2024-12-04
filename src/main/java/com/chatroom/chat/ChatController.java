@@ -1,6 +1,7 @@
 package com.chatroom.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -8,6 +9,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import com.chatroom.bot.*;
@@ -41,14 +43,25 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}/relayEndMessage")
     @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage relayEndMessage(@Payload WebSocketMessage endMessage) {
-        return endMessage;
-    }
+    public WebSocketMessage relayEndMessage(@Payload WebSocketMessage endMessage,
+                                            @DestinationVariable String roomId,
+                                            SimpMessageHeaderAccessor headerAccessor) {
+        // Get Principal set by WebSocketAuthInterceptor
+        Principal user = headerAccessor.getUser();
+        // Check if user is admin for this room
+        if (user == null || !roomId.equals(user.getName())) {
+            throw new MessageDeliveryException("Unauthorized: Only admin can end discussion");
+        }
+        return endMessage;    }
 
     @MessageMapping("/chat/{roomId}/endDiscussion")
     @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage generateSummary(){
-
+    public WebSocketMessage generateSummary(@DestinationVariable String roomId,
+                                            SimpMessageHeaderAccessor headerAccessor){
+        Principal user = headerAccessor.getUser();
+        if (user == null || !roomId.equals(user.getName())) {
+            throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
+        }
         String summary = chatBotController.chatBot(textMessageService.exportMessages());
         return WebSocketMessage.builder()
                 .messageType(MessageType.SUMMARY)
