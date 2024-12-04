@@ -72,7 +72,7 @@ Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=Tyw
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in the JS file.
 
 <h2>Acknowledgement</h2>
-@jwtk
+@jwtk<br>
 <URL>https://github.com/jwtk/jjwt</URL><br>
 @ali-bouali<br>
 <URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL><br>
