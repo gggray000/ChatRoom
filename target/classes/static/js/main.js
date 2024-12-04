@@ -51,6 +51,9 @@ function initializeEventListeners() {
         elements.messageInput.addEventListener('keydown', (e) => inputHandler.handleKeyPress(e));
         elements.messageForm.addEventListener('submit', sendMessage);
         elements.endButton.addEventListener('click',() => webSocketService.endDiscussion());
+       elements.sidebarToggle.addEventListener('click', () =>
+                                                {elements.userListSidebar.classList.toggle('expanded');
+        });
     });
 }
 

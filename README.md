@@ -2,8 +2,7 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Redesign chat page layout on mobile devices.<br>
-2. Implement FileService which generates PDF file from summary and URL for download.<br>
+1. Implement FileService which generates PDF file from summary and URL for download.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -16,6 +15,8 @@
 2. Use HTTPS instead of HTTP.<br>
 
 <h2>Update Log</h2>
+<h3>v0.7.3</h3>
+Redesigned chat page for mobile phone.
 <h3>v0.7.2</h3>
 Added a feature that the admin can provide instructions to ChatBot on the admin page.<br>
 <h3>v0.7.1</h3>

@@ -10,5 +10,8 @@ export const elements = {
     userListElement: document.querySelector('#user-list'),
     userCountElement: document.querySelector('#user-count'),
     endButton: document.querySelector('#endDiscussionBtn'),
-    systemMessage:document.querySelector('#systemPrompt')
+    systemMessage:document.querySelector('#systemPrompt'),
+    sidebarToggle: document.querySelector('.toggle-sidebar'),
+    userListSidebar: document.querySelector('.user-list-sidebar')
+
 };
