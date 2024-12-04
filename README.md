@@ -17,7 +17,7 @@
 
 <h2>Update Log</h2>
 <h3>v0.7.2</h3>
-Added a feature that admin can provide instruction to ChatBot at the admin page<br>
+Added a feature that admin can provide instruction to ChatBot at the admin page.<br>
 <h3>v0.7.1</h3>
 Enhanced security by implementing server-side JWT validation, and protecting frontend admin operation.
 <h3>v0.7</h3>
