@@ -42,7 +42,7 @@ public class ChatBotController {
     }
 
     @PostMapping("http://localhost:11434/api/chat")
-    public String chatBot(List<TextMessage> messageList) {
+    public String makeSummary(List<TextMessage> messageList) {
 //        String messageAsString = parseTextMessages(messageList);
         return chatBot.summarize(messageList.toString());
     }

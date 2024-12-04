@@ -62,7 +62,7 @@ public class ChatController {
         if (user == null || !roomId.equals(user.getName())) {
             throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
         }
-        String summary = chatBotController.chatBot(textMessageService.exportMessages());
+        String summary = chatBotController.makeSummary(textMessageService.exportMessages());
         return WebSocketMessage.builder()
                 .messageType(MessageType.SUMMARY)
                 .sender("ChatBot - Llama3.2 3B")
