@@ -3,8 +3,8 @@
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Implement SystemMessageProvider, allowing admin to set prompt for ChatBot at admin page.<br>
-3. Redesign chat page layout on mobile devices.<br>
-4. Implement FileService which generates PDF file from summary and URL for download.<br>
+2. Redesign chat page layout on mobile devices.<br>
+3. Implement FileService which generates PDF file from summary and URL for download.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -13,7 +13,7 @@
 4. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 **Pending**
-1. Migrate frontend from JavaScript to React.<br>
+1. Migrate frontend from plain JavaScript to React.<br>
 2. Use HTTPS instead of HTTP.<br>
 
 <h2>Update Log</h2>
