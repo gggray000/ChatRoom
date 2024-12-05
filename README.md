@@ -2,7 +2,8 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Implement FileService which generates PDF file from summary and URL for download.<br>
+1. Generate downlod link when summary.pdf is ready.<br>
+2. Handle concurrency in cases like setting SystemMessages, generating summaries/PDF files.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -15,6 +16,10 @@
 2. Use HTTPS instead of HTTP.<br>
 
 <h2>Update Log</h2>
+<h3>v0.8</h3>
+1. Implemented PDF generation service.<br>
+2. Added markdown formatting for summary on the chat page.<br>
+3. Fixed a bug where the ChatBot is not built without an admin propmt.<br>
 <h3>v0.7.3</h3>
 Redesigned chat page for mobile phone.
 <h3>v0.7.2</h3>
@@ -73,6 +78,12 @@ Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=Tyw
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in the JS file.
 
 <h2>Acknowledgement</h2>
+@vsch<br>
+<URL>https://github.com/vsch/flexmark-java</URL><br>
+@cure53<br>
+<URL>https://github.com/cure53/DOMPurify</URL><br>
+@markdown-it<br>
+<URL>https://github.com/markdown-it/markdown-it</URL><br>
 @jwtk<br>
 <URL>https://github.com/jwtk/jjwt</URL><br>
 @ali-bouali<br>

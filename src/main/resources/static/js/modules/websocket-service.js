@@ -7,6 +7,14 @@ export class WebSocketService {
         this.username = null;
         this.userListService = userListService;
         this.roomId = window.ROOM_ID;
+
+        // Initialize markdown-it with presets
+        this.md = window.markdownit({
+            html: false,        // Disable HTML tags in source
+            breaks: true,       // Convert '\n' in paragraphs into <br>
+            linkify: true,      // Autoconvert URL-like text to links
+            typographer: true,  // Enable smartquotes and other replacements
+        });
     }
 
     connect(username, roomId) {
@@ -97,6 +105,37 @@ export class WebSocketService {
         this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
     }
 
+    handleSummary(message){
+        const summaryElement = document.createElement('li');
+        summaryElement.classList.add('chat-message');
+        const { avatarElement: botAvatarElement, usernameElement: botNameElement }
+            = createUserInfo(message.sender);
+        summaryElement.appendChild(botAvatarElement);
+        summaryElement.appendChild(botNameElement);
+        const summaryTextElement = document.createElement('div');
+        summaryTextElement.classList.add('markdown-content');
+        // Convert markdown to HTML and sanitize in one go
+        const html = DOMPurify.sanitize(this.md.render(message.content));
+        summaryTextElement.innerHTML = html;
+        summaryElement.appendChild(summaryTextElement);
+        elements.messageArea.appendChild(summaryElement);
+        elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
+    }
+
+    generatePdf(summaryContent){
+        const pdfGenerateElement = document.createElement('li');
+        pdfGenerateElement.classList.add('event-message');
+        pdfGenerateElement.textContent = 'PDF is being generated...';
+        elements.messageArea.appendChild(pdfGenerateElement);
+        elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
+        const summaryMessage = {
+            sender: this.username,
+            messageType: 'SUMMARY',
+            content: summaryContent,
+        };
+        this.stompClient.send(`/app/chat/${this.roomId}/generatePdf`, {}, JSON.stringify(summaryMessage));
+    }
+
     onMessageReceived(payload) {
         const message = JSON.parse(payload.body);
         const messageElement = document.createElement('li');
@@ -140,11 +179,11 @@ export class WebSocketService {
                 break;
 
             case 'SUMMARY':
-                messageElement.classList.add('chat-message');
-                const { avatarElement: aiAvatarElement, usernameElement: aiNameElement } = createUserInfo(message.sender);
-                messageElement.appendChild(aiAvatarElement);
-                messageElement.appendChild(aiNameElement);
-                break;
+                this.handleSummary(message)
+                if (message.content) {
+                    this.generatePdf(message.content);
+                }
+                return;
         }
 
         if (message.content) {

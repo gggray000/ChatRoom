@@ -44,6 +44,9 @@ public class ChatBotController {
     @PostMapping("http://localhost:11434/api/chat")
     public String makeSummary(List<TextMessage> messageList) {
 //        String messageAsString = parseTextMessages(messageList);
+        if(chatBot == null){
+            buildChatBot();
+        }
         return chatBot.summarize(messageList.toString());
     }
 }

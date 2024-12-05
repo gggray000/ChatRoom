@@ -1,5 +1,6 @@
 package com.chatroom.chat;
 
+import com.chatroom.pdf.PdfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -19,11 +20,13 @@ public class ChatController {
     private final Map<String, Set<String>> roomUsers = new ConcurrentHashMap<>();
     private final TextMessageService textMessageService;
     private final ChatBotController chatBotController;
+    private final PdfService pdfService;
 
     @Autowired
-    public ChatController(TextMessageService textMessageService, ChatBotController chatBotController) {
+    public ChatController(TextMessageService textMessageService, ChatBotController chatBotController, PdfService pdfService) {
         this.textMessageService = textMessageService;
         this.chatBotController = chatBotController;
+        this.pdfService = pdfService;
     }
 
     @MessageMapping("/chat/{roomId}/sendMessage")
@@ -68,6 +71,13 @@ public class ChatController {
                 .sender("ChatBot - Llama3.2 3B")
                 .content(summary)
                 .build();
+    }
+
+    @MessageMapping("/chat/{roomId}/generatePdf")
+    public void generatePdf(@Payload WebSocketMessage webSocketMessage){
+        System.out.println(webSocketMessage.getSender());
+        pdfService.parseString(webSocketMessage.getContent());
+
     }
 
     @MessageMapping("/chat/{roomId}/addUser")
