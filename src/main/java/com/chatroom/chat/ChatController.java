@@ -1,6 +1,6 @@
 package com.chatroom.chat;
 
-import com.chatroom.pdf.PdfService;
+import com.chatroom.room.PdfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

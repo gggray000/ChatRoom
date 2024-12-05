@@ -1,4 +1,4 @@
-package com.chatroom.pdf;
+package com.chatroom.room;
 
 import com.vladsch.flexmark.pdf.converter.PdfConverterExtension;
 import com.vladsch.flexmark.util.data.DataHolder;
