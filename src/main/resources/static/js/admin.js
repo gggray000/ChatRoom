@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const qrCodeUrl = `/admin/qrcode/${data.roomId}?roomName=${encodeURIComponent(roomName)}`;
                 const qrCodeImg = document.createElement('img');
                 qrCodeImg.src = qrCodeUrl;
+                qrCodeImg.alt = "Fail to load QR-Code"
                 qrCodeContainer.appendChild(qrCodeImg);
                 qrCodeContainer.style.display = 'block';
             }

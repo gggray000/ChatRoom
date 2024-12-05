@@ -2,7 +2,7 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Generate downlod link when summary.pdf is ready.<br>
+1. Generate download link when summary.pdf is ready.<br>
 2. Handle concurrency in cases like setting SystemMessages, generating summaries/PDF files.
 
 <h3>Long-term</h3>
@@ -16,6 +16,8 @@
 2. Use HTTPS instead of HTTP.<br>
 
 <h2>Update Log</h2>
+<h3>v0.8.1</h3>
+Fixed a bug where the "alt" of QR-Code image get displayed all the time.
 <h3>v0.8</h3>
 1. Implemented PDF generation service.<br>
 2. Added markdown formatting for summary on the chat page.<br>
