@@ -4,6 +4,7 @@
 <h3>Short-term</h3>
 1. Generate download link when summary.pdf is ready.<br>
 2. Handle concurrency in cases like setting SystemMessages, generating summaries/PDF files.
+3. Fix the bug that typing indicator will overlap very long username. 
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -21,7 +22,7 @@
 Fixed a bug where the "alt" of QR-Code image get displayed all the time.
 <h3>v0.8</h3>
 1. Implemented PDF generation service.<br>
-2. Added markdown formatting for summary on the chat page.<br>
+2. Added Markdown formatting for summary on the chat page.<br>
 3. Fixed a bug where the ChatBot is not built without an admin propmt.<br>
 <h3>v0.7.3</h3>
 Redesigned chat page for mobile phone.
