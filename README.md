@@ -92,6 +92,8 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 <URL>https://stackoverflow.com/questions/75173568/how-to-generate-qr-code-with-some-text-using-java</URL><br>
 @E-ICEBLUE<br>
 <URL>https://www.e-iceblue.com/Download/barcode-for-java.html</URL><br>
+@meta-llama<br>
+<URL>https://github.com/meta-llama/llama</URL><br>
 @Ollama<br>
 <URL>https://github.com/ollama/ollama/blob/main/LICENSE</URL><br>
 @langchain4j<br>
