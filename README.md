@@ -8,7 +8,8 @@
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
 2. Use Markdown format for the PDF file.<br>
-3. Deployment with docker container, using the virtual machine provided by the professor.<br>
+3. Deploy with docker container, using the virtual machine provided by the professor.<br>
+4. Deploy to a cloud service, using Caddy/Nginx as the web server.<br>
 4. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
 
 <br>**Pending**
