@@ -22,5 +22,6 @@ public class WebSocketMessage {
     private String content;
     private MessageType messageType;
     private List<String> users;
+    private String resource;
 
 }

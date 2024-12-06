@@ -2,9 +2,8 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Generate download link when summary.pdf is ready.<br>
-2. Handle concurrency in cases like setting SystemMessages, generating summaries/PDF files.
-3. Fix the bug that typing indicator will overlap very long username. 
+1. Handle concurrency in cases like setting SystemMessages, generating summaries/PDF files.<br>
+2. Fix the bug that typing indicator will overlap very long username. 
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -18,6 +17,8 @@
 2. Use HTTPS instead of HTTP.<br>
 
 <h2>Update Log</h2>
+<h3>v0.8.2</h3>
+Implemented PDF summary download feature.
 <h3>v0.8.1</h3>
 Fixed a bug where the "alt" of QR-Code image get displayed all the time.
 <h3>v0.8</h3>

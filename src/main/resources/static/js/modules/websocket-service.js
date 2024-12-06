@@ -105,35 +105,37 @@ export class WebSocketService {
         this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
     }
 
-    handleSummary(message){
+    handleSummaryAndPdf(message) {
+        // Handle Summary
         const summaryElement = document.createElement('li');
         summaryElement.classList.add('chat-message');
+
         const { avatarElement: botAvatarElement, usernameElement: botNameElement }
             = createUserInfo(message.sender);
+
         summaryElement.appendChild(botAvatarElement);
         summaryElement.appendChild(botNameElement);
+
         const summaryTextElement = document.createElement('div');
         summaryTextElement.classList.add('markdown-content');
-        // Convert markdown to HTML and sanitize in one go
         const html = DOMPurify.sanitize(this.md.render(message.content));
         summaryTextElement.innerHTML = html;
         summaryElement.appendChild(summaryTextElement);
         elements.messageArea.appendChild(summaryElement);
-        elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
-    }
 
-    generatePdf(summaryContent){
-        const pdfGenerateElement = document.createElement('li');
-        pdfGenerateElement.classList.add('event-message');
-        pdfGenerateElement.textContent = 'PDF is being generated...';
-        elements.messageArea.appendChild(pdfGenerateElement);
+        // Handle PDF Download Link
+        if (message.resource) {
+            const pdfElement = document.createElement('li');
+            pdfElement.classList.add('event-message');
+            const downloadLink = document.createElement('a');
+            downloadLink.href = `/pdf/${message.resource}`;
+            downloadLink.textContent = 'Download Discussion Summary PDF';
+            downloadLink.classList.add('pdf-download-link');
+            pdfElement.appendChild(downloadLink);
+            elements.messageArea.appendChild(pdfElement);
+        }
+
         elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
-        const summaryMessage = {
-            sender: this.username,
-            messageType: 'SUMMARY',
-            content: summaryContent,
-        };
-        this.stompClient.send(`/app/chat/${this.roomId}/generatePdf`, {}, JSON.stringify(summaryMessage));
     }
 
     onMessageReceived(payload) {
@@ -179,11 +181,8 @@ export class WebSocketService {
                 break;
 
             case 'SUMMARY':
-                this.handleSummary(message)
-                if (message.content) {
-                    this.generatePdf(message.content);
-                }
-                return;
+              this.handleSummaryAndPdf(message);
+              return;
         }
 
         if (message.content) {
