@@ -3,7 +3,8 @@
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Handle concurrency in cases like setting SystemMessages, generating summaries/PDF files.<br>
-2. Fix the bug that typing indicator will overlap very long username. 
+2. Fix the bug that typing indicator will overlap very long username.<br>
+3. Figure out how to do test.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
