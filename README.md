@@ -10,7 +10,8 @@
 2. Use Markdown format for the PDF file.<br>
 3. Deploy with docker container, using the virtual machine provided by the professor.<br>
 4. Deploy to a cloud service, using Caddy/Nginx as the web server.<br>
-5. Use Spring Security to secure messages based on STOMP destinations and message types.<br>
+5. Secure endpoints with Spring Security.<br>
+6. Integration test/Module test/Unit test.
 
 <br>**Pending**
 1. Migrate frontend from JavaScript to React.<br>
