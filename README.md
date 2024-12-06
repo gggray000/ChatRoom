@@ -2,7 +2,7 @@
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Handle concurrency in cases like setting SystemMessages, generating summaries/PDF files.<br>
+1. Handle race condition in cases like setting SystemMessages, generating summaries/PDF files.<br>
 2. Fix the bug that typing indicator will overlap very long username. 
 
 <h3>Long-term</h3>
@@ -17,6 +17,8 @@
 2. Use HTTPS instead of HTTP.<br>
 
 <h2>Update Log</h2>
+<h3>v0.8.3</h3>
+Refactored ChatBotController.java
 <h3>v0.8.2</h3>
 Implemented PDF summary download feature.
 <h3>v0.8.1</h3>

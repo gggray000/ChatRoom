@@ -3,6 +3,7 @@ package com.chatroom.bot;
 import com.chatroom.chat.TextMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.service.AiServices;
+import jakarta.annotation.PostConstruct;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,13 +24,14 @@ public class ChatBotController {
         this.chatBotConfiguration = configuration;
     }
 
+    // Even though the bot is built by @PostConstruct, the systemMessageProvide holds a reference to prompt
+    // It can get updates of the prompt.
+    @PostConstruct
     private void buildChatBot() {
-        if (this.chatBot == null) {
             this.chatBot = AiServices.builder(ChatBot.class)
                     .chatLanguageModel(model)
                     .systemMessageProvider(memoryId -> chatBotConfiguration.prompt)
                     .build();
-        }
     }
 
     @PostMapping("/admin/set-system-prompt")
@@ -37,16 +39,10 @@ public class ChatBotController {
     public ResponseEntity<Map<String, String>> setSystemPrompt(@RequestBody Map<String, String> request) {
         String prompt = request.get("prompt");
         chatBotConfiguration.updatePrompt(prompt);
-        buildChatBot();
         return ResponseEntity.ok(Map.of("status", "success"));
     }
 
-    @PostMapping("http://localhost:11434/api/chat")
     public String makeSummary(List<TextMessage> messageList) {
-//        String messageAsString = parseTextMessages(messageList);
-        if(chatBot == null){
-            buildChatBot();
-        }
         return chatBot.summarize(messageList.toString());
     }
 }
