@@ -1,6 +1,6 @@
 # ChatRoom
 
-A web application for real-time anonymous group discussions with built-in AI summarization, QR code room sharing, and PDF export capabilities, ideal for classroom discussions, brainstorming, and workshops.
+A web application for real-time anonymous group discussions with built-in AI summarization and PDF export capabilities, ideal for classroom discussions, brainstorming, and workshops.
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
