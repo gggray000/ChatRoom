@@ -1,9 +1,12 @@
 # ChatRoom
 
+A web application for real-time anonymous group discussions with built-in AI summarization, QR code room sharing, and PDF export capabilities, ideal for classroom discussions, brainstorming, and workshops.
+
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Handle race condition in cases like setting SystemMessages, generating summaries/PDF files.<br>
-2. Fix the bug that typing indicator will overlap very long username. 
+1. Handle race conditions in cases like setting SystemMessages, and generating summaries/PDF files.<br>
+2. Fix the bug that the typing indicator will overlap a very long username. 
+3. Add logo to frontend pages.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
