@@ -5,7 +5,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Handle race conditions in cases like setting SystemMessages, and generating summaries/PDF files.<br>
-2. Fix the bug that the typing indicator will overlap a very long username. 
+2. Fix the bug that same usernames will cause conflicts.
 3. Add logo to frontend pages.
 
 <h3>Long-term</h3>
@@ -22,6 +22,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Wait for Llama 3.3 new releases, now there's only a 70B version available.
 
 <h2>Update Log</h2>
+<h3>v0.8.4</h3>
+1. Fixed the bug where typing indicator overlaps with long username.<br>
+2. Fixed the bug where long username isn't displayed correctly.
 <h3>v0.8.3</h3>
 Refactored ChatBotController.java
 <h3>v0.8.2</h3>

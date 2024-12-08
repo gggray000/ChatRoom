@@ -13,7 +13,6 @@ target/
 
 # Development files
 src/main/resources/static/js/main-old.js
-src/main/resources/static/css/main.css
 
 # Maven
 .mvn/
