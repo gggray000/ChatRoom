@@ -5,7 +5,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Handle race conditions in cases like setting SystemMessages, and generating summaries/PDF files.<br>
-2. Add logo to frontend pages.
+2. Add logo to frontend pages.<br>
+3. Improve JWT service with single token generation and validation.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
