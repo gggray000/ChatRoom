@@ -9,11 +9,10 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
-2. Use Markdown format for the PDF file.<br>
-3. Deploy with docker container, using the virtual machine provided by the professor.<br>
-4. Deploy to a cloud service, using Caddy/Nginx as the web server.<br>
-5. Secure endpoints with Spring Security.<br>
-6. Integration test/Module test/Unit test.
+2. Deploy with docker container, using the virtual machine provided by the professor.<br>
+3. Deploy to a cloud service, using Caddy/Nginx as the web server.<br>
+4. Secure endpoints with Spring Security.<br>
+5. Integration test/Module test/Unit test.
 
 <br>**Pending**
 1. Migrate frontend from JavaScript to React.<br>
