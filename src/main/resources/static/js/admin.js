@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const qrCodeContainer = document.getElementById('qrCodeContainer');
     const successMessage = document.getElementById('successMessage');
     const systemPromptInput = document.getElementById('systemPrompt');
+    const roomHeader = document.getElementById('room-header');
+    const promptHeader = document.getElementById('prompt-header');
 
     async function createRoom() {
         const roomName = roomNameInput.value.trim();
@@ -53,6 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
             roomNameInput.style.display = 'none';
             systemPromptInput.style.display = 'none';
             createRoomButton.style.display = 'none';
+            roomHeader.style.display = 'none';
+            promptHeader.style.display = 'none';
+
 
             const roomUrl = window.location.origin + roomData.url;
             const roomUrlLink = roomUrlContainer.querySelector('a');
