@@ -1,5 +1,6 @@
 package com.chatroom.app;
 
+import com.chatroom.bot.ChatBotConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +32,9 @@ public class AppController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private ChatBotConfiguration chatBotConfiguration;
 
     @GetMapping("/")
     public String home() {
@@ -76,6 +80,14 @@ public class AppController {
         }
     }
 
+    @PostMapping("/admin/set-system-prompt")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> setSystemPrompt(@RequestBody Map<String, String> request) {
+        String prompt = request.get("systemPrompt");
+        chatBotConfiguration.updatePrompt(prompt);
+        return ResponseEntity.ok(Map.of("status", "success"));
+    }
+
     @GetMapping("/admin/qrcode/{roomId}")
     public ResponseEntity<byte[]> getQrCode(@PathVariable String roomId) {
         try {
@@ -113,7 +125,7 @@ public class AppController {
         return "chat-room";
     }
 
-    @PostMapping("/api/auth/token")
+    @PostMapping("/admin/token")
     @ResponseBody
     public ResponseEntity<String> generateUserToken(@RequestBody Map<String, String> request) {
         try {

@@ -34,14 +34,6 @@ public class ChatBotController {
                     .build();
     }
 
-    @PostMapping("/admin/set-system-prompt")
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> setSystemPrompt(@RequestBody Map<String, String> request) {
-        String prompt = request.get("systemPrompt");
-        chatBotConfiguration.updatePrompt(prompt);
-        return ResponseEntity.ok(Map.of("status", "success"));
-    }
-
     public String makeSummary(List<TextMessage> messageList) {
         return chatBot.summarize(messageList.toString());
     }

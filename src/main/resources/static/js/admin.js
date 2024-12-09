@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const roomData = await createRoomResponse.json();
 
             // Then get the admin token
-            const tokenResponse = await fetch('/api/auth/token', {
+            const tokenResponse = await fetch('/admin/token', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
