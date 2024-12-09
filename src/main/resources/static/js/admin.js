@@ -15,14 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            if (systemPrompt) {
-                await fetch('/admin/set-system-prompt', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: systemPrompt })
-                });
-            }
-            const response = await fetch('/admin/create-room', {
+            // First create the room
+            const createRoomResponse = await fetch('/admin/create-room', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -31,33 +25,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (!createRoomResponse.ok) {
+                throw new Error(`HTTP error! status: ${createRoomResponse.status}`);
             }
 
-            const data = await response.json();
+            const roomData = await createRoomResponse.json();
 
-            if (data.adminToken && data.roomId) {
-                localStorage.setItem('roomAdminToken_' + data.roomId, data.adminToken);
+            // Then get the admin token
+            const tokenResponse = await fetch('/api/auth/token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: 'admin',
+                    roomId: roomData.roomId,
+                    isAdmin : true
+                })
+            });
 
-                successMessage.style.display = 'block';
-                roomNameInput.style.display = 'none';
-                systemPromptInput.style.display = 'none';
-                createRoomButton.style.display = 'none';
-
-                const roomUrl = window.location.origin + data.url;
-                const roomUrlLink = roomUrlContainer.querySelector('a');
-                roomUrlLink.href = roomUrl;
-                roomUrlLink.textContent = roomUrl;
-                roomUrlContainer.style.display = 'block';
-
-                const qrCodeUrl = `/admin/qrcode/${data.roomId}?roomName=${encodeURIComponent(roomName)}`;
-                const qrCodeImg = document.createElement('img');
-                qrCodeImg.src = qrCodeUrl;
-                qrCodeImg.alt = "Fail to load QR-Code"
-                qrCodeContainer.appendChild(qrCodeImg);
-                qrCodeContainer.style.display = 'block';
+            if (!tokenResponse.ok) {
+                throw new Error('Failed to get admin token');
             }
+
+            const token = await tokenResponse.text();
+            localStorage.setItem('userToken', token);
+            // Update UI
+            successMessage.style.display = 'block';
+            roomNameInput.style.display = 'none';
+            systemPromptInput.style.display = 'none';
+            createRoomButton.style.display = 'none';
+
+            const roomUrl = window.location.origin + roomData.url;
+            const roomUrlLink = roomUrlContainer.querySelector('a');
+            roomUrlLink.href = roomUrl;
+            roomUrlLink.textContent = roomUrl;
+            roomUrlContainer.style.display = 'block';
+
+            const qrCodeUrl = `/admin/qrcode/${roomData.roomId}?roomName=${encodeURIComponent(roomName)}`;
+            const qrCodeImg = document.createElement('img');
+            qrCodeImg.src = qrCodeUrl;
+            qrCodeImg.alt = "Fail to load QR-Code"
+            qrCodeContainer.appendChild(qrCodeImg);
+            qrCodeContainer.style.display = 'block';
+
         } catch (error) {
             console.error('Error:', error);
             alert('Failed to create room. Please try again.');

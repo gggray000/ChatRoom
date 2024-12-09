@@ -4,13 +4,13 @@ public class JwtUserDetails {
     private String username;
     private String tokenId;
     private String roomId;
-    private String role;
+    private final boolean isAdmin;
 
-    public JwtUserDetails(String username, String tokenId, String roomId, String role) {
+    public JwtUserDetails(String username, String tokenId, String roomId, boolean isAdmin) {
         this.username = username;
         this.tokenId = tokenId;
         this.roomId = roomId;
-        this.role = role;
+        this.isAdmin = isAdmin;
     }
 
     public String getUsername() {
@@ -25,7 +25,5 @@ public class JwtUserDetails {
         return roomId;
     }
 
-    public String getRole() {
-        return role;
-    }
+    public boolean isAdmin() { return isAdmin; }
 }

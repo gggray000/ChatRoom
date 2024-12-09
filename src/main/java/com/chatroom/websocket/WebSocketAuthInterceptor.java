@@ -25,28 +25,19 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            String userToken = accessor.getFirstNativeHeader("userToken");
-            String adminToken = accessor.getFirstNativeHeader("adminToken");
+            String token = accessor.getFirstNativeHeader("token");
             String roomId = accessor.getFirstNativeHeader("roomId");
 
-            if (userToken != null) {
-                JwtUserDetails userDetails = jwtService.validateUserToken(userToken);
+            if (token != null) {
+                JwtUserDetails userDetails = jwtService.validateUserToken(token);
                 if (userDetails == null || !roomId.equals(userDetails.getRoomId())) {
-                    throw new MessageDeliveryException("Invalid user token");
+                    throw new MessageDeliveryException("Invalid token");
                 }
-
                 // Set user details in session attributes
                 accessor.getSessionAttributes().put("username", userDetails.getUsername());
                 accessor.getSessionAttributes().put("tokenId", userDetails.getTokenId());
                 accessor.getSessionAttributes().put("roomId", roomId);
-                accessor.getSessionAttributes().put("role", userDetails.getRole());
-            }
-
-            if (adminToken != null) {
-                boolean isValidAdmin = jwtService.validateAdminToken(adminToken, roomId);
-                if (isValidAdmin) {
-                    accessor.getSessionAttributes().put("isAdmin", true);
-                }
+                accessor.getSessionAttributes().put("isAdmin", userDetails.isAdmin());
             }
         }
         return message;

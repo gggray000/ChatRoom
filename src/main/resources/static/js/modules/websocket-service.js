@@ -17,29 +17,19 @@ export class WebSocketService {
 
     async connect(username, roomId) {
         try {
-            // Store username for later use
             this.username = username;
-
             const socket = new SockJS('/ws');
             this.stompClient = Stomp.over(socket);
-            this.stompClient.debug = null; // Disable debug logging
 
-            const headers = {};
-            const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
-            if (adminToken) {
-                headers.adminToken = adminToken;
-                headers.roomId = roomId;
-                elements.endButton.classList.remove('hidden');
-            }
+            const token = localStorage.getItem('userToken');
+            const headers = {
+                token: token,
+                roomId: roomId
+            };
 
             this.stompClient.connect(headers,
                 () => this.onConnected(),
-                (error) => {
-                    this.onError(error);
-                    if (error && error.includes("Invalid admin token")) {
-                        localStorage.removeItem('roomAdminToken_' + roomId);
-                    }
-                }
+                error => this.onError(error)
             );
         } catch (error) {
             console.error('Connection error:', error);
@@ -48,13 +38,13 @@ export class WebSocketService {
     }
 
     onConnected() {
-        // First subscribe to receive messages
+        // Subscribe to receive messages
         this.stompClient.subscribe(`/topic/public/${this.roomId}`,
             (payload) => this.onMessageReceived(payload),
             { id: 'sub-0' }
         );
 
-        // Then send join message
+        // Send join message
         const joinMessage = {
             sender: this.username,
             messageType: 'JOIN',
@@ -62,15 +52,7 @@ export class WebSocketService {
         };
 
         this.stompClient.send(`/app/chat/${this.roomId}/addUser`, {}, JSON.stringify(joinMessage));
-        //this.stompClient.send(`/app/chat/${this.roomId}/sendMessage`, {}, JSON.stringify(joinMessage));
         elements.connectingElement.classList.add('hidden');
-
-        // Set up initial user info
-        // elements.userInfoRow.innerHTML = '';
-        // const { avatarElement, usernameElement } = createUserInfo(this.username);
-        // elements.userInfoRow.appendChild(avatarElement);
-        // elements.userInfoRow.appendChild(usernameElement);
-        // elements.userInfoRow.classList.remove('hidden');
     }
 
     updateUserInfo(username) {

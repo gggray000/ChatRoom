@@ -210,20 +210,22 @@ button:hover {
 }
 
 .chat-header {
-    padding: 1rem;
+    padding:  1rem 2rem;
     background: #f8f9fa;
     border-bottom: 1px solid #e1e1e1;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
 }
 
 .chat-header h2 {
     margin: 0;
     color: #2c3e50;
+    flex: 1;
 }
 
-.admin-btn {
+.chat-header .admin-btn {
     background: #dc3545;
     color: white;
     padding: 8px 16px;
@@ -233,10 +235,16 @@ button:hover {
     font-size: 0.9rem;
     transition: background-color 0.2s;
     white-space: nowrap;
+    width: auto;
+    margin-left: auto;
 }
 
-.admin-btn:hover {
+.chat.header .admin-btn:hover {
     background: #c82333;
+}
+
+.chat-header .logo {
+    height: 40px;
 }
 
 .connecting {
@@ -396,6 +404,14 @@ button:hover {
 
     .user-list-header {
         padding-left: 55px;
+    }
+
+    .chat-header {
+        padding-left: 60px;  /* Keep space for mobile menu button */
+    }
+
+    .chat-header img.logo {
+        height: 24px;  /* Slightly smaller logo on mobile */
     }
 
     .chat-container {

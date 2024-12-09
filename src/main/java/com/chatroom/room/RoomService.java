@@ -22,26 +22,20 @@ public class RoomService {
         Room room = new Room();
         room.setId(roomId);
         room.setName(name);
-        room.setAdminToken(jwtService.generateAdminToken(roomId));
         rooms.put(roomId, room);
         return room;
     }
-
     // With JPA, this will get room from repository
     public Room getRoom(String id) {
         return rooms.get(id);
     }
 
-    public void deleteRoom(String id) {
-        rooms.remove(id);
-    }
+//    public void deleteRoom(String id) {
+//        rooms.remove(id);
+//    }
+//
+//    public Map<String, Room> getAllRooms() {
+//        return rooms;
+//    }
 
-    public Map<String, Room> getAllRooms() {
-        return rooms;
-    }
-
-    public boolean isAdmin(String roomId, String token) {
-        Room room = getRoom(roomId);
-        return room != null && token != null && token.equals(room.getAdminToken());
-    }
 }

@@ -13,39 +13,41 @@ const roomName = window.ROOM_NAME;
 async function connect(event) {
     event.preventDefault();
     const username = elements.usernameForm.querySelector('#name').value.trim();
+
     if (username) {
         try {
-            // Get user token
-            const response = await fetch('/api/auth/token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: username,
-                    roomId: roomId
-                })
-            });
+            let token = localStorage.getItem('userToken');
+            // If no token exists, this is a normal user, and we need to get one
+            if (!token) {
+                const response = await fetch('/api/auth/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        roomId: roomId,
+                        isAdmin: false
+                    })
+                });
 
-            if (!response.ok) {
-                throw new Error('Failed to get token');
+                if (!response.ok) {
+                    throw new Error('Failed to get token');
+                }
+
+                token = await response.text();
+                localStorage.setItem('userToken', token);
+            }else{
+                elements.endButton.classList.remove('hidden');
             }
-
-            const token = await response.text();
-            localStorage.setItem('userToken', token);
-
-            // Check for admin token
-            const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
-            const adminControls = document.querySelector('.admin-controls');
-            if (adminToken) {
-                adminControls.classList.remove('hidden');
-            }
-
+            // If token exists, it means this is an admin who created the room
             elements.usernamePage.classList.add('hidden');
             elements.chatPage.classList.remove('hidden');
             document.querySelector('.chat-header h2').textContent = roomName;
 
-            webSocketService.connect(username, roomId);
+            // Connect to WebSocket with the token
+            await webSocketService.connect(username, roomId);
+
         } catch (error) {
             console.error('Connection error:', error);
             alert('Failed to connect. Please try again.');

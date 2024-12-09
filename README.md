@@ -5,8 +5,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Handle race conditions in cases like setting SystemMessages, and generating summaries/PDF files.<br>
-2. Add logo to frontend pages.<br>
-3. Improve JWT service with single token generation and validation.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -21,6 +19,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Wait for Llama 3.3 new releases, now there's only a 70B version available.
 
 <h2>Update Log</h2>
+<h3>v0.8.6</h3>
+1. Improved JWT service, now admin and users get tokens from same service but with different flags.<br>
+2. Improved design from admin page, and added the logo to the chat page.
 <h3>v0.8.5</h3>
 Improved JWT service to fix the bug where users with same username cause conflicts. Now every user gets his/her own JWT.
 <h3>v0.8.4</h3>

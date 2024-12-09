@@ -57,11 +57,12 @@ public class ChatController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    private void validateUserToken(String tokenId, String roomId) {
+    private JwtUserDetails validateUserToken(String tokenId, String roomId) {
         JwtUserDetails userDetails = jwtService.validateUserToken(tokenId);
         if (userDetails == null || !userDetails.getRoomId().equals(roomId)) {
             throw new MessageDeliveryException("Invalid or expired token");
         }
+        return userDetails;
     }
 
     @MessageMapping("/chat/{roomId}/addUser")
@@ -70,23 +71,19 @@ public class ChatController {
                                     @DestinationVariable String roomId,
                                     SimpMessageHeaderAccessor headerAccessor) {
         String tokenId = webSocketMessage.getTokenId();
-        validateUserToken(tokenId, roomId);
+        JwtUserDetails userDetails = validateUserToken(tokenId, roomId);
 
         String originalUsername = webSocketMessage.getSender();
         String finalUsername = generateUniqueUsername(originalUsername, roomId);
-
-        // If the username was modified, update the sender in the webSocketMessage
         webSocketMessage.setSender(finalUsername);
 
-        headerAccessor.getSessionAttributes().put("username", webSocketMessage.getSender());
+        headerAccessor.getSessionAttributes().put("username", finalUsername);
         headerAccessor.getSessionAttributes().put("roomId", roomId);
         headerAccessor.getSessionAttributes().put("tokenId", tokenId);
+        headerAccessor.getSessionAttributes().put("isAdmin", userDetails.isAdmin());
 
         roomUsers.computeIfAbsent(roomId, k -> new ConcurrentHashMap<>());
-
-        boolean isAdmin = headerAccessor.getUser() != null &&
-                roomId.equals(headerAccessor.getUser().getName());
-        ChatUser chatUser = new ChatUser(webSocketMessage.getSender(), tokenId, isAdmin);
+        ChatUser chatUser = new ChatUser(finalUsername, tokenId, userDetails.isAdmin());
         roomUsers.get(roomId).put(tokenId, chatUser);
 
         simpMessagingTemplate.convertAndSend("/topic/public/" + roomId,

@@ -61,20 +61,13 @@ public class AppController {
         }
 
         try {
-            // Create room
             Room room = roomService.createRoom(roomName);
             String roomUrl = urlService.createUrl(room);
 
-            // Generate admin token
-            String adminToken = jwtService.generateAdminToken(room.getId());
-            room.setAdminToken(adminToken);
-
-            // Create response
             Map<String, String> response = new HashMap<>();
             response.put("url", roomUrl);
             response.put("roomId", room.getId());
             response.put("roomName", room.getName());
-            response.put("adminToken", adminToken);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -126,25 +119,24 @@ public class AppController {
         try {
             String username = request.get("username");
             String roomId = request.get("roomId");
+            boolean isAdmin = request.get("isAdmin") != null && Boolean.parseBoolean(request.get("isAdmin"));
 
             if (username == null || roomId == null) {
                 return ResponseEntity.badRequest().body("Username and roomId are required");
             }
 
-            // Verify room exists
             Room room = roomService.getRoom(roomId);
             if (room == null) {
                 return ResponseEntity.badRequest().body("Invalid room ID");
             }
 
-            // Generate user token
-            String token = jwtService.generateUserToken(username, roomId);
+            // Generate token with isAdmin flag
+            String token = jwtService.generateUserToken(username, roomId, isAdmin);
             return ResponseEntity.ok(token);
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body("Error generating token: " + e.getMessage());
         }
     }
-
 
 }
