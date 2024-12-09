@@ -31,6 +31,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(`HTTP error! status: ${createRoomResponse.status}`);
             }
 
+            const setPromptResponse = await fetch('/admin/set-system-prompt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: roomName,
+                    systemPrompt: systemPrompt
+                })
+            });
+
+            if (!setPromptResponse.ok) {
+                throw new Error(`HTTP error! status: ${systemPrompt.status}`);
+            }
+
             const roomData = await createRoomResponse.json();
 
             // Then get the admin token
