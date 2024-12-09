@@ -134,6 +134,7 @@ public class ChatController {
         if(MessageType.CHAT.equals(webSocketMessage.getMessageType())){
             TextMessage textMessage = new TextMessage(
                     webSocketMessage.getSender(),
+                    roomId,
                     webSocketMessage.getContent()
             );
             textMessageService.saveTextMessage(textMessage);
@@ -162,7 +163,7 @@ public class ChatController {
             throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
         }
 
-        String summary = chatBotController.makeSummary(textMessageService.exportMessages());
+        String summary = chatBotController.makeSummary(roomId);
         String pdfFileName = pdfService.makePdf(roomId, summary);
 
         return WebSocketMessage.builder()

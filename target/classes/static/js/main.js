@@ -19,7 +19,7 @@ async function connect(event) {
             let token = localStorage.getItem('userToken');
             // If no token exists, this is a normal user, and we need to get one
             if (!token) {
-                const response = await fetch('/api/auth/token', {
+                const response = await fetch('/admin/token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

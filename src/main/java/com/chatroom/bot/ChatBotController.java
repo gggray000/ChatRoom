@@ -1,27 +1,25 @@
 package com.chatroom.bot;
 
 import com.chatroom.chat.TextMessage;
+import com.chatroom.chat.TextMessageService;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.annotation.PostConstruct;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ChatBotController {
 
     private final ChatLanguageModel model;
+    private final TextMessageService textMessageService;
     private ChatBot chatBot;
     private final ChatBotConfiguration chatBotConfiguration;
 
-    public ChatBotController(ChatLanguageModel model, ChatBotConfiguration configuration) {
+    public ChatBotController(ChatLanguageModel model, ChatBotConfiguration configuration, TextMessageService textMessageService) {
         this.model = model;
         this.chatBotConfiguration = configuration;
+        this.textMessageService = textMessageService;
     }
 
     // Even though the bot is built by @PostConstruct, the systemMessageProvide holds a reference to prompt
@@ -34,7 +32,7 @@ public class ChatBotController {
                     .build();
     }
 
-    public String makeSummary(List<TextMessage> messageList) {
-        return chatBot.summarize(messageList.toString());
+    public String makeSummary(String roomId) {
+        return chatBot.summarize(textMessageService.exportStoredMessages(roomId));
     }
 }
