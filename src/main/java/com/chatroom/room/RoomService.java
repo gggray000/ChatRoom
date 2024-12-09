@@ -22,7 +22,7 @@ public class RoomService {
         Room room = new Room();
         room.setId(roomId);
         room.setName(name);
-        room.setAdminToken(jwtService.generateToken(roomId));
+        room.setAdminToken(jwtService.generateAdminToken(roomId));
         rooms.put(roomId, room);
         return room;
     }

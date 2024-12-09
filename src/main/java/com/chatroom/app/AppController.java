@@ -1,8 +1,5 @@
 package com.chatroom.app;
 
-import com.chatroom.bot.ChatBotConfiguration;
-import com.chatroom.bot.ChatBotController;
-import com.chatroom.bot.ChatBotTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +14,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -32,7 +30,7 @@ public class AppController {
     private QrCodeService qrCodeService;
 
     @Autowired
-    private ChatBotConfiguration chatBotConfiguration;
+    private JwtService jwtService;
 
     @GetMapping("/")
     public String home() {
@@ -62,15 +60,27 @@ public class AppController {
             return ResponseEntity.badRequest().body(Map.of("error", "Room name is required"));
         }
 
-        Room room = roomService.createRoom(roomName);
-        String roomUrl = urlService.createUrl(room);
+        try {
+            // Create room
+            Room room = roomService.createRoom(roomName);
+            String roomUrl = urlService.createUrl(room);
 
-        return ResponseEntity.ok(Map.of(
-                "url", roomUrl,
-                "roomId", room.getId(),
-                "roomName", room.getName(),
-                "adminToken", room.getAdminToken()
-        ));
+            // Generate admin token
+            String adminToken = jwtService.generateAdminToken(room.getId());
+            room.setAdminToken(adminToken);
+
+            // Create response
+            Map<String, String> response = new HashMap<>();
+            response.put("url", roomUrl);
+            response.put("roomId", room.getId());
+            response.put("roomName", room.getName());
+            response.put("adminToken", adminToken);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to create room: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/admin/qrcode/{roomId}")
@@ -109,4 +119,32 @@ public class AppController {
         model.addAttribute("roomName", room.getName());
         return "chat-room";
     }
+
+    @PostMapping("/api/auth/token")
+    @ResponseBody
+    public ResponseEntity<String> generateUserToken(@RequestBody Map<String, String> request) {
+        try {
+            String username = request.get("username");
+            String roomId = request.get("roomId");
+
+            if (username == null || roomId == null) {
+                return ResponseEntity.badRequest().body("Username and roomId are required");
+            }
+
+            // Verify room exists
+            Room room = roomService.getRoom(roomId);
+            if (room == null) {
+                return ResponseEntity.badRequest().body("Invalid room ID");
+            }
+
+            // Generate user token
+            String token = jwtService.generateUserToken(username, roomId);
+            return ResponseEntity.ok(token);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body("Error generating token: " + e.getMessage());
+        }
+    }
+
+
 }

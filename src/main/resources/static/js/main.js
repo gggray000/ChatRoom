@@ -2,6 +2,7 @@ import { elements } from './modules/dom-elements.js';
 import { UserListService } from './modules/user-list-service.js';
 import { WebSocketService } from './modules/websocket-service.js';
 import { InputHandler } from './modules/input-handler.js';
+import { createUserInfo } from './modules/avatar-service.js';
 
 const userListService = new UserListService();
 const webSocketService = new WebSocketService(userListService);
@@ -9,28 +10,57 @@ const inputHandler = new InputHandler(webSocketService);
 const roomId = window.ROOM_ID;
 const roomName = window.ROOM_NAME;
 
-function connect(event) {
+async function connect(event) {
     event.preventDefault();
     const username = elements.usernameForm.querySelector('#name').value.trim();
-    const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
-
     if (username) {
-        const adminControls = document.querySelector('.admin-controls');
-        if (adminToken) {
-            adminControls.classList.remove('hidden');
+        try {
+            // Get user token
+            const response = await fetch('/api/auth/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    roomId: roomId
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to get token');
+            }
+
+            const token = await response.text();
+            localStorage.setItem('userToken', token);
+
+            // Check for admin token
+            const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
+            const adminControls = document.querySelector('.admin-controls');
+            if (adminToken) {
+                adminControls.classList.remove('hidden');
+            }
+
+            elements.usernamePage.classList.add('hidden');
+            elements.chatPage.classList.remove('hidden');
+            document.querySelector('.chat-header h2').textContent = roomName;
+
+            webSocketService.connect(username, roomId);
+        } catch (error) {
+            console.error('Connection error:', error);
+            alert('Failed to connect. Please try again.');
         }
-        elements.usernamePage.classList.add('hidden');
-        elements.chatPage.classList.remove('hidden');
-        document.querySelector('.chat-header h2').textContent = roomName;
-        webSocketService.connect(username, roomId);
     }
 }
 
 function sendMessage(event) {
     event.preventDefault();
     const messageContent = elements.messageInput.value.trim();
-    webSocketService.sendMessage(messageContent);
-    elements.messageInput.value = '';
+    if (messageContent) {
+        webSocketService.sendMessage(messageContent);
+        elements.messageInput.value = '';
+        elements.messageInput.style.height = 'auto';
+    }
 }
 
 function initializeEventListeners() {
@@ -50,9 +80,9 @@ function initializeEventListeners() {
         elements.messageInput.addEventListener('input', () => inputHandler.handleTyping());
         elements.messageInput.addEventListener('keydown', (e) => inputHandler.handleKeyPress(e));
         elements.messageForm.addEventListener('submit', sendMessage);
-        elements.endButton.addEventListener('click',() => webSocketService.endDiscussion());
-       elements.sidebarToggle.addEventListener('click', () =>
-                                                {elements.userListSidebar.classList.toggle('expanded');
+        elements.endButton.addEventListener('click', () => webSocketService.endDiscussion());
+        elements.sidebarToggle.addEventListener('click', () => {
+            elements.userListSidebar.classList.toggle('expanded');
         });
     });
 }

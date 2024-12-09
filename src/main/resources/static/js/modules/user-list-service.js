@@ -50,21 +50,34 @@ export class UserListService {
     }
 
     updateUserCounter() {
-        elements.userCountElement.textContent = `Online Users: ${this.connectedUsers.size}`;
+        const userCountElement = document.querySelector('#user-count');
+        if (userCountElement) {
+            userCountElement.textContent = `Online Users: ${this.connectedUsers.size}`;
+        }
     }
 
-    addUserToList(username) {
-        if (!this.connectedUsers.has(username)) {
+    addUserToList(username, tokenId) {
+        if (!tokenId || !username) {
+            console.error('Attempted to add user without token ID or username');
+            return;
+        }
+
+        const userListElement = document.querySelector('#user-list');
+        if (!userListElement) return;
+
+        if (!this.connectedUsers.has(tokenId)) {
             const userElement = document.createElement('div');
             userElement.classList.add('user-list-item');
+            userElement.setAttribute('data-token-id', tokenId);
 
-            const avatarElement = createUserInfo(username).avatarElement;
+            const { avatarElement, usernameElement } = createUserInfo(username);
 
             const userInfoContainer = document.createElement('div');
             userInfoContainer.classList.add('user-info-container');
 
             const usernameTooltip = document.createElement('div');
             usernameTooltip.classList.add('username-tooltip');
+            usernameTooltip.setAttribute('data-token-id', tokenId);
 
             const usernameText = document.createTextNode(username);
             usernameTooltip.appendChild(usernameText);
@@ -72,11 +85,7 @@ export class UserListService {
             const tooltipText = document.createElement('span');
             tooltipText.classList.add('tooltiptext');
             tooltipText.textContent = username;
-
             usernameTooltip.appendChild(tooltipText);
-
-            // Setup tooltip positioning
-            setupTooltip(usernameTooltip, tooltipText);
 
             const typingIndicator = document.createElement('div');
             typingIndicator.classList.add('typing-indicator');
@@ -87,28 +96,53 @@ export class UserListService {
             userElement.appendChild(avatarElement);
             userElement.appendChild(userInfoContainer);
 
-            elements.userListElement.appendChild(userElement);
-            this.connectedUsers.set(username, {
+            userListElement.appendChild(userElement);
+
+            this.connectedUsers.set(tokenId, {
                 element: userElement,
+                username: username,
                 typingIndicator: typingIndicator
             });
+
             this.updateUserCounter();
         }
     }
 
-    removeUserFromList(username) {
-        const userListObject = this.connectedUsers.get(username);
-        if (userListObject) {
-            elements.userListElement.removeChild(userListObject.element);
-            this.connectedUsers.delete(username);
+    removeUserFromList(tokenId) {
+        if (!tokenId) {
+            console.error('Attempted to remove user without token ID');
+            return;
+        }
+
+        const userInfo = this.connectedUsers.get(tokenId);
+        if (userInfo && userInfo.element) {
+            const userListElement = document.querySelector('#user-list');
+            if (userListElement && userInfo.element.parentNode === userListElement) {
+                userListElement.removeChild(userInfo.element);
+            }
+            this.connectedUsers.delete(tokenId);
             this.updateUserCounter();
         }
     }
 
-    handleTypingIndicator(username, isTyping) {
-        const userListObject = this.connectedUsers.get(username);
-        if (userListObject && userListObject.typingIndicator) {
-            userListObject.typingIndicator.classList[isTyping ? 'add' : 'remove']('active');
+    clearUserList() {
+        const userListElement = document.querySelector('#user-list');
+        if (userListElement) {
+            userListElement.innerHTML = '';
+        }
+        this.connectedUsers.clear();
+        this.updateUserCounter();
+    }
+
+    handleTypingIndicator(tokenId, isTyping) {
+        if (!tokenId) {
+            console.error('Attempted to update typing status without token ID');
+            return;
+        }
+
+        const userInfo = this.connectedUsers.get(tokenId);
+        if (userInfo && userInfo.typingIndicator) {
+            userInfo.typingIndicator.classList[isTyping ? 'add' : 'remove']('active');
         }
     }
 }

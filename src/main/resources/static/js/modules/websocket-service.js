@@ -7,66 +7,85 @@ export class WebSocketService {
         this.username = null;
         this.userListService = userListService;
         this.roomId = window.ROOM_ID;
-
-        // Initialize markdown-it with presets
         this.md = window.markdownit({
-            html: false,        // Disable HTML tags in source
-            breaks: true,       // Convert '\n' in paragraphs into <br>
-            linkify: true,      // Autoconvert URL-like text to links
-            typographer: true,  // Enable smartquotes and other replacements
+            html: false,
+            breaks: true,
+            linkify: true,
+            typographer: true,
         });
     }
 
-    connect(username, roomId) {
-        this.username = username;
-        const socket = new SockJS('/ws');
-        this.stompClient = Stomp.over(socket);
+    async connect(username, roomId) {
+        try {
+            // Store username for later use
+            this.username = username;
 
-        const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
-        const headers = adminToken ? {
-            'adminToken': adminToken,
-            'roomId': roomId
-        } : {};
+            const socket = new SockJS('/ws');
+            this.stompClient = Stomp.over(socket);
+            this.stompClient.debug = null; // Disable debug logging
 
-        this.stompClient.connect(headers,
-            () => this.onConnected(),
-            () => {
-                this.onError();
-                if (error.includes("Invalid admin token")) {
-                    // Clear invalid token
-                    localStorage.removeItem('roomAdminToken_' + roomId);
-                    // Handle invalid token error (e.g., show message to user)
-                }
+            const headers = {};
+            const adminToken = localStorage.getItem('roomAdminToken_' + roomId);
+            if (adminToken) {
+                headers.adminToken = adminToken;
+                headers.roomId = roomId;
+                elements.endButton.classList.remove('hidden');
             }
-        );
+
+            this.stompClient.connect(headers,
+                () => this.onConnected(),
+                (error) => {
+                    this.onError(error);
+                    if (error && error.includes("Invalid admin token")) {
+                        localStorage.removeItem('roomAdminToken_' + roomId);
+                    }
+                }
+            );
+        } catch (error) {
+            console.error('Connection error:', error);
+            this.onError('Failed to connect. Please try again.');
+        }
     }
 
     onConnected() {
-        console.log('Connected to WebSocket!');
+        // First subscribe to receive messages
         this.stompClient.subscribe(`/topic/public/${this.roomId}`,
-            (payload) => this.onMessageReceived(payload)
+            (payload) => this.onMessageReceived(payload),
+            { id: 'sub-0' }
         );
 
+        // Then send join message
         const joinMessage = {
             sender: this.username,
             messageType: 'JOIN',
-            roomId: this.roomId
+            tokenId: localStorage.getItem('userToken')
         };
 
-        //this.userListService.addUserToList(this.username);
         this.stompClient.send(`/app/chat/${this.roomId}/addUser`, {}, JSON.stringify(joinMessage));
-        this.stompClient.send(`/app/chat/${this.roomId}/sendMessage`, {}, JSON.stringify(joinMessage));
+        //this.stompClient.send(`/app/chat/${this.roomId}/sendMessage`, {}, JSON.stringify(joinMessage));
         elements.connectingElement.classList.add('hidden');
 
-        const { avatarElement, usernameElement } = createUserInfo(this.username);
+        // Set up initial user info
+        // elements.userInfoRow.innerHTML = '';
+        // const { avatarElement, usernameElement } = createUserInfo(this.username);
+        // elements.userInfoRow.appendChild(avatarElement);
+        // elements.userInfoRow.appendChild(usernameElement);
+        // elements.userInfoRow.classList.remove('hidden');
+    }
+
+    updateUserInfo(username) {
+        this.username = username;
+        elements.userInfoRow.innerHTML = '';
+        const { avatarElement, usernameElement } = createUserInfo(username);
         elements.userInfoRow.appendChild(avatarElement);
         elements.userInfoRow.appendChild(usernameElement);
         elements.userInfoRow.classList.remove('hidden');
     }
 
-    onError() {
-        elements.connectingElement.textContent = 'Could not connect to server. Please retry.';
+    onError(message) {
+        elements.connectingElement.textContent = message || 'Could not connect to WebSocket server. Please refresh this page to try again!';
         elements.connectingElement.style.color = 'red';
+        elements.connectingElement.classList.remove('hidden');
     }
 
     sendMessage(messageContent) {
@@ -75,7 +94,7 @@ export class WebSocketService {
                 sender: this.username,
                 content: messageContent,
                 messageType: 'CHAT',
-                roomId: this.roomId
+                tokenId: localStorage.getItem('userToken')
             };
             this.stompClient.send(
                 `/app/chat/${this.roomId}/sendMessage`,
@@ -86,56 +105,30 @@ export class WebSocketService {
     }
 
     sendTypingStatus(isTyping) {
-        const typingMessage = {
-            sender: this.username,
-            messageType: isTyping ? 'TYPING' : 'TYPING_STOPPED',
-            content: null,
-            roomId: this.roomId
-        };
-        this.stompClient.send(`/app/chat/${this.roomId}/sendMessage`, {}, JSON.stringify(typingMessage));
-    }
-
-    endDiscussion(){
-        const endMessage = {
-            sender: this.username,
-            messageType: 'END',
-            content: null,
-        };
-        this.stompClient.send(`/app/chat/${this.roomId}/relayEndMessage`, {}, JSON.stringify(endMessage));
-        this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
-    }
-
-    handleSummaryAndPdf(message) {
-        // Handle Summary
-        const summaryElement = document.createElement('li');
-        summaryElement.classList.add('chat-message');
-
-        const { avatarElement: botAvatarElement, usernameElement: botNameElement }
-            = createUserInfo(message.sender);
-
-        summaryElement.appendChild(botAvatarElement);
-        summaryElement.appendChild(botNameElement);
-
-        const summaryTextElement = document.createElement('div');
-        summaryTextElement.classList.add('markdown-content');
-        const html = DOMPurify.sanitize(this.md.render(message.content));
-        summaryTextElement.innerHTML = html;
-        summaryElement.appendChild(summaryTextElement);
-        elements.messageArea.appendChild(summaryElement);
-
-        // Handle PDF Download Link
-        if (message.resource) {
-            const pdfElement = document.createElement('li');
-            pdfElement.classList.add('event-message');
-            const downloadLink = document.createElement('a');
-            downloadLink.href = `/pdf/${message.resource}`;
-            downloadLink.textContent = 'Download Discussion Summary PDF';
-            downloadLink.classList.add('pdf-download-link');
-            pdfElement.appendChild(downloadLink);
-            elements.messageArea.appendChild(pdfElement);
+        if (this.stompClient) {
+            const typingMessage = {
+                sender: this.username,
+                messageType: isTyping ? 'TYPING' : 'TYPING_STOPPED',
+                tokenId: localStorage.getItem('userToken')
+            };
+            this.stompClient.send(
+                `/app/chat/${this.roomId}/sendMessage`,
+                {},
+                JSON.stringify(typingMessage)
+            );
         }
+    }
 
-        elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
+    endDiscussion() {
+        if (this.stompClient) {
+            const endMessage = {
+                sender: this.username,
+                messageType: 'END',
+                tokenId: localStorage.getItem('userToken')
+            };
+            this.stompClient.send(`/app/chat/${this.roomId}/relayEndMessage`, {}, JSON.stringify(endMessage));
+            this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
+        }
     }
 
     onMessageReceived(payload) {
@@ -144,13 +137,16 @@ export class WebSocketService {
 
         switch (message.messageType) {
             case 'JOIN':
-                this.userListService.addUserToList(message.sender);
+                if (message.tokenId === localStorage.getItem('userToken')) {
+                    this.updateUserInfo(message.sender);
+                }
+                this.userListService.addUserToList(message.sender, message.tokenId);
                 messageElement.classList.add('event-message');
                 message.content = `${message.sender} joined!`;
                 break;
 
             case 'LEAVE':
-                this.userListService.removeUserFromList(message.sender);
+                this.userListService.removeUserFromList(message.tokenId);
                 messageElement.classList.add('event-message');
                 message.content = `${message.sender} left!`;
                 break;
@@ -162,27 +158,31 @@ export class WebSocketService {
                 messageElement.appendChild(usernameElement);
                 break;
 
+            case 'USER_LIST':
+                this.userListService.clearUserList();
+                if (Array.isArray(message.users)) {
+                    message.users.forEach(user => {
+                        // Make sure we're handling both object and string formats
+                        const username = typeof user === 'object' ? user.username : user;
+                        const userTokenId = typeof user === 'object' ? user.tokenId : message.tokenId;
+                        this.userListService.addUserToList(username, userTokenId);
+                    });
+                }
+                return;
+
+            case 'TYPING':
+            case 'TYPING_STOPPED':
+                this.userListService.handleTypingIndicator(message.tokenId, message.messageType === 'TYPING');
+                return;
+
+            case 'SUMMARY':
+                this.handleSummaryAndPdf(message);
+                return;
+
             case 'END':
                 messageElement.classList.add('event-message');
                 message.content = 'Generating discussion summary...';
                 break;
-
-            case 'USER_LIST':
-                elements.userListElement.innerHTML = '';
-                this.userListService.connectedUsers.clear();
-                message.users.forEach(user => {
-                    this.userListService.addUserToList(user);
-                });
-                break;
-
-            case 'TYPING':
-            case 'TYPING_STOPPED':
-                this.userListService.handleTypingIndicator(message.sender, message.messageType === 'TYPING');
-                break;
-
-            case 'SUMMARY':
-              this.handleSummaryAndPdf(message);
-              return;
         }
 
         if (message.content) {
@@ -193,5 +193,81 @@ export class WebSocketService {
             elements.messageArea.appendChild(messageElement);
             elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
         }
+    }
+
+    async handleSummaryAndPdf(message) {
+        const summaryElement = document.createElement('li');
+        summaryElement.classList.add('chat-message');
+
+        const { avatarElement, usernameElement } = createUserInfo(message.sender);
+        summaryElement.appendChild(avatarElement);
+        summaryElement.appendChild(usernameElement);
+
+        const summaryTextElement = document.createElement('div');
+        summaryTextElement.classList.add('markdown-content');
+        const html = DOMPurify.sanitize(this.md.render(message.content));
+        summaryTextElement.innerHTML = html;
+        summaryElement.appendChild(summaryTextElement);
+        elements.messageArea.appendChild(summaryElement);
+
+        if (message.resource) {
+            const pdfElement = document.createElement('li');
+            pdfElement.classList.add('event-message');
+            const downloadButton = document.createElement('button');
+            downloadButton.textContent = 'Download Discussion Summary PDF';
+            downloadButton.classList.add('pdf-download-link');
+
+            downloadButton.addEventListener('click', async () => {
+                try {
+                    // Show loading state
+                    downloadButton.textContent = 'Downloading...';
+                    downloadButton.disabled = true;
+
+                    const token = localStorage.getItem('userToken');
+                    const response = await fetch(`/api/pdf/${message.resource}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    // Convert the response to a blob
+                    const blob = await response.blob();
+
+                    // Create a URL for the blob
+                    const url = window.URL.createObjectURL(blob);
+
+                    // Create a temporary anchor element
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = message.resource;
+
+                    // Add to document, click it, and remove it
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Clean up
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+
+                    // Reset button state
+                    downloadButton.textContent = 'Download Discussion Summary PDF';
+                    downloadButton.disabled = false;
+                } catch (error) {
+                    console.error('Download failed:', error);
+                    downloadButton.textContent = 'Download Failed - Try Again';
+                    downloadButton.disabled = false;
+                }
+            });
+
+            pdfElement.appendChild(downloadButton);
+            elements.messageArea.appendChild(pdfElement);
+        }
+
+        elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
     }
 }

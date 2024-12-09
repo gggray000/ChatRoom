@@ -1,6 +1,7 @@
 package com.chatroom.websocket;
 
 import com.chatroom.room.JwtService;
+import com.chatroom.room.JwtUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -24,23 +25,28 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            String userToken = accessor.getFirstNativeHeader("userToken");
             String adminToken = accessor.getFirstNativeHeader("adminToken");
             String roomId = accessor.getFirstNativeHeader("roomId");
 
-            if (adminToken != null && roomId != null) {
-                // Use JwtService to validate token
-                boolean isValid = jwtService.validateToken(adminToken, roomId);
-
-                if (!isValid) {
-                    throw new MessageDeliveryException("Invalid admin token for room: " + roomId);
+            if (userToken != null) {
+                JwtUserDetails userDetails = jwtService.validateUserToken(userToken);
+                if (userDetails == null || !roomId.equals(userDetails.getRoomId())) {
+                    throw new MessageDeliveryException("Invalid user token");
                 }
-                // If valid, set user principal
-                accessor.setUser(new Principal() {
-                    @Override
-                    public String getName() {
-                        return roomId;
-                    }
-                });
+
+                // Set user details in session attributes
+                accessor.getSessionAttributes().put("username", userDetails.getUsername());
+                accessor.getSessionAttributes().put("tokenId", userDetails.getTokenId());
+                accessor.getSessionAttributes().put("roomId", roomId);
+                accessor.getSessionAttributes().put("role", userDetails.getRole());
+            }
+
+            if (adminToken != null) {
+                boolean isValidAdmin = jwtService.validateAdminToken(adminToken, roomId);
+                if (isValidAdmin) {
+                    accessor.getSessionAttributes().put("isAdmin", true);
+                }
             }
         }
         return message;
