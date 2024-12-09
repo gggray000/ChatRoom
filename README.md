@@ -5,7 +5,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Handle race conditions in cases like setting SystemMessages, and generating summaries/PDF files.<br>
-2. Change rules for PDF file generation.
+2. Change rules for PDF file generation.<br>
+3. Fix the bug that users can't connect to the second room.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
