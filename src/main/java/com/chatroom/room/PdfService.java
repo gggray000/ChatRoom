@@ -24,7 +24,7 @@ public class PdfService {
         this.pdfStorageLocation.toFile().mkdirs();
     }
 
-    public String makePdf(String content) {
+    public String makePdf(String roomId, String content) {
         MutableDataSet options = new MutableDataSet();
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();
@@ -32,7 +32,7 @@ public class PdfService {
         Node document = parser.parse(content);
         String html = renderer.render(document);
 
-        String filename = UUID.randomUUID().toString() + ".pdf";
+        String filename = roomId + ".pdf";
         Path pdfPath = pdfStorageLocation.resolve(filename);
 
         makePdfFromHtml(html, pdfPath.toString());

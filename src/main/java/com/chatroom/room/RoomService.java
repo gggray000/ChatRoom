@@ -10,11 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class RoomService {
 
-// Now this uses in-storage memory to storage Rooms, in the future need to be changed to use JPA for database
+// Temporary in-memory storage for Rooms, in the future need to be changed to use JPA for database
 
-    @Autowired
-    private JwtService jwtService;
-    // Temporary placeholder variable for the repository
     private final Map<String, Room> rooms = new ConcurrentHashMap<>();
 
     public Room createRoom(String name) {

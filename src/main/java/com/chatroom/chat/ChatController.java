@@ -163,7 +163,7 @@ public class ChatController {
         }
 
         String summary = chatBotController.makeSummary(textMessageService.exportMessages());
-        String pdfFileName = pdfService.makePdf(summary);
+        String pdfFileName = pdfService.makePdf(roomId, summary);
 
         return WebSocketMessage.builder()
                 .messageType(MessageType.SUMMARY)

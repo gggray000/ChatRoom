@@ -4,6 +4,7 @@ import com.spire.barcode.BarCodeGenerator;
 import com.spire.barcode.BarCodeType;
 import com.spire.barcode.BarcodeSettings;
 import com.spire.barcode.QRCodeECL;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -35,9 +36,24 @@ public class QrCodeService {
     }
 
     public static void main(String []args) throws IOException {
-        //Instantiate a BarcodeSettings object
+        // Instantiate a BarcodeSettings object
+        BarcodeSettings settings = getBarcodeSettings();
+        settings.isShowBottomText(true);
+
+        //Set border visibility
+        settings.hasBorder(false);
+
+        //Instantiate a BarCodeGenerator object based on the specific settings
+        BarCodeGenerator barCodeGenerator = new BarCodeGenerator(settings);
+        //Generate QR code image
+        BufferedImage bufferedImage = barCodeGenerator.generateImage();
+        //save the image to a .png file
+        ImageIO.write(bufferedImage,"png",new File("QR_Code_Test.png"));
+    }
+
+    private static @NotNull BarcodeSettings getBarcodeSettings() {
         BarcodeSettings settings = new BarcodeSettings();
-        //Set barcode type
+        // Set barcode type
         settings.setType(BarCodeType.QR_Code);
         //Set barcode data
         String data = "https://zoom.earth/";
@@ -55,16 +71,6 @@ public class QrCodeService {
         //Set text visibility
         settings.setShowText(false);
         settings.setShowTopText(true);
-        settings.isShowBottomText(true);
-
-        //Set border visibility
-        settings.hasBorder(false);
-
-        //Instantiate a BarCodeGenerator object based on the specific settings
-        BarCodeGenerator barCodeGenerator = new BarCodeGenerator(settings);
-        //Generate QR code image
-        BufferedImage bufferedImage = barCodeGenerator.generateImage();
-        //save the image to a .png file
-        ImageIO.write(bufferedImage,"png",new File("QR_Code_Test.png"));
+        return settings;
     }
 }
