@@ -5,7 +5,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Change naming rules for PDF file generation.<br>
-2. Fix the bug that posterior users might overwrite prior users. Rewrite roomUsers in ChatControlle.
+2. Fix the bug that posterior users might overwrite prior users. Rewrite roomUsers in ChatController.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
