@@ -5,10 +5,16 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Configuration
 public class ChatBotConfiguration {
 
-    public String prompt = """
+    private final Map<String, String> roomPrompts = new ConcurrentHashMap<>();
+    private final Map<String, ChatMemory> roomMemories = new ConcurrentHashMap<>();
+
+    private final String PROMPT_TEMPLATE = """
             You are an AI assistant that helps summarize chat discussions, based on the main topic
             provided by admin.
             When provided with a chat history, make sure to follow the following guidelines:
@@ -26,12 +32,17 @@ public class ChatBotConfiguration {
             %s
             """;
 
-    @Bean
-    ChatMemory chatMemory() {
-        return MessageWindowChatMemory.withMaxMessages(50);
+    public ChatMemory getOrCreateMemoryForRoom(String roomId) {
+        return roomMemories.computeIfAbsent(roomId,
+                id -> MessageWindowChatMemory.withMaxMessages(50)
+        );
     }
 
-    public void updatePrompt(String newPrompt) {
-        this.prompt = String.format(this.prompt, newPrompt != null ? newPrompt.trim() : "");
+    public String getPromptForRoom(String roomId) {
+        return roomPrompts.getOrDefault(roomId, String.format(PROMPT_TEMPLATE, ""));
+    }
+
+    public void updatePromptForRoom(String roomId, String newPrompt) {
+        roomPrompts.put(roomId, String.format(PROMPT_TEMPLATE, newPrompt != null ? newPrompt.trim() : ""));
     }
 }

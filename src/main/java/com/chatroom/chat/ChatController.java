@@ -129,7 +129,6 @@ public class ChatController {
     @SendTo("/topic/public/{roomId}")
     public WebSocketMessage sendMessage(@Payload WebSocketMessage webSocketMessage,
                                         @DestinationVariable String roomId) {
-        validateUserToken(webSocketMessage.getTokenId(), roomId);
 
         if(MessageType.CHAT.equals(webSocketMessage.getMessageType())){
             TextMessage textMessage = new TextMessage(

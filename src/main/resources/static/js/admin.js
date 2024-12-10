@@ -31,11 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(`HTTP error! status: ${createRoomResponse.status}`);
             }
 
+            const roomData = await createRoomResponse.json();
+
             const setPromptResponse = await fetch('/admin/set-system-prompt', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: roomName,
+                    roomId: roomData.roomId,
                     systemPrompt: systemPrompt
                 })
             });
@@ -43,8 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!setPromptResponse.ok) {
                 throw new Error(`HTTP error! status: ${systemPrompt.status}`);
             }
-
-            const roomData = await createRoomResponse.json();
 
             // Then get the admin token
             const tokenResponse = await fetch('/admin/token', {

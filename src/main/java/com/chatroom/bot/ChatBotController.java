@@ -2,6 +2,7 @@ package com.chatroom.bot;
 
 import com.chatroom.chat.TextMessage;
 import com.chatroom.chat.TextMessageService;
+import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.annotation.PostConstruct;
@@ -22,17 +23,17 @@ public class ChatBotController {
         this.textMessageService = textMessageService;
     }
 
-    // Even though the bot is built by @PostConstruct, the systemMessageProvide holds a reference to prompt
-    // It can get updates of the prompt.
-    @PostConstruct
-    private void buildChatBot() {
-            this.chatBot = AiServices.builder(ChatBot.class)
-                    .chatLanguageModel(model)
-                    .systemMessageProvider(memoryId -> chatBotConfiguration.prompt)
-                    .build();
-    }
-
     public String makeSummary(String roomId) {
+        ChatMemory roomMemory = chatBotConfiguration.getOrCreateMemoryForRoom(roomId);
+        String systemPrompt = chatBotConfiguration.getPromptForRoom(roomId);
+
+        // Create a one-time use ChatBot instance with the room-specific memory
+        this.chatBot = AiServices.builder(ChatBot.class)
+                .chatLanguageModel(model)
+                .chatMemory(roomMemory)
+                .systemMessageProvider(memoryId -> systemPrompt)
+                .build();
+
         return chatBot.summarize(textMessageService.exportStoredMessages(roomId));
     }
 }

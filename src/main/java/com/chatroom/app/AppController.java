@@ -84,7 +84,8 @@ public class AppController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> setSystemPrompt(@RequestBody Map<String, String> request) {
         String prompt = request.get("systemPrompt");
-        chatBotConfiguration.updatePrompt(prompt);
+        String roomId = request.get("roomId");
+        chatBotConfiguration.updatePromptForRoom(roomId, prompt);
         return ResponseEntity.ok(Map.of("status", "success"));
     }
 
