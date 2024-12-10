@@ -4,8 +4,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Handle race conditions in cases like setting SystemMessages, and generating summaries/PDF files.<br>
-2. Change rules for PDF file generation.<br>
+1. Resolve race condition for systemMessage, by implementing a mechanism for a shared model with separate chatMemory.<br>
+2. Change naming rules for PDF file generation.<br>
 3. Fix the bug that users can't connect to the second room.
 
 <h3>Long-term</h3>
