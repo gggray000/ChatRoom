@@ -5,7 +5,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Change naming rules for PDF file generation.<br>
-2. Fix the bug that posterior users might overwrite prior users. Rewrite roomUsers in ChatController and Room class.
+2. Fix the bug that posterior users might overwrite prior users. Rewrite roomUsers in ChatController, Room class, and WebSocketMessage class.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -25,13 +25,13 @@ Resolved race condition for ChatBot's SystemMessage.
 <h3>v0.8.7</h3>
 Resolved race condition for text messages export.
 <h3>v0.8.6</h3>
-1. Improved JWT service, now admin and users get tokens from same service but with different flags.<br>
-2. Improved design from admin page, and added the logo to the chat page.
+1. Improved JWT service, now admin and users get tokens from the same service but with different flags.<br>
+2. Improved design of the admin page, and added the logo to the chat page.
 <h3>v0.8.5</h3>
-Improved JWT service to fix the bug where users with same username cause conflicts. Now every user gets his/her own JWT.
+Improved JWT service to fix the bug where users with the same username cause conflicts. Now every user gets his/her own JWT.
 <h3>v0.8.4</h3>
-1. Fixed the bug where typing indicator overlaps with long username.<br>
-2. Fixed the bug where long username isn't displayed correctly.
+1. Fixed the bug where the typing indicator overlaps with a long username.<br>
+2. Fixed the bug where a long username isn't displayed correctly.
 <h3>v0.8.3</h3>
 Refactored ChatBotController.java
 <h3>v0.8.2</h3>
