@@ -6,12 +6,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
-
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Service
 public class JwtService {
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+
     @Value("${jwt.secret}")
     private String secret;
 
@@ -38,6 +41,13 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
 
+            String roomId = claims.get("roomId", String.class);
+            String username = claims.get("username", String.class);
+            boolean isAdmin = claims.get("isAdmin", Boolean.class);
+
+            logger.info("Token validation - Room: {}, User: {}, Admin: {}",
+                    roomId, username, isAdmin);
+
             return new JwtUserDetails(
                     claims.getSubject(),  // username
                     claims.getId(),       // unique token id
@@ -45,6 +55,7 @@ public class JwtService {
                     claims.get("isAdmin", Boolean.class)  // Add isAdmin claim
             );
         } catch (Exception e) {
+            logger.error("Token validation failed: {}", e.getMessage());
             return null;
         }
     }

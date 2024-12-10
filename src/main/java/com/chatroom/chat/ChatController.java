@@ -21,6 +21,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import com.chatroom.bot.*;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 public class ChatController {
@@ -31,6 +33,7 @@ public class ChatController {
     private final PdfService pdfService;
     private final JwtService jwtService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
     // Inner class to store user details
     private static class ChatUser {
@@ -71,11 +74,15 @@ public class ChatController {
                                     @DestinationVariable String roomId,
                                     SimpMessageHeaderAccessor headerAccessor) {
         String tokenId = webSocketMessage.getTokenId();
+        logger.info("Adding user to room {} with token {}", roomId, tokenId);
+
         JwtUserDetails userDetails = validateUserToken(tokenId, roomId);
 
         String originalUsername = webSocketMessage.getSender();
         String finalUsername = generateUniqueUsername(originalUsername, roomId);
         webSocketMessage.setSender(finalUsername);
+        logger.info("Current users in room {}: {}", roomId,
+                roomUsers.containsKey(roomId) ? roomUsers.get(roomId).size() : 0);
 
         headerAccessor.getSessionAttributes().put("username", finalUsername);
         headerAccessor.getSessionAttributes().put("roomId", roomId);
