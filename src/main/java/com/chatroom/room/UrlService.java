@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 public class UrlService {
 
     public String createUrl(Room room){
-        return "/chat/" + room.getId();
+        return "/chat/" + room.getRoomId();
     }
 
 }

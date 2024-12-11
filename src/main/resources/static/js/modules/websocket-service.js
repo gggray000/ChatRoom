@@ -23,6 +23,7 @@ export class WebSocketService {
 
             const token = localStorage.getItem('userToken');
             const headers = {
+                username: username,
                 token: token,
                 roomId: roomId
             };
@@ -119,7 +120,7 @@ export class WebSocketService {
 
         switch (message.messageType) {
             case 'JOIN':
-                if (message.tokenId === localStorage.getItem('userToken')) {
+                if (message.sender === this.username) {
                     this.updateUserInfo(message.sender);
                 }
                 this.userListService.addUserToList(message.sender, message.tokenId);
@@ -142,12 +143,10 @@ export class WebSocketService {
 
             case 'USER_LIST':
                 this.userListService.clearUserList();
-                if (Array.isArray(message.users)) {
-                    message.users.forEach(user => {
-                        // Make sure we're handling both object and string formats
-                        const username = typeof user === 'object' ? user.username : user;
-                        const userTokenId = typeof user === 'object' ? user.tokenId : message.tokenId;
-                        this.userListService.addUserToList(username, userTokenId);
+                //console.log("Received user list:", message.userList);
+                if (Array.isArray(message.userList)) {
+                    message.userList.forEach(user => {
+                        this.userListService.addUserToList(user);
                     });
                 }
                 return;

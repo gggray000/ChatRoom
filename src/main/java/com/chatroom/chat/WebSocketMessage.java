@@ -22,7 +22,7 @@ public class WebSocketMessage {
     private String sender;
     private String content;
     private MessageType messageType;
-    private List<Map<String, Object>> users;
+    private List<String> userList;
     private String tokenId;
     private String resource;
 

@@ -56,19 +56,19 @@ export class UserListService {
         }
     }
 
-    addUserToList(username, tokenId) {
-        if (!tokenId || !username) {
-            console.error('Attempted to add user without token ID or username');
+    addUserToList(username) {
+        if (!username) {
+            console.error('Attempted to add user without username');
             return;
         }
 
         const userListElement = document.querySelector('#user-list');
         if (!userListElement) return;
 
-        if (!this.connectedUsers.has(tokenId)) {
+        if (!this.connectedUsers.has(username)) {
             const userElement = document.createElement('div');
             userElement.classList.add('user-list-item');
-            userElement.setAttribute('data-token-id', tokenId);
+            userElement.setAttribute('data-username', username);
 
             const { avatarElement, usernameElement } = createUserInfo(username);
 
@@ -77,7 +77,7 @@ export class UserListService {
 
             const usernameTooltip = document.createElement('div');
             usernameTooltip.classList.add('username-tooltip');
-            usernameTooltip.setAttribute('data-token-id', tokenId);
+            usernameTooltip.setAttribute('data-username', username);
 
             const usernameText = document.createTextNode(username);
             usernameTooltip.appendChild(usernameText);
@@ -98,7 +98,7 @@ export class UserListService {
 
             userListElement.appendChild(userElement);
 
-            this.connectedUsers.set(tokenId, {
+            this.connectedUsers.set(username, {
                 element: userElement,
                 username: username,
                 typingIndicator: typingIndicator
@@ -108,19 +108,19 @@ export class UserListService {
         }
     }
 
-    removeUserFromList(tokenId) {
-        if (!tokenId) {
-            console.error('Attempted to remove user without token ID');
+    removeUserFromList(username) {
+        if (!username) {
+            console.error('Attempted to remove user without username');
             return;
         }
 
-        const userInfo = this.connectedUsers.get(tokenId);
+        const userInfo = this.connectedUsers.get(username);
         if (userInfo && userInfo.element) {
             const userListElement = document.querySelector('#user-list');
             if (userListElement && userInfo.element.parentNode === userListElement) {
                 userListElement.removeChild(userInfo.element);
             }
-            this.connectedUsers.delete(tokenId);
+            this.connectedUsers.delete(username);
             this.updateUserCounter();
         }
     }
@@ -134,13 +134,13 @@ export class UserListService {
         this.updateUserCounter();
     }
 
-    handleTypingIndicator(tokenId, isTyping) {
-        if (!tokenId) {
+    handleTypingIndicator(username, isTyping) {
+        if (!username) {
             console.error('Attempted to update typing status without token ID');
             return;
         }
 
-        const userInfo = this.connectedUsers.get(tokenId);
+        const userInfo = this.connectedUsers.get(username);
         if (userInfo && userInfo.typingIndicator) {
             userInfo.typingIndicator.classList[isTyping ? 'add' : 'remove']('active');
         }

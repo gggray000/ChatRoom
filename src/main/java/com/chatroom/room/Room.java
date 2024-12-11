@@ -1,29 +1,28 @@
 package com.chatroom.room;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-@Entity
+
 public class Room {
 
-    @Id
-    private String id;
+    private String roomId;
     private String name;
+    private List<User> users;
 
-    public Room() {
-    }
-
-    public Room(String id, String name) {
-        this.id = id;
+    public Room(String roomId, String name) {
+        this.roomId = roomId;
         this.name = name;
+        this.users = new ArrayList<>();
     }
 
-    public String getId() {
-        return id;
+    public String getRoomId() {
+        return roomId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
     public String getName() {
@@ -33,4 +32,21 @@ public class Room {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<User> getUsers(){
+        return this.users;
+    }
+
+    public void addUsers(User user){
+        this.getUsers().add(user);
+    }
+
+    public User findUser(String name){
+        for(User user: this.users){
+            if (Objects.equals(user.getUsername(), name)){
+                return user;
+            }
+        } return null;
+    }
+
 }

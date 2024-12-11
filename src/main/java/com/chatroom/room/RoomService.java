@@ -16,15 +16,13 @@ public class RoomService {
 
     public Room createRoom(String name) {
         String roomId = UUID.randomUUID().toString();
-        Room room = new Room();
-        room.setId(roomId);
-        room.setName(name);
+        Room room = new Room(roomId, name);
         rooms.put(roomId, room);
         return room;
     }
     // With JPA, this will get room from repository
-    public Room getRoom(String id) {
-        return rooms.get(id);
+    public Room getRoom(String roomId) {
+        return rooms.get(roomId);
     }
 
 //    public void deleteRoom(String id) {

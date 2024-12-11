@@ -70,7 +70,7 @@ public class AppController {
 
             Map<String, String> response = new HashMap<>();
             response.put("url", roomUrl);
-            response.put("roomId", room.getId());
+            response.put("roomId", room.getRoomId());
             response.put("roomName", room.getName());
 
             return ResponseEntity.ok(response);

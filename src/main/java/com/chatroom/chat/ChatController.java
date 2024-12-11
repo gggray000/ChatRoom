@@ -1,8 +1,6 @@
 package com.chatroom.chat;
 
-import com.chatroom.room.JwtService;
-import com.chatroom.room.JwtUserDetails;
-import com.chatroom.room.PdfService;
+import com.chatroom.room.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +17,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import com.chatroom.bot.*;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
@@ -26,38 +26,27 @@ import org.slf4j.LoggerFactory;
 
 @Controller
 public class ChatController {
-    // Map to store room users with their token IDs
-    private final Map<String, Map<String, ChatUser>> roomUsers = new ConcurrentHashMap<>();
     private final TextMessageService textMessageService;
     private final ChatBotController chatBotController;
     private final PdfService pdfService;
     private final JwtService jwtService;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final RoomService roomService;
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
-
-    // Inner class to store user details
-    private static class ChatUser {
-        String username;
-        String tokenId;
-        boolean isAdmin;
-
-        ChatUser(String username, String tokenId, boolean isAdmin) {
-            this.username = username;
-            this.tokenId = tokenId;
-            this.isAdmin = isAdmin;
-        }
-    }
 
     @Autowired
     public ChatController(TextMessageService textMessageService,
                           ChatBotController chatBotController,
                           PdfService pdfService,
-                          JwtService jwtService, SimpMessagingTemplate simpMessagingTemplate) {
+                          JwtService jwtService,
+                          SimpMessagingTemplate simpMessagingTemplate,
+                          RoomService roomService) {
         this.textMessageService = textMessageService;
         this.chatBotController = chatBotController;
         this.pdfService = pdfService;
         this.jwtService = jwtService;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.roomService = roomService;
     }
 
     private JwtUserDetails validateUserToken(String tokenId, String roomId) {
@@ -75,23 +64,22 @@ public class ChatController {
                                     SimpMessageHeaderAccessor headerAccessor) {
         String tokenId = webSocketMessage.getTokenId();
         logger.info("Adding user to room {} with token {}", roomId, tokenId);
-
         JwtUserDetails userDetails = validateUserToken(tokenId, roomId);
 
         String originalUsername = webSocketMessage.getSender();
         String finalUsername = generateUniqueUsername(originalUsername, roomId);
+
+        User user = new User(tokenId, finalUsername);
+        roomService.getRoom(roomId).addUsers(user);
+
         webSocketMessage.setSender(finalUsername);
         logger.info("Current users in room {}: {}", roomId,
-                roomUsers.containsKey(roomId) ? roomUsers.get(roomId).size() : 0);
+                roomService.getRoom(roomId).getUsers().size());
 
         headerAccessor.getSessionAttributes().put("username", finalUsername);
         headerAccessor.getSessionAttributes().put("roomId", roomId);
         headerAccessor.getSessionAttributes().put("tokenId", tokenId);
         headerAccessor.getSessionAttributes().put("isAdmin", userDetails.isAdmin());
-
-        roomUsers.computeIfAbsent(roomId, k -> new ConcurrentHashMap<>());
-        ChatUser chatUser = new ChatUser(finalUsername, tokenId, userDetails.isAdmin());
-        roomUsers.get(roomId).put(tokenId, chatUser);
 
         simpMessagingTemplate.convertAndSend("/topic/public/" + roomId,
                 WebSocketMessage.builder()
@@ -100,35 +88,34 @@ public class ChatController {
                         .tokenId(tokenId)
                         .build());
 
-        return updateUserList(finalUsername, roomId);
+        return updateUserList(roomId);
     }
 
-    @MessageMapping("/chat/{roomId}/removeUser")
-    @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage removeUser(@Payload WebSocketMessage chatMessage, String username, String roomId) {
-        if (roomId != null && roomUsers.containsKey(roomId)) {
-            String tokenId = chatMessage.getTokenId(); // Get tokenId from the message
-            roomUsers.get(roomId).remove(tokenId);
-
-            return updateUserList(null, roomId);
+    public WebSocketMessage removeUser(String username, String roomId) {
+        if (roomId != null && roomService.getRoom(roomId) != null) {
+            //String tokenId = webSocketMessage.getTokenId(); // Get tokenId from the message
+            roomService.getRoom(roomId)
+                         .getUsers()
+                         .remove(roomService.getRoom(roomId).findUser(username));
+            WebSocketMessage userListMessage =  updateUserList(roomId);
+            simpMessagingTemplate.convertAndSend(
+                    "/topic/public/" + roomId, userListMessage);
         }
         return null;
     }
 
-    private WebSocketMessage updateUserList(String finalUsername, String roomId) {
-        List<Map<String, Object>> userList = new ArrayList<>();
-        roomUsers.get(roomId).values().forEach(user -> {
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("username", user.username);
-            userMap.put("tokenId", user.tokenId);
-            userMap.put("isAdmin", user.isAdmin);
-            userList.add(userMap);
-        });
+    private WebSocketMessage updateUserList(String roomId) {
+
+        List<String> userList = roomService.getRoom(roomId).getUsers()
+                .stream()
+                .map(User::getUsername)
+                .toList();
+        System.out.println("Backend List: " + roomService.getRoom(roomId).getUsers());
+        System.out.println("Frontend List: " + userList);
 
         return WebSocketMessage.builder()
                 .messageType(MessageType.USER_LIST)
-                .sender(finalUsername)
-                .users(userList)
+                .userList(userList)
                 .build();
     }
 
@@ -151,7 +138,6 @@ public class ChatController {
     @MessageMapping("/chat/{roomId}/relayEndMessage")
     @SendTo("/topic/public/{roomId}")
     public WebSocketMessage relayEndMessage(@Payload WebSocketMessage endMessage,
-                                            @DestinationVariable String roomId,
                                             SimpMessageHeaderAccessor headerAccessor) {
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
         if (isAdmin == null || !isAdmin) {
@@ -207,11 +193,12 @@ public class ChatController {
     }
 
     private String generateUniqueUsername(String baseUsername, String roomId) {
-        if (!roomUsers.containsKey(roomId)) {
+        if (roomService.getRoom(roomId) == null) {
             return baseUsername;
         }
-        boolean usernameTaken = roomUsers.get(roomId).values().stream()
-                .anyMatch(user -> user.username.equals(baseUsername));
+        boolean usernameTaken = roomService.getRoom(roomId).getUsers()
+                .stream()
+                .anyMatch(user -> user.getUsername().equals(baseUsername));
         if (!usernameTaken) {
             return baseUsername;
         }
@@ -220,8 +207,9 @@ public class ChatController {
         do {
             newUsername = baseUsername + "(" + counter + ")";
             final String usernameToCheck = newUsername;
-            usernameTaken = roomUsers.get(roomId).values().stream()
-                    .anyMatch(user -> user.username.equals(usernameToCheck));
+            usernameTaken =roomService.getRoom(roomId).getUsers()
+                    .stream()
+                    .anyMatch(user -> user.getUsername().equals(usernameToCheck));
             counter++;
         } while (usernameTaken);
         return newUsername;

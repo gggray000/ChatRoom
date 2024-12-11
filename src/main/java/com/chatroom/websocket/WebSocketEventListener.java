@@ -39,7 +39,7 @@ public class WebSocketEventListener {
                     .build();
             messagingTemplate.convertAndSend("/topic/public/" + roomId, leaveMessage);
             logger.info("User Disconnected: " + username);
-            chatController.removeUser(leaveMessage, username, roomId);
+            chatController.removeUser(username, roomId);
         }
     }
 }
