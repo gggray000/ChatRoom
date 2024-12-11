@@ -157,7 +157,7 @@ export class WebSocketService {
                 return;
 
             case 'SUMMARY':
-                this.handleSummaryAndPdf(message);
+                this.handleSummaryAndPdf(this.roomId, message);
                 return;
 
             case 'END':
@@ -176,7 +176,7 @@ export class WebSocketService {
         }
     }
 
-    async handleSummaryAndPdf(message) {
+    async handleSummaryAndPdf(roomId, message) {
         const summaryElement = document.createElement('li');
         summaryElement.classList.add('chat-message');
 
@@ -207,7 +207,8 @@ export class WebSocketService {
                     const token = localStorage.getItem('userToken');
                     const response = await fetch(`/api/pdf/${message.resource}`, {
                         headers: {
-                            'Authorization': `Bearer ${token}`
+                            roomId: roomId,
+                            token: token
                         }
                     });
 

@@ -27,13 +27,13 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
         final Logger logger = LoggerFactory.getLogger(WebSocketAuthInterceptor.class);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            String token = accessor.getFirstNativeHeader("token");
+            String tokenId = accessor.getFirstNativeHeader("token");
             String roomId = accessor.getFirstNativeHeader("roomId");
-            logger.info("Connection attempt - Room ID: {}, Token: {}", roomId, token);
+            logger.info("Connection attempt - Room ID: {}, Token: {}", roomId, tokenId);
 
 
-            if (token != null) {
-                JwtUserDetails userDetails = jwtService.validateUserToken(token);
+            if (tokenId != null) {
+                JwtUserDetails userDetails = jwtService.validateUserToken(tokenId, roomId);
                 logger.info("User validation - Room ID: {}, Username: {}, Valid: {}",
                         roomId,
                         userDetails != null ? userDetails.getUsername() : "null",

@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 import java.util.Date;
@@ -34,26 +35,31 @@ public class JwtService {
                 .compact();
     }
 
-    public JwtUserDetails validateUserToken(String token) {
+    public JwtUserDetails validateUserToken(String tokenId, String roomId) {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secret)
-                    .parseClaimsJws(token)
+                    .parseClaimsJws(tokenId)
                     .getBody();
 
-            String roomId = claims.get("roomId", String.class);
+            String roomIdInToken = claims.get("roomId", String.class);
             String username = claims.get("username", String.class);
             boolean isAdmin = claims.get("isAdmin", Boolean.class);
 
             logger.info("Token validation - Room: {}, User: {}, Admin: {}",
-                    roomId, username, isAdmin);
+                    roomIdInToken, username, isAdmin);
 
-            return new JwtUserDetails(
+            JwtUserDetails jwtUserDetails = new JwtUserDetails(
                     claims.getSubject(),  // username
                     claims.getId(),       // unique token id
                     claims.get("roomId", String.class),
-                    claims.get("isAdmin", Boolean.class)  // Add isAdmin claim
-            );
+                    claims.get("isAdmin", Boolean.class));  // Add isAdmin claim
+
+            if (!jwtUserDetails.getRoomId().equals(roomId)) {
+                throw new MessageDeliveryException("Invalid room id");
+            }
+            return jwtUserDetails;
+
         } catch (Exception e) {
             logger.error("Token validation failed: {}", e.getMessage());
             return null;

@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Then get the admin token
-            const tokenResponse = await fetch('/admin/token', {
+            /*/!*const tokenResponse = await fetch('/admin/token', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const token = await tokenResponse.text();
-            localStorage.setItem('userToken', token);
+            localStorage.setItem('userToken', token);*/
             // Update UI
             successMessage.style.display = 'block';
             roomNameInput.style.display = 'none';

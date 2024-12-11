@@ -16,9 +16,8 @@ async function connect(event) {
 
     if (username) {
         try {
-            let token = localStorage.getItem('userToken');
-            // If no token exists, this is a normal user, and we need to get one
-            if (!token) {
+            const isAdmin = document.referrer.includes('/admin');
+
                 const response = await fetch('/admin/token', {
                     method: 'POST',
                     headers: {
@@ -27,7 +26,7 @@ async function connect(event) {
                     body: JSON.stringify({
                         username: username,
                         roomId: roomId,
-                        isAdmin: false
+                        isAdmin: isAdmin
                     })
                 });
 
@@ -35,17 +34,16 @@ async function connect(event) {
                     throw new Error('Failed to get token');
                 }
 
-                token = await response.text();
-                localStorage.setItem('userToken', token);
-            }else{
-                elements.endButton.classList.remove('hidden');
-            }
-            // If token exists, it means this is an admin who created the room
+                const token = await response.text();
+                localStorage.setItem('userToken',token);
+
             elements.usernamePage.classList.add('hidden');
             elements.chatPage.classList.remove('hidden');
             document.querySelector('.chat-header h2').textContent = roomName;
+            if(isAdmin){
+                elements.endButton.classList.remove('hidden');
+            }
 
-            // Connect to WebSocket with the token
             await webSocketService.connect(username, roomId);
 
         } catch (error) {

@@ -49,14 +49,6 @@ public class ChatController {
         this.roomService = roomService;
     }
 
-    private JwtUserDetails validateUserToken(String tokenId, String roomId) {
-        JwtUserDetails userDetails = jwtService.validateUserToken(tokenId);
-        if (userDetails == null || !userDetails.getRoomId().equals(roomId)) {
-            throw new MessageDeliveryException("Invalid or expired token");
-        }
-        return userDetails;
-    }
-
     @MessageMapping("/chat/{roomId}/addUser")
     @SendTo("/topic/public/{roomId}")
     public WebSocketMessage addUser(@Payload WebSocketMessage webSocketMessage,
@@ -64,7 +56,7 @@ public class ChatController {
                                     SimpMessageHeaderAccessor headerAccessor) {
         String tokenId = webSocketMessage.getTokenId();
         logger.info("Adding user to room {} with token {}", roomId, tokenId);
-        JwtUserDetails userDetails = validateUserToken(tokenId, roomId);
+        JwtUserDetails userDetails = jwtService.validateUserToken(tokenId, roomId);
 
         String originalUsername = webSocketMessage.getSender();
         String finalUsername = generateUniqueUsername(originalUsername, roomId);
@@ -169,10 +161,11 @@ public class ChatController {
     @GetMapping("/api/pdf/{filename}")
     public ResponseEntity<Resource> downloadPdf(
             @PathVariable String filename,
-            @RequestHeader("Authorization") String token) {
+            SimpMessageHeaderAccessor headerAccessor) {
+        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
+        String token = headerAccessor.getSessionAttributes().get("tokenId").toString();
 
-        // Validate the token
-        JwtUserDetails userDetails = jwtService.validateUserToken(token.replace("Bearer ", ""));
+        JwtUserDetails userDetails = jwtService.validateUserToken(token, roomId);
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

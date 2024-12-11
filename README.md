@@ -5,7 +5,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Change naming rules for PDF file generation.<br>
-2. Fix connection bug with multiple rooms and users.
 
 <h3>Long-term</h3>
 1. JPA implementation for chat history.<br>
@@ -20,6 +19,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Wait for Llama 3.3 new releases, now there's only a 70B version available.
 
 <h2>Update Log</h2>
+<h3>v0.9</h3>
+Streamlined connection and verification process for the admin and normal users.
 <h3>v0.8.9</h3>
 Fixed bug like new users could replace old users at the front end, changed frontend JWT handling logic, rewrote Room class, WebSocketMessage class, ChatController, added User class.
 <h3>v0.8.8</h3>
