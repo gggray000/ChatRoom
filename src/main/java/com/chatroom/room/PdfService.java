@@ -32,7 +32,7 @@ public class PdfService {
         Node document = parser.parse(content);
         String html = renderer.render(document);
 
-        String filename = roomId + ".pdf";
+        String filename = "Summary_Room_" + roomId + ".pdf";
         Path pdfPath = pdfStorageLocation.resolve(filename);
 
         makePdfFromHtml(html, pdfPath.toString());

@@ -15,7 +15,10 @@ public class RoomService {
     private final Map<String, Room> rooms = new ConcurrentHashMap<>();
 
     public Room createRoom(String name) {
-        String roomId = UUID.randomUUID().toString();
+        String roomId = UUID.randomUUID().toString().substring(0, 5);
+        while (rooms.containsKey(roomId)) {
+            roomId = UUID.randomUUID().toString().substring(0, 5);
+        }
         Room room = new Room(roomId, name);
         rooms.put(roomId, room);
         return room;
