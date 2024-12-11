@@ -85,7 +85,6 @@ public class ChatController {
 
     public WebSocketMessage removeUser(String username, String roomId) {
         if (roomId != null && roomService.getRoom(roomId) != null) {
-            //String tokenId = webSocketMessage.getTokenId(); // Get tokenId from the message
             roomService.getRoom(roomId)
                          .getUsers()
                          .remove(roomService.getRoom(roomId).findUser(username));
@@ -97,7 +96,6 @@ public class ChatController {
     }
 
     private WebSocketMessage updateUserList(String roomId) {
-
         List<String> userList = roomService.getRoom(roomId).getUsers()
                 .stream()
                 .map(User::getUsername)
@@ -115,7 +113,6 @@ public class ChatController {
     @SendTo("/topic/public/{roomId}")
     public WebSocketMessage sendMessage(@Payload WebSocketMessage webSocketMessage,
                                         @DestinationVariable String roomId) {
-
         if(MessageType.CHAT.equals(webSocketMessage.getMessageType())){
             TextMessage textMessage = new TextMessage(
                     webSocketMessage.getSender(),
@@ -161,9 +158,8 @@ public class ChatController {
     @GetMapping("/api/pdf/{filename}")
     public ResponseEntity<Resource> downloadPdf(
             @PathVariable String filename,
-            SimpMessageHeaderAccessor headerAccessor) {
-        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-        String token = headerAccessor.getSessionAttributes().get("tokenId").toString();
+            @RequestHeader(value = "roomId") String roomId,
+            @RequestHeader(value = "token") String token) {
 
         JwtUserDetails userDetails = jwtService.validateUserToken(token, roomId);
         if (userDetails == null) {
