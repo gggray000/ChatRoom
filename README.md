@@ -7,7 +7,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 1. Do more tests.<br>
 
 <h3>Long-term</h3>
-1. JPA implementation for chat history.<br>
+1. JPA implementation.<br>
 2. Deploy with docker container, using the virtual machine provided by the professor.<br>
 3. Deploy to a cloud service, using Caddy/Nginx as the web server.<br>
 4. Secure endpoints with Spring Security.<br>
