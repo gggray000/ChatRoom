@@ -5,7 +5,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Do more tests.<br>
-2. Create a new branch for to-be-deployed version, fixed bugs including typing indicator, QR-code and ChatBot.
+2. Create a new branch for to-be-deployed version, fix bugs including typing indicator, QR-code and ChatBot.
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
