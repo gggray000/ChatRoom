@@ -5,7 +5,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Do more tests.<br>
-2. Fix bugs including typing indicator, QR-code and ChatBot on `dev_docker` branch.
+2. Fix bugs including typing indicator, QR-code, and ChatBot on <code>dev_docker</code> branch.<br>
+3. Implement Caddy/Nginx -> get a domain -> use CloudFlare as CDN.
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
