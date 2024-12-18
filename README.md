@@ -106,7 +106,7 @@ Refactored the project structure for future development and created a new branch
 Further development will be committed to the <code>dev</code> branch now.
 <h3>v0.0</h3>
 Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=TywlS9iAZCM&list=WL&index=114</URL>.<br>
-There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in `main.js`.
+There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in <code>main.js</code>.
 
 <h2>Acknowledgement</h2>
 @vsch<br>
