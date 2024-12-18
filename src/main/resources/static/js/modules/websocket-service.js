@@ -39,13 +39,12 @@ export class WebSocketService {
     }
 
     onConnected() {
-        // Subscribe to receive messages
+
         this.stompClient.subscribe(`/topic/public/${this.roomId}`,
             (payload) => this.onMessageReceived(payload),
             { id: 'sub-0' }
         );
 
-        // Send join message
         const joinMessage = {
             sender: this.username,
             messageType: 'JOIN',
@@ -153,7 +152,7 @@ export class WebSocketService {
 
             case 'TYPING':
             case 'TYPING_STOPPED':
-                this.userListService.handleTypingIndicator(message.tokenId, message.messageType === 'TYPING');
+                this.userListService.handleTypingIndicator(message.sender, message.messageType === 'TYPING');
                 return;
 
             case 'SUMMARY':
