@@ -11,10 +11,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h3>Long-term</h3>
 1. JPA implementation.<br>
 2. Deploy to the professor's virtual machine.<br>
-3. Use Caddy/Nginx as the web server.<br>
-4. Secure endpoints with Spring Security.<br>
-5. Integration test/Module test/Unit test.
-6. Check if JWT can work with Spring Security.
+3. Secure endpoints with Spring Security.<br>
+4. Integration test/Module test/Unit test.
+5. Check if JWT can work with Spring Security.
 
 <br>**Pending**
 1. Migrate frontend from JavaScript to React.<br>
