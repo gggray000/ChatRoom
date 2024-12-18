@@ -5,14 +5,15 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Do more tests.<br>
-2. Check if JWT with Spring Security.
+2. Create a new branch for to-be-deployed version, fixed bugs including typing indicator, QR-code and ChatBot.
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
-2. Deploy with docker container, using the virtual machine provided by the professor.<br>
-3. Deploy to a cloud service, using Caddy/Nginx as the web server.<br>
+2. Deploy to the professor's virtual machine.<br>
+3. Use Caddy/Nginx as the web server.<br>
 4. Secure endpoints with Spring Security.<br>
 5. Integration test/Module test/Unit test.
+6. Check if JWT can work with Spring Security.
 
 <br>**Pending**
 1. Migrate frontend from JavaScript to React.<br>
@@ -20,6 +21,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Wait for Llama 3.3 new releases, now there's only a 70B version available.
 
 <h2>Update Log</h2>
+<h3>v0.9.2</h3>
+Added Dockerfile and docker-compose.yml, deployed the application to AWS EC2(with limited features).
 <h3>v0.9.1</h3>
 Changed roomId generation rule and PDF file naming rule.
 <h3>v0.9</h3>
