@@ -83,7 +83,7 @@ Implemented local run Llama3.2 3B in the application, using LangChain4j with Oll
 Added QR-Code generation feature.
 <h3>v0.5</h3>
 1. Added URL generation, and redesigned the admin page. <br>
-2. Now each URL stands for a unique <code>ChatRoom<code>. Refactored controllers and WebSocket code, added new directory <code>/room</code> to handle this.<br>
+2. Now each URL stands for a unique <code>ChatRoom</code>. Refactored controllers and WebSocket code, added new directory <code>/room</code> to handle this.<br>
 3. Fixed the bug where the chat room's name was not displayed on the chat page.<br>
 4. Added /.gitignore
 <h3>v0.4.3</h3>
