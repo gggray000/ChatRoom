@@ -17,8 +17,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <br>**Pending**
 1. Migrate frontend from JavaScript to React.<br>
-2. Use HTTPS instead of HTTP.<br>
-3. Wait for Llama 3.3 new releases, now there's only a 70B version available.
+2. Wait for Llama 3.3 new releases, now there's only a 70B version available.
 
 <h2>Update Log</h2>
 <h3>v0.9.4</h3>
