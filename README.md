@@ -5,7 +5,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Do more tests.<br>
-2. Fix bugs including typing indicator, QR-code, and ChatBot on <code>dev_docker</code> branch.<br>
+2. Fix bugs (including QR-code) on <code>dev_docker</code> branch.<br>
 3. Implement Caddy/Nginx -> get a domain -> use CloudFlare as CDN.
 
 <h3>Long-term</h3>
@@ -21,6 +21,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Wait for Llama 3.3 new releases, now there's only a 70B version available.
 
 <h2>Update Log</h2>
+<h3>v0.9.3</h3>
+1. Changed <code>docker-compose.yml<code> and used SSH reverse tunneling to allow application on AWS EC2 to access ChatBot on local device.<br>
+2. Fixed the bug of typing status indicator.
 <h3>v0.9.2</h3>
 Added <code>Dockerfile</code> and <code>docker-compose.yml</code>, deployed the application to AWS EC2(with limited features).
 <h3>v0.9.1</h3>

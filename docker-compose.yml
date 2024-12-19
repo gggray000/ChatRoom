@@ -1,20 +1,11 @@
-version: '3.8'
-
 services:
   chatroom-app:
     image: gggray000/chatroom:latest
-    ports:
-      - "8080:8080"
+    network_mode: "host"
     environment:
-      - OLLAMA_HOST=ray000.ddns.net
+      - OLLAMA_HOST=127.0.0.1
       - OLLAMA_PORT=11434
       - JWT_SECRET=chat-room-validate
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
     restart: unless-stopped
-    networks:
-      - chatroom-network
-
-networks:
-  chatroom-network:
-    driver: bridge
