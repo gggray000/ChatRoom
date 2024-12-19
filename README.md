@@ -6,7 +6,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h3>Short-term</h3>
 1. Do more tests.<br>
 2. Fix bugs (including QR-code) on <code>dev_docker</code> branch.<br>
-3. Implement Caddy/Nginx -> get a domain -> use CloudFlare as CDN.
+3. Get a domain -> use CloudFlare as CDN and configure Caddy properly.
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
@@ -21,6 +21,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Wait for Llama 3.3 new releases, now there's only a 70B version available.
 
 <h2>Update Log</h2>
+<h3>v0.9.4</h3>
+Implemented a simple Caddy service as reverse proxy.
 <h3>v0.9.3</h3>
 1. Changed <code>docker-compose.yml</code>code> and used SSH reverse tunneling to allow application on AWS EC2 to access ChatBot on local device.<br>
 2. Fixed the bug of typing status indicator.

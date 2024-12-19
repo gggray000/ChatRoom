@@ -1,7 +1,26 @@
+version: '3.8'
+
 services:
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    network_mode: "host"  # Since we're using host networking
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data            # For storing certificates
+      - caddy_config:/config        # For Caddy configurations
+      - caddy_logs:/var/log/caddy   # For logs
+    environment:
+      - XDG_DATA_HOME=/data   # Directory for certificates and other data
+      - XDG_CONFIG_HOME=/config  # Directory for configurations
+    restart: unless-stopped
+    depends_on:
+      - chatroom-app
+
   chatroom-app:
     image: gggray000/chatroom:latest
-    network_mode: "host"
+    container_name: chatroom-app
+    network_mode: "host"      # Keep host networking for your SSH tunnel
     environment:
       - OLLAMA_HOST=127.0.0.1
       - OLLAMA_PORT=11434
@@ -9,3 +28,8 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
     restart: unless-stopped
+
+volumes:
+  caddy_data:    # Persistent volume for certificates
+  caddy_config:  # Persistent volume for configurations
+  caddy_logs:    # Persistent volume for logs
