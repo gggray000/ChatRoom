@@ -81,7 +81,7 @@ public class ChatController {
         return updateUserList(roomId);
     }
 
-    public WebSocketMessage removeUser(String username, String roomId) {
+    public void removeUser(String username, String roomId) {
         if (roomId != null && roomService.getRoom(roomId) != null) {
             roomService.getRoom(roomId)
                          .getUsers()
@@ -90,7 +90,6 @@ public class ChatController {
             simpMessagingTemplate.convertAndSend(
                     "/topic/public/" + roomId, userListMessage);
         }
-        return null;
     }
 
     private WebSocketMessage updateUserList(String roomId) {
