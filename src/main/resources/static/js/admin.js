@@ -47,23 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(`HTTP error! status: ${systemPrompt.status}`);
             }
 
-            // Then get the admin token
-            /*/!*const tokenResponse = await fetch('/admin/token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: 'admin',
-                    roomId: roomData.roomId,
-                    isAdmin : true
-                })
-            });
-
-            if (!tokenResponse.ok) {
-                throw new Error('Failed to get admin token');
-            }
-
-            const token = await tokenResponse.text();
-            localStorage.setItem('userToken', token);*/
             // Update UI
             successMessage.style.display = 'block';
             roomNameInput.style.display = 'none';
@@ -79,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
             roomUrlLink.textContent = roomUrl;
             roomUrlContainer.style.display = 'block';
 
-            const qrCodeUrl = `/admin/qrcode/${roomData.roomId}?roomName=${encodeURIComponent(roomName)}`;
+            const qrCodeUrl = `/admin/qrcode/${roomData.roomId.trim()}`;
             const qrCodeImg = document.createElement('img');
             qrCodeImg.src = qrCodeUrl;
             qrCodeImg.alt = "Fail to load QR-Code"

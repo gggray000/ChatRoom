@@ -26,7 +26,7 @@ public class QrCodeService {
         settings.setData(url);
         settings.setX(2);
         settings.setQRCodeECL(QRCodeECL.M);
-        settings.setTopText(roomName);
+        settings.setTopText("Room: " + roomName);
         settings.setShowText(false);
         settings.setShowTopText(true);
         settings.isShowBottomText(false);
