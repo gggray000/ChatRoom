@@ -5,8 +5,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Do more tests.<br>
-2. Fix bugs (including QR-code) on <code>dev_docker</code> branch.<br>
-3. Get a domain -> use CloudFlare as CDN and configure Caddy properly.
+2. Get a domain -> use CloudFlare as CDN and configure Caddy properly.
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
@@ -20,6 +19,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 2. Wait for Llama 3.3 new releases, now there's only a 70B version available.
 
 <h2>Update Log</h2>
+<h3>v0.9.5</h3>
+Fixed the bug that QR Code can't be displayed on EC2 server. Solution: install the font in Docker's Linux system.
 <h3>v0.9.4</h3>
 Implemented a simple Caddy service as reverse proxy.
 <h3>v0.9.3</h3>

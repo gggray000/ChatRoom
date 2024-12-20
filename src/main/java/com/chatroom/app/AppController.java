@@ -1,6 +1,7 @@
 package com.chatroom.app;
 
 import com.chatroom.bot.ChatBotConfiguration;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -90,15 +91,21 @@ public class AppController {
     }
 
     @GetMapping("/admin/qrcode/{roomId}")
-    public ResponseEntity<byte[]> getQrCode(@PathVariable String roomId) {
+    public ResponseEntity<byte[]> getQrCode(@PathVariable String roomId, HttpServletRequest request) {
         try {
             Room room = roomService.getRoom(roomId);
             if (room == null) {
                 return ResponseEntity.notFound().build();
             }
+            // Get the base URL dynamically
+            String baseUrl = request.getScheme() + "://" + request.getServerName();
+            // Add port only if it's not the default port (80 for HTTP or 443 for HTTPS)
+            if (request.getServerPort() != 80 && request.getServerPort() != 443) {
+                baseUrl += ":" + request.getServerPort();
+            }
 
             String roomUrl = urlService.createUrl(room);  // Use urlService here
-            BufferedImage qrImage = qrCodeService.qrCodeGeneration("http://localhost:8080" + roomUrl, room.getName());
+            BufferedImage qrImage = qrCodeService.qrCodeGeneration(baseUrl + roomUrl, room.getName());
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(qrImage, "png", baos);
