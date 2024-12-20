@@ -5,7 +5,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Do more tests.<br>
-2. Get a domain -> use CloudFlare as CDN and configure Caddy properly.
+2. Get a domain -> use CloudFlare as CDN and configure Caddy properly.<br>
+3. Fix the bug where refreshing the chat page causes disconnection.
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
