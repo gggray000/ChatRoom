@@ -25,7 +25,7 @@ Fixed the bug that QR Code can't be displayed on EC2 server. Solution: install t
 <h3>v0.9.4</h3>
 Implemented a simple Caddy service as reverse proxy.
 <h3>v0.9.3</h3>
-1. Changed <code>docker-compose.yml</code>code> and used SSH reverse tunneling to allow application on AWS EC2 to access ChatBot on local device.<br>
+1. Changed <code>docker-compose.yml</code> and used SSH reverse tunneling to allow application on AWS EC2 to access ChatBot on local device.<br>
 2. Fixed the bug of typing status indicator.
 <h3>v0.9.2</h3>
 Added <code>Dockerfile</code> and <code>docker-compose.yml</code>, deployed the application to AWS EC2(with limited features).
