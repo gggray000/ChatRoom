@@ -6,6 +6,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h3>Short-term</h3>
 1. Do more tests.<br>
 2. Improve security with Caddy.<br>
+3. Add a logout function for the admin page.<br>
+4. Clear the logic of API endpoints.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
