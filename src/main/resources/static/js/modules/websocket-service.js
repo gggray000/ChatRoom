@@ -18,8 +18,12 @@ export class WebSocketService {
     async connect(username, roomId) {
         try {
             this.username = username;
-            const socket = new SockJS('/ws');
+            const socketUrl = `${window.location.protocol === 'https:' ? 'https:' : 'http:'}//${window.location.host}/ws`;
+            const socket = new SockJS(socketUrl);
             this.stompClient = Stomp.over(socket);
+            this.stompClient.debug = function(str) {
+                console.log('STOMP: ' + str);
+            };
 
             const token = localStorage.getItem('userToken');
             const headers = {
