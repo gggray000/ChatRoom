@@ -1,8 +1,13 @@
 package com.chatroom.room;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
 public class User {
 
     private final String token;
+    @Setter
     private String username;
 
     public User(String token, String username) {
@@ -10,16 +15,4 @@ public class User {
         this.username = username;
     }
 
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public String getUsername() {
-        return username;
-    }
 }

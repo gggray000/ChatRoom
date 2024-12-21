@@ -1,40 +1,29 @@
 package com.chatroom.room;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
+@Getter
 public class Room {
 
+    @Setter
     private String roomId;
+    @Setter
     private String name;
+    @Setter
+    private String prompt;
     private List<User> users;
 
     public Room(String roomId, String name) {
         this.roomId = roomId;
         this.name = name;
         this.users = new ArrayList<>();
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<User> getUsers(){
-        return this.users;
+        this.prompt = "";
     }
 
     public void addUsers(User user){

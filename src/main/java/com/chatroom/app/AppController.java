@@ -39,7 +39,7 @@ public class AppController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/chat";
+        return "redirect:/admin";
     }
 
     @GetMapping("/admin")
@@ -49,7 +49,7 @@ public class AppController {
 
     @GetMapping("/chat")
     public String enterChatRoom() {
-        return "chat-room";
+        return "access-denied";
     }
 
     @GetMapping("/denied")
@@ -81,12 +81,40 @@ public class AppController {
         }
     }
 
+    @PostMapping("/admin/cancel-room")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> cancelRoomCreation(@RequestBody Map<String, String> request) {
+        String roomId = request.get("roomId");
+        String originalName = "";
+        String originalPrompt = "";
+        try{
+            Room roomToBeDeleted = roomService.getRoom(roomId);
+            originalName = roomToBeDeleted.getName();
+            originalPrompt = roomToBeDeleted.getPrompt();
+            roomService.deleteRoom(roomToBeDeleted.getRoomId());
+            chatBotConfiguration.deleteRoomMemoryAndPrompt(roomId);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete room. " + e.getMessage());
+        }
+
+        Map<String, String> response = new HashMap<>();
+        response.put("originalName", originalName);
+        response.put("originalPrompt", originalPrompt);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/admin/set-system-prompt")
     @ResponseBody
     public ResponseEntity<Map<String, String>> setSystemPrompt(@RequestBody Map<String, String> request) {
         String prompt = request.get("systemPrompt");
         String roomId = request.get("roomId");
         chatBotConfiguration.updatePromptForRoom(roomId, prompt);
+        try{
+            Room temptRoom = roomService.getRoom(roomId);
+            temptRoom.setPrompt(prompt);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to set prompt for Room Entity. " + e.getMessage());
+        }
         return ResponseEntity.ok(Map.of("status", "success"));
     }
 

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const systemPromptInput = document.getElementById('systemPrompt');
     const roomHeader = document.getElementById('room-header');
     const promptHeader = document.getElementById('prompt-header');
+    const cancelButton = document.getElementById('cancel-button')
 
     async function createRoom() {
         const roomName = roomNameInput.value.trim();
@@ -32,6 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const roomData = await createRoomResponse.json();
+            cancelButton.dataset.roomId = roomData.roomId;
+            cancelButton.dataset.roomName = roomData.name;
 
             const setPromptResponse = await fetch('/admin/set-system-prompt', {
                 method: 'POST',
@@ -44,8 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!setPromptResponse.ok) {
-                throw new Error(`HTTP error! status: ${systemPrompt.status}`);
+                throw new Error(`HTTP error! status: ${setPromptResponse.status}`);
             }
+
+            cancelButton.dataset.prompt = systemPrompt;
 
             // Update UI
             successMessage.style.display = 'block';
@@ -69,9 +74,64 @@ document.addEventListener('DOMContentLoaded', function() {
             qrCodeContainer.appendChild(qrCodeImg);
             qrCodeContainer.style.display = 'block';
 
+            cancelButton.style.display = 'block';
+
         } catch (error) {
             console.error('Error:', error);
             alert('Failed to create room. Please try again.');
+        }
+    }
+
+    async function cancelCreation(){
+        const roomId = cancelButton.dataset.roomId;
+        const roomName = cancelButton.dataset.roomName;
+        const systemPrompt = cancelButton.dataset.prompt;
+
+        try {
+            const cancelationResponse = await fetch('/admin/cancel-room', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: roomName,
+                    roomId: roomId,
+                    systemPrompt: systemPrompt
+                })
+            });
+
+            if (!cancelationResponse.ok) {
+                throw new Error(`HTTP error! status: ${cancelationResponse.status}`);
+            }
+
+            const responseData = await cancelationResponse.json();
+
+            // Reset UI first
+            successMessage.style.display = 'none';
+            roomHeader.style.display = 'block';
+            promptHeader.style.display = 'block';
+
+            // Show and populate input fields
+            roomNameInput.style.display = 'block';
+            systemPromptInput.style.display = 'block';
+            createRoomButton.style.display = 'block';
+
+            // Set values from response
+            roomNameInput.value = responseData.originalName;
+            systemPromptInput.value = responseData.originalPrompt;
+
+            // Hide post-creation elements
+            roomUrlContainer.style.display = 'none';
+            qrCodeContainer.style.display = 'none';
+            qrCodeContainer.innerHTML = ''; // Clear QR code
+            cancelButton.style.display = 'none';
+
+            // Clear button dataset
+            delete cancelButton.dataset.roomId;
+            delete cancelButton.dataset.roomName;
+            delete cancelButton.dataset.prompt;
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to cancel room. Please try again.');
         }
     }
 
@@ -82,4 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
             createRoom();
         }
     });
+    cancelButton.addEventListener('click', cancelCreation);
+
 });

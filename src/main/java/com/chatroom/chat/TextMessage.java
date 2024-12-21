@@ -1,5 +1,8 @@
 package com.chatroom.chat;
 
+import lombok.Getter;
+
+@Getter
 public class TextMessage {
     String userName;
     String roomId;
@@ -9,18 +12,6 @@ public class TextMessage {
         this.userName = userName;
         this.roomId = roomId;
         this.content = content;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getRoomId() {
-        return roomId;
     }
 
     @Override

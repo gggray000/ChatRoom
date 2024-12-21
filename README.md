@@ -6,8 +6,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h3>Short-term</h3>
 1. Do more tests.<br>
 2. Improve security with Caddy.<br>
-3. Add a logout function for the admin page.<br>
-4. Clear the logic of API endpoints.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
@@ -23,6 +21,10 @@ A web application for real-time anonymous group discussions with built-in AI sum
 4. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.6</h3>
+1. Added a button at admin page, which allows the admin to cancel room creation, yet keep all the original input in place.<br>
+2. Created <code>access-denied</code> page, redesigned some API endpoints' logic in <code>AppController</code>.
+3. Refactored and modified <code>Room</code> and <code>User</code> class.
 <h3>v0.9.5</h3>
 Fixed the bug that QR Code can't be displayed on EC2 server. Solution: install the font in Docker's Linux system.
 <h3>v0.9.4</h3>

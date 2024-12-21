@@ -28,12 +28,15 @@ public class RoomService {
         return rooms.get(roomId);
     }
 
-//    public void deleteRoom(String id) {
-//        rooms.remove(id);
-//    }
-//
-//    public Map<String, Room> getAllRooms() {
-//        return rooms;
-//    }
+    public void deleteRoom(String roomId) {
+        if(rooms.get(roomId) != null){
+            rooms.remove(roomId);
+        }
+
+    }
+
+    public Map<String, Room> getAllRooms() {
+        return rooms;
+    }
 
 }

@@ -45,4 +45,9 @@ public class ChatBotConfiguration {
     public void updatePromptForRoom(String roomId, String newPrompt) {
         roomPrompts.put(roomId, String.format(PROMPT_TEMPLATE, newPrompt != null ? newPrompt.trim() : ""));
     }
+
+    public void deleteRoomMemoryAndPrompt(String roomId){
+        roomMemories.remove(roomId);
+        roomPrompts.remove(roomId);
+    }
 }
