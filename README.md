@@ -5,8 +5,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Do more tests.<br>
-2. Get a domain -> use CloudFlare as CDN and configure Caddy properly.<br>
-3. Fix the bug where refreshing the chat page causes disconnection.
+2. Improve security with Caddy.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
@@ -17,13 +16,15 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <br>**Pending**
 1. Migrate frontend from JavaScript to React.<br>
-2. Wait for Llama 3.3 new releases, now there's only a 70B version available.
+2. Wait for Llama 3.3 new releases, now there's only a 70B version available.<br>
+3. Figure out how to handle page refresh events properly.<br>
+4. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
 <h3>v0.9.5</h3>
 Fixed the bug that QR Code can't be displayed on EC2 server. Solution: install the font in Docker's Linux system.
 <h3>v0.9.4</h3>
-Implemented a simple Caddy service as reverse proxy.
+Implemented a simple Caddy service as a reverse proxy.
 <h3>v0.9.3</h3>
 1. Changed <code>docker-compose.yml</code> and used SSH reverse tunneling to allow application on AWS EC2 to access ChatBot on local device.<br>
 2. Fixed the bug of typing status indicator.
@@ -58,7 +59,7 @@ Fixed a bug where the <code>alt</code> of QR-Code image get displayed all the ti
 2. Added Markdown formatting for summary on the chat page.<br>
 3. Fixed a bug where the ChatBot is not built without an admin prompt.<br>
 <h3>v0.7.3</h3>
-Redesigned chat page for mobile phone.
+Redesigned chat page for mobile devices.
 <h3>v0.7.2</h3>
 Added a feature that the admin can provide instructions to ChatBot on the admin page.<br>
 <h3>v0.7.1</h3>
