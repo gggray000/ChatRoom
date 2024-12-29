@@ -2,6 +2,7 @@ export const elements = {
     usernamePage: document.querySelector('#username-page'),
     chatPage: document.querySelector('#chat-page'),
     usernameForm: document.querySelector('#usernameForm'),
+    nickNameButton: document.querySelector('.nickname-generate'),
     messageForm: document.querySelector('#messageForm'),
     messageInput: document.querySelector('#textArea'),
     messageArea: document.querySelector('#messageArea'),
@@ -13,5 +14,4 @@ export const elements = {
     systemMessage:document.querySelector('#systemPrompt'),
     sidebarToggle: document.querySelector('.toggle-sidebar'),
     userListSidebar: document.querySelector('.user-list-sidebar')
-
 };

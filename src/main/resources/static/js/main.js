@@ -1,8 +1,8 @@
-import { elements } from './modules/dom-elements.js';
-import { UserListService } from './modules/user-list-service.js';
-import { WebSocketService } from './modules/websocket-service.js';
-import { InputHandler } from './modules/input-handler.js';
-import { createUserInfo } from './modules/avatar-service.js';
+import {elements} from './modules/dom-elements.js';
+import {UserListService} from './modules/user-list-service.js';
+import {WebSocketService} from './modules/websocket-service.js';
+import {InputHandler} from './modules/input-handler.js';
+import {generateRandomNickname} from "./modules/avatar-service.js";
 
 const userListService = new UserListService();
 const webSocketService = new WebSocketService(userListService);
@@ -12,6 +12,7 @@ const roomName = window.ROOM_NAME;
 
 async function connect(event) {
     event.preventDefault();
+
     const username = elements.usernameForm.querySelector('#name').value.trim();
 
     if (username) {
@@ -63,9 +64,17 @@ function sendMessage(event) {
     }
 }
 
-function initializeEventListeners() {
-    elements.usernameForm.addEventListener('submit', connect, true);
+function getRandomName(){
+    let nickname = generateRandomNickname()
+    console.log(nickname);
+    elements.usernameForm.querySelector('#name').value = nickname;
+}
 
+function initializeEventListeners() {
+
+    elements.usernameForm.addEventListener('submit', connect, true);
+    console.log('Nickname button:', elements.nickNameButton);
+    elements.nickNameButton.addEventListener('click', getRandomName);
     document.addEventListener('DOMContentLoaded', () => {
         if (elements.messageInput.tagName.toLowerCase() === 'input') {
             const textarea = document.createElement('textarea');

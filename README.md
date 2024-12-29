@@ -4,7 +4,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Do more tests.<br>
+1. Write test cases.<br>
 2. Improve security with Caddy.<br>
 
 <h3>Long-term</h3>
@@ -18,6 +18,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 4. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.7</h3>
+Implemented random username generation feature.
 <h3>v0.9.6</h3>
 1. Added a button at admin page, which allows the admin to cancel room creation, yet keep all the original input in place.<br>
 2. Created <code>access-denied</code> page, redesigned some API endpoints' logic in <code>AppController</code>.
@@ -117,6 +119,8 @@ Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=Tyw
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in <code>main.js</code>.
 
 <h2>Acknowledgement</h2>
+@jamo<br>
+<URL>https://github.com/jamo/nick-generator</URL><br>
 @vsch<br>
 <URL>https://github.com/vsch/flexmark-java</URL><br>
 @cure53<br>

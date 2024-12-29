@@ -61,15 +61,16 @@ button {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s;
+    margin-bottom: 10px;  /* Add space between stacked buttons */
 }
 
-.accent {
-    background: #3498db;
+.nickname-generate {
+    background: #3498db;  /* Blue */
     color: white;
 }
 
-.primary {
-    background: #2ecc71;
+.username-submit {
+    background: #2ecc71;  /* Green */
     color: white;
 }
 

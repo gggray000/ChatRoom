@@ -1,4 +1,4 @@
-import { COLORS } from './constants.js';
+import { COLORS, ADJECTIVES, ANIMALS } from './constants.js';
 
 export function getAvatarColor(messageSender) {
     const PRIME = 16777619;
@@ -25,4 +25,9 @@ export function createUserInfo(sender) {
     usernameElement.classList.add('username');
 
     return { avatarElement, usernameElement };
+}
+
+export function generateRandomNickname(){
+    return ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)] + ' ' +
+           ANIMALS[Math.floor(Math.random() * ANIMALS.length)]
 }
