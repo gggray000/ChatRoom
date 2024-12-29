@@ -229,6 +229,7 @@ export const ANIMALS= [
         'Wallaby',
         'Walrus',
         'Warthog',
+        'Westie',
         'Wolf',
         'Woodpecker',
         'Wrasse',
