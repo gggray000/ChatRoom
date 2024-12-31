@@ -20,21 +20,6 @@ public class AppControllerWebMvcTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@MockBean
-	private RoomService roomService;
-
-	@MockBean
-	private UrlService urlService;
-
-	@MockBean
-	private QrCodeService qrCodeService;
-
-	@MockBean
-	private JwtService jwtService;
-
-	@MockBean
-	private ChatBotConfiguration chatBotConfiguration;
-
 	@Test
     public void testRoomCreationWithEmptyName() throws Exception {
 		this.mockMvc.perform(post("/admin/create-room")

@@ -5,8 +5,7 @@ import com.chatroom.room.Room;
 import org.junit.jupiter.api.Test;  // Use JUnit 5 annotation
 import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;  // Use JUnit 5 assertions
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RoomTests {
     private RoomService roomService;
@@ -27,5 +26,15 @@ public class RoomTests {
         // test Room deletion
         roomService.deleteRoom(roomId1);
         assertNull(roomService.getRoom(roomId1));
+        assertEquals(1, roomService.getAllRooms().size());
+    }
+
+    @Test
+    void testDuplicatedRoom(){
+        Room room3 = roomService.createRoom("test");
+        Room room4 = roomService.createRoom("test");
+        assertFalse(room3.getRoomId()==room4.getRoomId());
+        assertEquals(2, roomService.getAllRooms().size());
+
     }
 }

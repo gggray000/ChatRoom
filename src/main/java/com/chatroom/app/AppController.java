@@ -80,7 +80,7 @@ public class AppController {
                     .body(Map.of("error", "Failed to create room: " + e.getMessage()));
         }
     }
-
+    
     @PostMapping("/admin/cancel-room")
     @ResponseBody
     public ResponseEntity<Map<String, String>> cancelRoomCreation(@RequestBody Map<String, String> request) {
@@ -92,6 +92,7 @@ public class AppController {
             originalName = roomToBeDeleted.getName();
             originalPrompt = roomToBeDeleted.getPrompt();
             roomService.deleteRoom(roomToBeDeleted.getRoomId());
+            chatBotConfiguration.updatePromptForRoom(roomId, "");
             chatBotConfiguration.deleteRoomMemoryAndPrompt(roomId);
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete room. " + e.getMessage());
