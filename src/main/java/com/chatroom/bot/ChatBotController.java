@@ -1,13 +1,9 @@
 package com.chatroom.bot;
 
-import com.chatroom.chat.TextMessage;
 import com.chatroom.chat.TextMessageService;
-import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.service.AiServices;
-import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 @RestController
 public class ChatBotController {
@@ -24,13 +20,13 @@ public class ChatBotController {
     }
 
     public String makeSummary(String roomId) {
-        ChatMemory roomMemory = chatBotConfiguration.getOrCreateMemoryForRoom(roomId);
+        chatBotConfiguration.createMemoryForRoom(roomId);
         String systemPrompt = chatBotConfiguration.getPromptForRoom(roomId);
 
         // Create a one-time use ChatBot instance with the room-specific memory
         this.chatBot = AiServices.builder(ChatBot.class)
                 .chatLanguageModel(model)
-                .chatMemory(roomMemory)
+                .chatMemory(chatBotConfiguration.getChatMemoryForRoom(roomId))
                 .systemMessageProvider(memoryId -> systemPrompt)
                 .build();
 

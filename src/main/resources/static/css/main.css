@@ -62,6 +62,8 @@ button {
     cursor: pointer;
     transition: background-color 0.2s;
     margin-bottom: 10px;  /* Add space between stacked buttons */
+    background: #2ecc71;
+    color: white;
 }
 
 .nickname-generate {
@@ -246,6 +248,7 @@ button:hover {
 
 .chat-header .logo {
     height: 40px;
+    margin-top: -12px;
 }
 
 .connecting {

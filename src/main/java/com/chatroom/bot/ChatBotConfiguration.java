@@ -2,7 +2,6 @@ package com.chatroom.bot;
 
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
@@ -32,10 +31,12 @@ public class ChatBotConfiguration {
             %s
             """;
 
-    public ChatMemory getOrCreateMemoryForRoom(String roomId) {
-        return roomMemories.computeIfAbsent(roomId,
-                id -> MessageWindowChatMemory.withMaxMessages(50)
-        );
+    public ChatMemory getChatMemoryForRoom(String roomId) {
+        return roomMemories.get(roomId);
+    }
+
+    public void createMemoryForRoom(String roomId) {
+        roomMemories.put(roomId, MessageWindowChatMemory.withMaxMessages(50));
     }
 
     public String getPromptForRoom(String roomId) {
