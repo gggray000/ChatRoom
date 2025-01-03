@@ -1,6 +1,7 @@
 package com.chatroom.app;
 
 import com.chatroom.bot.ChatBotConfiguration;
+import com.chatroom.room.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import com.chatroom.room.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -67,7 +66,7 @@ public class AppController {
 
         try {
             Room room = roomService.createRoom(roomName);
-            String roomUrl = urlService.createUrl(room);
+            String roomUrl = urlService.createUrl(room.getRoomId());
 
             Map<String, String> response = new HashMap<>();
             response.put("url", roomUrl);
@@ -133,7 +132,7 @@ public class AppController {
                 baseUrl += ":" + request.getServerPort();
             }
 
-            String roomUrl = urlService.createUrl(room);  // Use urlService here
+            String roomUrl = urlService.createUrl(roomId);  // Use urlService here
             BufferedImage qrImage = qrCodeService.qrCodeGeneration(baseUrl + roomUrl, room.getName());
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -151,8 +150,9 @@ public class AppController {
         }
     }
 
-    @GetMapping("/chat/{roomId}")
-    public String chatRoom(@PathVariable String roomId, Model model) {
+    @GetMapping("/chat/{urlNumber}")
+    public String chatRoom(@PathVariable Integer urlNumber, Model model) {
+        String roomId = urlService.getRoomUrlTable().get(urlNumber);
         Room room = roomService.getRoom(roomId);
         if (room == null) {
             return "redirect:/denied";

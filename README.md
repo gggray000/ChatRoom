@@ -18,6 +18,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 4. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.8</h3>
+Changed the URL generation logic.
 <h3>v0.9.7</h3>
 Implemented random username generation feature.
 <h3>v0.9.6</h3>

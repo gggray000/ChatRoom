@@ -1,9 +1,6 @@
 package com.chatroom;
 
-import com.chatroom.room.JwtService;
-import com.chatroom.room.JwtUserDetails;
-import com.chatroom.room.Room;
-import com.chatroom.room.RoomService;
+import com.chatroom.room.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -54,5 +51,18 @@ public class RoomTests {
         assertNull(jwtService.validateUserToken(token2, "001"));
         // test wrong room id
         assertNull(jwtService.validateUserToken(token1, "0001"));
+    }
+
+    @Test
+    void testUrlCreation() {
+        UrlService urlService = new UrlService(roomService);
+        Room room5 = roomService.createRoom("test");
+        String roomId5 = room5.getRoomId();
+        String url = urlService.createUrl(roomId5);
+        assertEquals(1, urlService.getRoomUrlTable().size());
+        // simulate URL generation for QrCodeService, which calls the same function another time
+        assertEquals(url, urlService.createUrl(roomId5));
+        // test wrong roomId
+        assertNull(urlService.createUrl("abcd1"));
     }
 }
