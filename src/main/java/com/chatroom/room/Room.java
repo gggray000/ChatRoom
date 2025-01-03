@@ -17,6 +17,7 @@ public class Room {
     private String name;
     @Setter
     private String prompt;
+    @Getter
     private List<User> users;
 
     public Room(String roomId, String name) {
@@ -27,7 +28,9 @@ public class Room {
     }
 
     public void addUsers(User user){
-        this.getUsers().add(user);
+        if (!this.getUsers().contains(user)) {
+            this.getUsers().add(user);
+        }
     }
 
     public User findUser(String name){

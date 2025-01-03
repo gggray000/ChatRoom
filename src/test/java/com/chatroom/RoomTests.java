@@ -35,7 +35,25 @@ public class RoomTests {
         Room room4 = roomService.createRoom("test");
         assertFalse(room3.getRoomId()==room4.getRoomId());
         assertEquals(2, roomService.getAllRooms().size());
+    }
 
+    @Test
+    void testAddAndRemoveUser() {
+        User user1 = new User("token1", "user1");
+        User user2 = new User("token2", "user2");
+        Room room5 = roomService.createRoom("test");
+        String roomId5 = room5.getRoomId();
+        roomService.getRoom(roomId5).addUsers(user1);
+        roomService.getRoom(roomId5).addUsers(user2);
+        assertEquals(2, room5.getUsers().size());
+        // test duplicated adding
+        roomService.getRoom(roomId5).addUsers(user1);
+        assertEquals(2, room5.getUsers().size());
+        // test deletion and deleting not existed user
+        roomService.getRoom(roomId5).getUsers().remove(user1);
+        assertEquals(1, room5.getUsers().size());
+        roomService.getRoom(roomId5).getUsers().remove(new User("token3", "user3"));
+        assertEquals(1, room5.getUsers().size());
     }
 
     @Test
@@ -56,12 +74,12 @@ public class RoomTests {
     @Test
     void testUrlCreation() {
         UrlService urlService = new UrlService(roomService);
-        Room room5 = roomService.createRoom("test");
-        String roomId5 = room5.getRoomId();
-        String url = urlService.createUrl(roomId5);
+        Room room6 = roomService.createRoom("test");
+        String roomId6 = room6.getRoomId();
+        String url = urlService.createUrl(roomId6);
         assertEquals(1, urlService.getRoomUrlTable().size());
         // simulate URL generation for QrCodeService, which calls the same function another time
-        assertEquals(url, urlService.createUrl(roomId5));
+        assertEquals(url, urlService.createUrl(roomId6));
         // test wrong roomId
         assertNull(urlService.createUrl("abcd1"));
     }
