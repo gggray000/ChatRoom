@@ -3,13 +3,13 @@ package com.chatroom.room;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.MessageDeliveryException;
-import org.springframework.stereotype.Service;
-import java.util.UUID;
-import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.UUID;
 
 
 @Service
@@ -56,7 +56,7 @@ public class JwtService {
                     claims.get("isAdmin", Boolean.class));  // Add isAdmin claim
 
             if (!jwtUserDetails.getRoomId().equals(roomId)) {
-                throw new MessageDeliveryException("Invalid room id");
+                return null;
             }
             return jwtUserDetails;
 

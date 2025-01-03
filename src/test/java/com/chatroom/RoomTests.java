@@ -1,9 +1,12 @@
 package com.chatroom;
 
-import com.chatroom.room.RoomService;
+import com.chatroom.room.JwtService;
+import com.chatroom.room.JwtUserDetails;
 import com.chatroom.room.Room;
-import org.junit.jupiter.api.Test;  // Use JUnit 5 annotation
+import com.chatroom.room.RoomService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,5 +39,20 @@ public class RoomTests {
         assertFalse(room3.getRoomId()==room4.getRoomId());
         assertEquals(2, roomService.getAllRooms().size());
 
+    }
+
+    @Test
+    void testJwtService() {
+        JwtService jwtService = new JwtService();
+        ReflectionTestUtils.setField(jwtService, "secret", "chat-room-validate");
+        String token1 = jwtService.generateUserToken("Admin", "001", true);
+        System.out.println(token1);
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(token1, "001");
+        assertTrue(jwtUserDetails.isAdmin());
+        // test token forgery
+        String token2 = token1 + "admin";
+        assertNull(jwtService.validateUserToken(token2, "001"));
+        // test wrong room id
+        assertNull(jwtService.validateUserToken(token1, "0001"));
     }
 }
