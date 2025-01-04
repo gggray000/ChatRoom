@@ -25,6 +25,12 @@ public class ChatTests {
         TextMessage msg3 = new TextMessage("c", "002", "Hello from another room!");
         System.out.println(textMessageService.exportStoredMessages("001"));
         assertEquals(2, textMessageService.exportStoredMessages("001").lines().count());
+    }
 
+    @Test
+    void testInvalidTextMessages() {
+        TextMessage msg3 = new TextMessage(null, "003", "I'm a ghost!");
+        textMessageService.saveTextMessage(msg3);
+        assertEquals(0, textMessageService.messageList.size());
     }
 }

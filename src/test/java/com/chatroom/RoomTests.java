@@ -16,6 +16,12 @@ public class RoomTests {
     }
 
     @Test
+    void testNullRoomName() {
+        assertNull(roomService.createRoom(null));
+        assertEquals(0, roomService.getAllRooms().size());
+    }
+
+    @Test
     void testCancelRoomCreation() {
         Room room1 = roomService.createRoom("room1");
         String roomId1 = room1.getRoomId();
