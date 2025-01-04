@@ -1,6 +1,9 @@
 package com.chatroom.chat;
 
+import com.chatroom.bot.ChatBotController;
 import com.chatroom.room.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,12 +18,11 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import java.util.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
-import com.chatroom.bot.*;
-import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 @Controller
 public class ChatController {
@@ -52,33 +54,36 @@ public class ChatController {
     public WebSocketMessage addUser(@Payload WebSocketMessage webSocketMessage,
                                     @DestinationVariable String roomId,
                                     SimpMessageHeaderAccessor headerAccessor) {
+
         String tokenId = webSocketMessage.getTokenId();
         logger.info("Adding user to room {} with token {}", roomId, tokenId);
+
         JwtUserDetails userDetails = jwtService.validateUserToken(tokenId, roomId);
-
         String originalUsername = webSocketMessage.getSender();
-        String finalUsername = generateUniqueUsername(originalUsername, roomId);
+        String finalUsername = roomService.generateUniqueUsername(originalUsername, roomId);
 
-        User user = new User(tokenId, finalUsername);
-        roomService.getRoom(roomId).addUsers(user);
+        if (userDetails != null && finalUsername != null) {
+            User user = new User(tokenId, finalUsername);
+            roomService.getRoom(roomId).addUsers(user);
+            webSocketMessage.setSender(finalUsername);
+            logger.info("Current users in room {}: {}", roomId,
+                    roomService.getRoom(roomId).getUsers().size());
 
-        webSocketMessage.setSender(finalUsername);
-        logger.info("Current users in room {}: {}", roomId,
-                roomService.getRoom(roomId).getUsers().size());
+            headerAccessor.getSessionAttributes().put("username", finalUsername);
+            headerAccessor.getSessionAttributes().put("roomId", roomId);
+            headerAccessor.getSessionAttributes().put("tokenId", tokenId);
+            headerAccessor.getSessionAttributes().put("isAdmin", userDetails.isAdmin());
 
-        headerAccessor.getSessionAttributes().put("username", finalUsername);
-        headerAccessor.getSessionAttributes().put("roomId", roomId);
-        headerAccessor.getSessionAttributes().put("tokenId", tokenId);
-        headerAccessor.getSessionAttributes().put("isAdmin", userDetails.isAdmin());
+            simpMessagingTemplate.convertAndSend("/topic/public/" + roomId,
+                    WebSocketMessage.builder()
+                            .sender(finalUsername)
+                            .messageType(MessageType.JOIN)
+                            .tokenId(tokenId)
+                            .build());
 
-        simpMessagingTemplate.convertAndSend("/topic/public/" + roomId,
-                WebSocketMessage.builder()
-                        .sender(finalUsername)
-                        .messageType(MessageType.JOIN)
-                        .tokenId(tokenId)
-                        .build());
-
-        return updateUserList(roomId);
+            return updateUserList(roomId);
+        }
+        return null;
     }
 
     public void removeUser(String username, String roomId) {
@@ -178,26 +183,4 @@ public class ChatController {
         }
     }
 
-    private String generateUniqueUsername(String baseUsername, String roomId) {
-        if (roomService.getRoom(roomId) == null) {
-            return baseUsername;
-        }
-        boolean usernameTaken = roomService.getRoom(roomId).getUsers()
-                .stream()
-                .anyMatch(user -> user.getUsername().equals(baseUsername));
-        if (!usernameTaken) {
-            return baseUsername;
-        }
-        int counter = 2;
-        String newUsername;
-        do {
-            newUsername = baseUsername + "(" + counter + ")";
-            final String usernameToCheck = newUsername;
-            usernameTaken =roomService.getRoom(roomId).getUsers()
-                    .stream()
-                    .anyMatch(user -> user.getUsername().equals(usernameToCheck));
-            counter++;
-        } while (usernameTaken);
-        return newUsername;
-    }
 }

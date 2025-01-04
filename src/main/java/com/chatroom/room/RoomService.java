@@ -41,4 +41,26 @@ public class RoomService {
         return rooms;
     }
 
+    public String generateUniqueUsername(String baseUsername, String roomId) {
+        if (getRoom(roomId) == null) {
+            return null;
+        }
+        if (!isUsernameTaken(baseUsername, roomId)) {
+            return baseUsername;
+        }
+        int counter = 2;
+        String uniqueName;
+        do {
+            uniqueName = baseUsername + "(" + counter + ")";
+            counter++;
+        } while (isUsernameTaken(uniqueName, roomId));
+        return uniqueName;
+    }
+
+    private boolean isUsernameTaken(String username, String roomId) {
+        return getRoom(roomId).getUsers()
+                .stream()
+                .anyMatch(user -> user.getUsername().equals(username));
+    }
+
 }
