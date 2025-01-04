@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RoomTests {
@@ -44,22 +46,35 @@ public class RoomTests {
     }
 
     @Test
-    void testAddAndRemoveUser() {
-        User user1 = new User("token1", "user1");
-        User user2 = new User("token2", "user2");
+    void testUsername() {
+        // test null roomId
+        assertNull(roomService.generateUniqueUsername("user1", "999"));
+        // test duplicated usernames
         Room room5 = roomService.createRoom("test");
-        String roomId5 = room5.getRoomId();
-        roomService.getRoom(roomId5).addUsers(user1);
-        roomService.getRoom(roomId5).addUsers(user2);
-        assertEquals(2, room5.getUsers().size());
+        User user3 = new User("token3", "Ray");
+        User user4 = new User("token4", "Ray");
+        room5.addUsers(user3);
+        String username4 = roomService.generateUniqueUsername(user4.getUsername(), room5.getRoomId());
+        assertFalse(Objects.equals(user3.getUsername(), username4));
+    }
+
+    @Test
+    void testAddAndRemoveUser() {
+        User user3 = new User("token3", "user3");
+        User user4 = new User("token4", "user4");
+        Room room6 = roomService.createRoom("test");
+        String roomId6 = room6.getRoomId();
+        roomService.getRoom(roomId6).addUsers(user3);
+        roomService.getRoom(roomId6).addUsers(user4);
+        assertEquals(2, room6.getUsers().size());
         // test duplicated adding
-        roomService.getRoom(roomId5).addUsers(user1);
-        assertEquals(2, room5.getUsers().size());
+        roomService.getRoom(roomId6).addUsers(user3);
+        assertEquals(2, room6.getUsers().size());
         // test deletion and deleting not existed user
-        roomService.getRoom(roomId5).getUsers().remove(user1);
-        assertEquals(1, room5.getUsers().size());
-        roomService.getRoom(roomId5).getUsers().remove(new User("token3", "user3"));
-        assertEquals(1, room5.getUsers().size());
+        roomService.getRoom(roomId6).getUsers().remove(user3);
+        assertEquals(1, room6.getUsers().size());
+        roomService.getRoom(roomId6).getUsers().remove(new User("token3", "user3"));
+        assertEquals(1, room6.getUsers().size());
     }
 
     @Test
@@ -80,12 +95,12 @@ public class RoomTests {
     @Test
     void testUrlCreation() {
         UrlService urlService = new UrlService(roomService);
-        Room room6 = roomService.createRoom("test");
-        String roomId6 = room6.getRoomId();
-        String url = urlService.createUrl(roomId6);
+        Room room7 = roomService.createRoom("test");
+        String roomId7 = room7.getRoomId();
+        String url = urlService.createUrl(roomId7);
         assertEquals(1, urlService.getRoomUrlTable().size());
         // simulate URL generation for QrCodeService, which calls the same function another time
-        assertEquals(url, urlService.createUrl(roomId6));
+        assertEquals(url, urlService.createUrl(roomId7));
         // test wrong roomId
         assertNull(urlService.createUrl("abcd1"));
     }
