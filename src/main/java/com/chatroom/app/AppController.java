@@ -151,7 +151,7 @@ public class AppController {
     }
 
     @GetMapping("/chat/{urlNumber}")
-    public String chatRoom(@PathVariable Integer urlNumber, Model model) {
+    public String enterChatRoom(@PathVariable Integer urlNumber, Model model) {
         String roomId = urlService.getRoomUrlTable().get(urlNumber);
         Room room = roomService.getRoom(roomId);
         if (room == null) {
