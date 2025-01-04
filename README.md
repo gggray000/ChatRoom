@@ -9,7 +9,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
-2. Deploy to the professor's virtual machine.<br>
+2. ChatBot Moderation.<br>
 
 <br>**Pending**<br>
 1. Migrate frontend from JavaScript to React.<br>
