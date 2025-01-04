@@ -16,7 +16,9 @@ public class TextMessageService {
     }
 
     public void saveTextMessage(TextMessage msg){
-        messageList.add(msg);
+        if (msg.getUserName() != null) {
+            messageList.add(msg);
+        }
     }
 
     public String exportStoredMessages(String roomId) {

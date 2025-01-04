@@ -1,6 +1,5 @@
 package com.chatroom.room;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -15,13 +14,16 @@ public class RoomService {
     private final Map<String, Room> rooms = new ConcurrentHashMap<>();
 
     public Room createRoom(String name) {
-        String roomId = UUID.randomUUID().toString().substring(0, 5);
-        while (rooms.containsKey(roomId)) {
-            roomId = UUID.randomUUID().toString().substring(0, 5);
+        if (name != null) {
+            String roomId = UUID.randomUUID().toString().substring(0, 5);
+            while (rooms.containsKey(roomId)) {
+                roomId = UUID.randomUUID().toString().substring(0, 5);
+            }
+            Room room = new Room(roomId, name);
+            rooms.put(roomId, room);
+            return room;
         }
-        Room room = new Room(roomId, name);
-        rooms.put(roomId, room);
-        return room;
+        return null;
     }
     // With JPA, this will get room from repository
     public Room getRoom(String roomId) {
