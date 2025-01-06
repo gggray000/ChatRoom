@@ -101,7 +101,11 @@ public class RoomTests {
         assertEquals(1, urlService.getRoomUrlTable().size());
         // simulate URL generation for QrCodeService, which calls the same function another time
         assertEquals(url, urlService.createUrl(roomId7));
+        Integer urlNumber7 = urlService.generateUrlNumber(roomId7);
+        assertEquals(roomId7, urlService.getRoomIdFromTable(urlNumber7));
         // test wrong roomId
         assertNull(urlService.createUrl("abcd1"));
+        // test wrong urlNumber
+        assertNull(urlService.getRoomIdFromTable(++urlNumber7));
     }
 }
