@@ -152,7 +152,10 @@ public class AppController {
 
     @GetMapping("/chat/{urlNumber}")
     public String enterChatRoom(@PathVariable Integer urlNumber, Model model) {
-        String roomId = urlService.getRoomUrlTable().get(urlNumber);
+        String roomId = urlService.getRoomIdFromTable(urlNumber);
+        if (roomId == null) {
+            return "redirect:/denied";
+        }
         Room room = roomService.getRoom(roomId);
         if (room == null) {
             return "redirect:/denied";

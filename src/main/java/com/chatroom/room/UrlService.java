@@ -22,12 +22,12 @@ public class UrlService {
 
     public String createUrl(String roomId) {
         if (roomService.getAllRooms().containsKey(roomId)) {
-            return "/chat/" + translateRoomIdToNumber(roomId);
+            return "/chat/" + generateUrlNumber(roomId);
         }
         return null;
     }
 
-    private Integer translateRoomIdToNumber(String roomId) {
+    public Integer generateUrlNumber(String roomId) {
         // First find existing urlNumber
         for (Map.Entry<Integer, String> entry : roomUrlTable.entrySet()) {
             if (Objects.equals(roomId, entry.getValue())) {
@@ -40,4 +40,11 @@ public class UrlService {
         return urlNumber;
     }
 
+    public String getRoomIdFromTable(Integer urlNumber) {
+        if (this.roomUrlTable.containsKey(urlNumber)) {
+            return roomUrlTable.get(urlNumber);
+        } else {
+            return null;
+        }
+    }
 }

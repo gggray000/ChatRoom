@@ -27,7 +27,10 @@ public class RoomService {
     }
     // With JPA, this will get room from repository
     public Room getRoom(String roomId) {
-        return rooms.get(roomId);
+        if (rooms.containsKey(roomId)) {
+            return rooms.get(roomId);
+        }
+        return null;
     }
 
     public void deleteRoom(String roomId) {
