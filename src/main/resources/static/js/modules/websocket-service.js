@@ -1,5 +1,5 @@
-import { elements } from './dom-elements.js';
-import { createUserInfo } from './avatar-service.js';
+import {elements} from './dom-elements.js';
+import {createUserInfo} from './avatar-service.js';
 
 export class WebSocketService {
     constructor(userListService) {
@@ -49,6 +49,12 @@ export class WebSocketService {
             { id: 'sub-0' }
         );
 
+        this.stompClient.subscribe(`/topic/private/${this.roomId}/${this.username}`,
+            (payload) => this.onMessageReceived(payload),
+            {id: 'sub-1'}
+        );
+
+
         const joinMessage = {
             sender: this.username,
             messageType: 'JOIN',
@@ -57,6 +63,36 @@ export class WebSocketService {
 
         this.stompClient.send(`/app/chat/${this.roomId}/addUser`, {}, JSON.stringify(joinMessage));
         elements.connectingElement.classList.add('hidden');
+
+        const getHistoryRequest = {
+            sender: this.username,
+            messageType: 'GET_HISTORY',
+            tokenId: localStorage.getItem('userToken')
+        };
+
+        this.stompClient.send(
+            `/app/chat/${this.roomId}/history`,
+            {},
+            JSON.stringify(getHistoryRequest)
+        );
+    }
+
+    onError(message) {
+        elements.connectingElement.textContent = message || 'Could not connect to WebSocket server. Please refresh this page to try again!';
+        elements.connectingElement.style.color = 'red';
+        elements.connectingElement.classList.remove('hidden');
+    }
+
+    disconnect() {
+        if (this.stompClient) {
+            this.stompClient.disconnect();
+        }
+        localStorage.clear();
+
+        elements.chatPage.classList.add('hidden');
+        elements.usernamePage.classList.remove('hidden');
+        elements.messageArea.innerHTML = '';
+        this.userListService.clearUserList();
     }
 
     updateUserInfo(username) {
@@ -66,12 +102,6 @@ export class WebSocketService {
         elements.userInfoRow.appendChild(avatarElement);
         elements.userInfoRow.appendChild(usernameElement);
         elements.userInfoRow.classList.remove('hidden');
-    }
-
-    onError(message) {
-        elements.connectingElement.textContent = message || 'Could not connect to WebSocket server. Please refresh this page to try again!';
-        elements.connectingElement.style.color = 'red';
-        elements.connectingElement.classList.remove('hidden');
     }
 
     sendMessage(messageContent) {
@@ -166,6 +196,11 @@ export class WebSocketService {
             case 'END':
                 messageElement.classList.add('event-message');
                 message.content = 'Generating discussion summary...';
+                break;
+
+            case 'SHOW_HISTORY':
+                messageElement.classList.add('event-message');
+                message.content = `--- Previous Messages ---`;
                 break;
         }
 

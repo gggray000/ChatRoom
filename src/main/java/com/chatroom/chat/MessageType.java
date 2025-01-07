@@ -7,6 +7,8 @@ public enum MessageType {
     USER_LIST,
     TYPING,
     TYPING_STOPPED,
+    GET_HISTORY,
+    SHOW_HISTORY,
     END,
     SUMMARY
 }

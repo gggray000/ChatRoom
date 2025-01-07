@@ -14,10 +14,14 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <br>**Pending**<br>
 1. Migrate frontend from JavaScript to React.<br>
 2. Wait for Llama 3.3 new releases, now there's only a 70B version available.<br>
-3. Figure out how to handle page refresh events properly.<br>
-4. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
+3. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.9</h3>
+
+1. User now can refresh or close the tab but retain his/her username, without being disconnected from the room.<br>
+2. Now new users or old users who reconnect can see chat room's message history.
+3. Added a disconnect button at chat page, user can exit the chat room or change username.
 <h3>v0.9.8</h3>
 Changed the URL generation logic.
 <h3>v0.9.7</h3>

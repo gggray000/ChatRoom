@@ -11,14 +11,22 @@ const roomId = window.ROOM_ID;
 const roomName = window.ROOM_NAME;
 
 async function connect(event) {
-    event.preventDefault();
+    if (event) {
+        event.preventDefault();
+    }
 
-    const username = elements.usernameForm.querySelector('#name').value.trim();
+    // Get username either from form or localStorage
+    const username = event ?
+        elements.usernameForm.querySelector('#name').value.trim() :
+        localStorage.getItem('username');
 
     if (username) {
         try {
-            const isAdmin = document.referrer.includes('/admin');
+            const isAdmin = document.referrer.includes('/admin') ||
+                localStorage.getItem('isAdmin') === 'true';
 
+            // Only get new token if we don't have one or if this is a new connection
+            if (!localStorage.getItem('userToken') || event) {
                 const response = await fetch('/admin/token', {
                     method: 'POST',
                     headers: {
@@ -36,12 +44,17 @@ async function connect(event) {
                 }
 
                 const token = await response.text();
-                localStorage.setItem('userToken',token);
+                localStorage.setItem('userToken', token);
+                localStorage.setItem('username', username);
+                localStorage.setItem('isAdmin', isAdmin);
+                localStorage.setItem('roomId', roomId);
+            }
 
             elements.usernamePage.classList.add('hidden');
             elements.chatPage.classList.remove('hidden');
             document.querySelector('.chat-header h2').textContent = roomName;
-            if(isAdmin){
+
+            if (localStorage.getItem('isAdmin') === 'true') {
                 elements.endButton.classList.remove('hidden');
             }
 
@@ -50,6 +63,8 @@ async function connect(event) {
         } catch (error) {
             console.error('Connection error:', error);
             alert('Failed to connect. Please try again.');
+            // Clear storage on connection error
+            localStorage.clear();
         }
     }
 }
@@ -71,10 +86,9 @@ function getRandomName(){
 }
 
 function initializeEventListeners() {
-
     elements.usernameForm.addEventListener('submit', connect, true);
-    console.log('Nickname button:', elements.nickNameButton);
     elements.nickNameButton.addEventListener('click', getRandomName);
+
     document.addEventListener('DOMContentLoaded', () => {
         if (elements.messageInput.tagName.toLowerCase() === 'input') {
             const textarea = document.createElement('textarea');
@@ -84,16 +98,31 @@ function initializeEventListeners() {
             elements.messageInput.parentNode.replaceChild(textarea, elements.messageInput);
             elements.messageInput = textarea;
         }
-
+        elements.sidebarToggle.addEventListener('click', () => {
+            elements.userListSidebar.classList.toggle('expanded');
+        });
         elements.messageInput.addEventListener('input', (e) => inputHandler.autoResizeInput(e));
         elements.messageInput.addEventListener('input', () => inputHandler.handleTyping());
         elements.messageInput.addEventListener('keydown', (e) => inputHandler.handleKeyPress(e));
         elements.messageForm.addEventListener('submit', sendMessage);
         elements.endButton.addEventListener('click', () => webSocketService.endDiscussion());
-        elements.sidebarToggle.addEventListener('click', () => {
-            elements.userListSidebar.classList.toggle('expanded');
+        elements.disconnectButton.addEventListener('click', () => {
+            if (confirm('Are you sure to disconnect or change username?')) {
+                webSocketService.disconnect();
+            }
         });
     });
 }
 
 initializeEventListeners();
+
+// Check for existing session on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const roomId = window.ROOM_ID;
+    const existingUsername = localStorage.getItem('username');
+    const existingToken = localStorage.getItem('userToken');
+
+    if (existingUsername && existingToken && roomId === localStorage.getItem('roomId')) {
+        connect();
+    }
+});

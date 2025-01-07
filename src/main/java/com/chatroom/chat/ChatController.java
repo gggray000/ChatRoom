@@ -27,6 +27,7 @@ import java.util.List;
 @Controller
 public class ChatController {
     private final TextMessageService textMessageService;
+    private final WebSocketMessageService webSocketMessageService;
     private final ChatBotController chatBotController;
     private final PdfService pdfService;
     private final JwtService jwtService;
@@ -35,13 +36,14 @@ public class ChatController {
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
     @Autowired
-    public ChatController(TextMessageService textMessageService,
+    public ChatController(TextMessageService textMessageService, WebSocketMessageService webSocketMessageService,
                           ChatBotController chatBotController,
                           PdfService pdfService,
                           JwtService jwtService,
                           SimpMessagingTemplate simpMessagingTemplate,
                           RoomService roomService) {
         this.textMessageService = textMessageService;
+        this.webSocketMessageService = webSocketMessageService;
         this.chatBotController = chatBotController;
         this.pdfService = pdfService;
         this.jwtService = jwtService;
@@ -116,6 +118,8 @@ public class ChatController {
     public WebSocketMessage sendMessage(@Payload WebSocketMessage webSocketMessage,
                                         @DestinationVariable String roomId) {
         if(MessageType.CHAT.equals(webSocketMessage.getMessageType())){
+            webSocketMessageService.saveWebSocketMessage(roomId, webSocketMessage);
+
             TextMessage textMessage = new TextMessage(
                     webSocketMessage.getSender(),
                     roomId,
@@ -126,12 +130,34 @@ public class ChatController {
         return webSocketMessage;
     }
 
+    @MessageMapping("/chat/{roomId}/history")
+    public void displayHistory(@DestinationVariable String roomId,
+                               SimpMessageHeaderAccessor headerAccessor) {
+        String username = headerAccessor.getSessionAttributes().get("username").toString();
+        List<WebSocketMessage> history = webSocketMessageService.exportWebSocketMessage(roomId);
+        if (!history.isEmpty()) {
+            for (WebSocketMessage message : history) {
+                simpMessagingTemplate.convertAndSend(
+                        "/topic/private/" + roomId + "/" + username, message
+                );
+            }
+            WebSocketMessage notice = WebSocketMessage.builder()
+                    .messageType(MessageType.SHOW_HISTORY)
+                    .build();
+            simpMessagingTemplate.convertAndSend(
+                    "/topic/private/" + roomId + "/" + username, notice
+            );
+        }
+    }
+
     @MessageMapping("/chat/{roomId}/relayEndMessage")
     @SendTo("/topic/public/{roomId}")
     public WebSocketMessage relayEndMessage(@Payload WebSocketMessage endMessage,
+                                            @DestinationVariable String roomId,
                                             SimpMessageHeaderAccessor headerAccessor) {
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        if (isAdmin == null || !isAdmin) {
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(endMessage.getTokenId(), roomId);
+        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
         }
         return endMessage;
@@ -139,10 +165,12 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}/endDiscussion")
     @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage generateSummary(@DestinationVariable String roomId,
+    public WebSocketMessage generateSummary(@Payload WebSocketMessage endMessage,
+                                            @DestinationVariable String roomId,
                                             SimpMessageHeaderAccessor headerAccessor) {
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        if (isAdmin == null || !isAdmin) {
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(endMessage.getTokenId(), roomId);
+        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
         }
 

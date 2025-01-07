@@ -213,7 +213,7 @@ button:hover {
 }
 
 .chat-header {
-    padding:  1rem 2rem;
+    padding: 1rem 2rem;
     background: #f8f9fa;
     border-bottom: 1px solid #e1e1e1;
     display: flex;
@@ -229,7 +229,7 @@ button:hover {
 }
 
 .chat-header .admin-btn {
-    background: #dc3545;
+    background: #2ecc71;
     color: white;
     padding: 8px 16px;
     border-radius: 4px;
@@ -243,11 +243,29 @@ button:hover {
 }
 
 .chat.header .admin-btn:hover {
-    background: #c82333;
+    background: #27ae60;
+}
+
+.chat-header .disconnect-btn {
+    background: #e74c3c; /* Red color */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    width: auto;
+    margin-right: 1rem; /* Add space before the logo */
+}
+
+.chat-header .disconnect-btn:hover {
+    background: #c0392b; /* Darker red on hover */
 }
 
 .chat-header .logo {
-    height: 40px;
+    height: 45px;
     margin-top: -12px;
 }
 
@@ -412,10 +430,27 @@ button:hover {
 
     .chat-header {
         padding-left: 60px;  /* Keep space for mobile menu button */
+        gap: 0.5rem;
+    }
+
+    .chat-header h2 {
+        line-height: 30px; /* Match height for mobile alignment */
     }
 
     .chat-header img.logo {
-        height: 24px;  /* Slightly smaller logo on mobile */
+        height: 30px; /* Updated from 24px to 30px */
+        margin-top: -6px;
+        margin-left: 0.5rem;
+    }
+
+    .chat-header .admin-btn,
+    .chat-header .disconnect-btn {
+        padding: 6px 12px; /* Reduced padding */
+        font-size: 0.85rem; /* Slightly smaller font */
+    }
+
+    .chat-header .disconnect-btn {
+        margin-right: 0.5rem; /* Reduced space before logo */
     }
 
     .chat-container {
