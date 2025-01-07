@@ -19,7 +19,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>Update Log</h2>
 <h3>v0.9.9</h3>
 1. User now can refresh or close the tab but retain his/her username, without being disconnected from the room.<br>
-2. Now new users or old users who reconnect can see chat room's message history.
+2. Now new users or old users who reconnect can see chat room's message history.<br>
 3. Added a disconnect button at chat page, user can exit the chat room or change username.
 <h3>v0.9.8</h3>
 Changed the URL generation logic.
@@ -27,7 +27,7 @@ Changed the URL generation logic.
 Implemented random username generation feature.
 <h3>v0.9.6</h3>
 1. Added a button at admin page, which allows the admin to cancel room creation, yet keep all the original input in place.<br>
-2. Created <code>access-denied</code> page, redesigned some API endpoints' logic in <code>AppController</code>.
+2. Created <code>access-denied</code> page, redesigned some API endpoints' logic in <code>AppController</code>.<br>
 3. Refactored and modified <code>Room</code> and <code>User</code> class.
 <h3>v0.9.5</h3>
 Fixed the bug that QR Code can't be displayed on EC2 server. Solution: install the font in Docker's Linux system.
