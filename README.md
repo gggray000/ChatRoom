@@ -18,15 +18,15 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>Update Log</h2>
 <h3>v0.9.9</h3>
-1. User now can refresh or close the tab but retain his/her username, without being disconnected from the room.<br>
-2. Now new users or old users who reconnect can see chat room's message history.<br>
-3. Added a disconnect button at chat page, user can exit the chat room or change username.
+1. User can now refresh or close the tab but retain his/her username, without being disconnected from the room.<br>
+2. Now new users or reconnected old users can see the chat room's message history.<br>
+3. Added a disconnect button on the chat page, users can exit the chat room or change their username.
 <h3>v0.9.8</h3>
 Changed the URL generation logic.
 <h3>v0.9.7</h3>
 Implemented random username generation feature.
 <h3>v0.9.6</h3>
-1. Added a button at admin page, which allows the admin to cancel room creation, yet keep all the original input in place.<br>
+1. Added a button on the admin page, which allows the admin to cancel room creation, yet keep all the original input in place.<br>
 2. Created <code>access-denied</code> page, redesigned some API endpoints' logic in <code>AppController</code>.<br>
 3. Refactored and modified <code>Room</code> and <code>User</code> class.
 <h3>v0.9.5</h3>
@@ -77,7 +77,7 @@ Implemented an easy JWT service, now only the admin can generate a summary.
 <h3>v0.6.5</h3>
 Fixed a bug that leads to duplicated "Generating summary..." messages and summaries.
 <h3>v0.6.4</h3>
-1. Redesigned the chat page, so that current user's info is displayed at the left bottom.<br>
+1. Redesigned the chat page, so that the current user's info is displayed at the left bottom.<br>
 2. Now the user list enables scrolling.<br>
 3. Renamed <code>ChatMessage</code> to <code>WebSocketMessage</code>, and <code>TextChatMessage</code> to <code>TextMessage</code>, which are actually text messages sent by users.<br>
 <h3>v0.6.3</h3>
