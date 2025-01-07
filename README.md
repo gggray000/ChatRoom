@@ -18,7 +18,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>Update Log</h2>
 <h3>v0.9.9</h3>
-
 1. User now can refresh or close the tab but retain his/her username, without being disconnected from the room.<br>
 2. Now new users or old users who reconnect can see chat room's message history.
 3. Added a disconnect button at chat page, user can exit the chat room or change username.
