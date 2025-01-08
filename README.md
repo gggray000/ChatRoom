@@ -5,7 +5,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
-2. Refresh rate control.<br>
+2. Configure the domain with Cloudflare again but with Nginx.<br>
 3. Mobile page design improvement.<br>
 
 <h3>Long-term</h3>
@@ -18,6 +18,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.9.1<h3>
+Changed web server from <code>Caddy</code> to <code>Nginx</code>, implemented refresh rate control.<br>
 <h3>v0.9.9</h3>
 1. User can now refresh or close the tab but retain his/her username, without being disconnected from the room.<br>
 2. Now new users or reconnected old users can see the chat room's message history.<br>
