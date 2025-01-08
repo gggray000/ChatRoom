@@ -5,7 +5,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
-2. Improve security with Caddy.<br>
+2. Refresh rate control.<br>
+3. Mobile page design improvement.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
