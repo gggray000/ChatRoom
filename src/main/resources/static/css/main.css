@@ -247,7 +247,7 @@ button:hover {
 }
 
 .chat-header .disconnect-btn {
-    background: #e74c3c; /* Red color */
+    background: #e74c3c;
     color: white;
     padding: 8px 16px;
     border-radius: 4px;
@@ -257,7 +257,7 @@ button:hover {
     transition: background-color 0.2s;
     white-space: nowrap;
     width: auto;
-    margin-right: 1rem; /* Add space before the logo */
+    margin-right: auto;
 }
 
 .chat-header .disconnect-btn:hover {
@@ -347,6 +347,7 @@ button:hover {
     width: calc(100% - 120px);
     font-family: inherit;
     font-size: 1rem;
+    margin-right: -1rem;
 }
 
 #messageForm button {
@@ -355,6 +356,7 @@ button:hover {
     padding: 8px 16px;
     white-space: nowrap;
     flex-shrink: 0;
+    margin-left: 1.5rem;
 }
 
 .hidden {
@@ -405,6 +407,7 @@ button:hover {
 
 /* Media Queries */
 @media screen and (max-width: 768px) {
+
     #messageForm {
         padding: 0.5rem;
     }
@@ -428,34 +431,20 @@ button:hover {
         padding-left: 55px;
     }
 
-    .chat-header {
-        padding-left: 60px;  /* Keep space for mobile menu button */
-        gap: 0.5rem;
-    }
-
-    .chat-header h2 {
-        line-height: 30px; /* Match height for mobile alignment */
-    }
-
-    .chat-header img.logo {
-        height: 30px; /* Updated from 24px to 30px */
-        margin-top: -6px;
-        margin-left: 0.5rem;
-    }
-
-    .chat-header .admin-btn,
-    .chat-header .disconnect-btn {
-        padding: 6px 12px; /* Reduced padding */
-        font-size: 0.85rem; /* Slightly smaller font */
-    }
-
-    .chat-header .disconnect-btn {
-        margin-right: 0.5rem; /* Reduced space before logo */
-    }
-
-    .chat-container {
-        position: relative;
-        height: 100%;
+    .toggle-sidebar {
+        display: block;
+        position: absolute;
+        top: 0.75rem;
+        left: 10px;
+        background: #2c3e50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        z-index: 11;
     }
 
     .user-list-sidebar {
@@ -471,29 +460,47 @@ button:hover {
         left: 0;
     }
 
+    .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 4rem;
+        padding-right: 1rem;
+        gap: 0.5rem;
+    }
+
+    .chat-header h2 {
+        flex: 1;
+        line-height: 30px;
+        min-width: 100px;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .chat-header .admin-btn,
+    .chat-header .disconnect-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        width: 6rem;
+        margin-top: -0.25rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .chat-header .logo {
+        height: 45px;
+        margin-top: -0.5rem;
+        flex-shrink: 0;
+    }
+
     .main-chat-area {
         width: 100%;
         height: 100%;
-    }
-
-    .toggle-sidebar {
-        display: block;
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 11;
-        background: #2c3e50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 8px;
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-    }
-
-    .chat-header {
-        padding-left: 60px;
     }
 }
 

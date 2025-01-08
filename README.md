@@ -6,7 +6,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h3>Short-term</h3>
 1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
 2. Configure the domain with Cloudflare again but with Nginx.<br>
-3. Mobile page design improvement.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
@@ -18,6 +17,11 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.9.2</h3>
+
+1. Improved UI design of chat page for mobile device.<br>
+2. Added empty username warning.<br>
+3. Fixed bugs for SSH Tunnel and static resource access.
 <h3>v0.9.9.1</h3>
 Changed web server from <code>Caddy</code> to <code>Nginx</code>, implemented refresh rate control.<br>
 <h3>v0.9.9</h3>
@@ -127,6 +131,8 @@ Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=Tyw
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in <code>main.js</code>.
 
 <h2>Acknowledgement</h2>
+@nginx<br>
+<URL>https://github.com/nginx/nginx</URL><br>
 @jamo<br>
 <URL>https://github.com/jamo/nick-generator</URL><br>
 @vsch<br>
@@ -137,8 +143,6 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 <URL>https://github.com/markdown-it/markdown-it</URL><br>
 @jwtk<br>
 <URL>https://github.com/jwtk/jjwt</URL><br>
-@ali-bouali<br>
-<URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL><br>
 @Dheeraj Malik<br>
 <URL>https://stackoverflow.com/questions/75173568/how-to-generate-qr-code-with-some-text-using-java</URL><br>
 @E-ICEBLUE<br>
@@ -149,3 +153,5 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 <URL>https://github.com/ollama/ollama/blob/main/LICENSE</URL><br>
 @langchain4j<br>
 <URL>https://github.com/langchain4j/langchain4j?tab=Apache-2.0-1-ov-file</URL><br>
+@ali-bouali<br>
+<URL>https://github.com/ali-bouali/spring-boot-websocket-chat-app</URL><br>

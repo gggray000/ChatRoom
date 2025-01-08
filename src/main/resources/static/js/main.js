@@ -66,6 +66,8 @@ async function connect(event) {
             // Clear storage on connection error
             localStorage.clear();
         }
+    } else {
+        alert("Please enter a username or get a random nickname.")
     }
 }
 
