@@ -13,7 +13,7 @@ A web application for real-time anonymous group discussions with built-in AI sum
 2. ChatBot Moderation.<br>
 
 <br>**Pending**<br>
-1. Migrate frontend from JavaScript to React.<br>
+1. Migrate frontend to <code>React.js</code>.<br>
 2. Wait for Llama 3.3 new releases, now there's only a 70B version available.<br>
 3. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
