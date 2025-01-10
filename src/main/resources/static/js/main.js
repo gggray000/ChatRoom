@@ -118,6 +118,11 @@ function initializeEventListeners() {
                 webSocketService.disconnect();
             }
         });
+        elements.disconnectButtonUser.addEventListener('click', () => {
+            if (confirm('Are you sure to disconnect or change username?')) {
+                webSocketService.disconnect();
+            }
+        });
     });
 }
 

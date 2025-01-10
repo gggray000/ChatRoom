@@ -16,10 +16,11 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <br>**Pending**<br>
 1. Migrate frontend to <code>React.js</code>.<br>
-2. Wait for Llama 3.3 new releases, now there's only a 70B version available.<br>
-3. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
+   2Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.9-4</h3>
+Changed local LLM from llama3.2 3B to phi4 14B.
 <h3>v0.9.9-3</h3>
 1. Improved PDF formatting.<br>
 2. Redesigned chat page UI for future features (Timer, Shutdown).

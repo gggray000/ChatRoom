@@ -5,6 +5,7 @@ import com.chatroom.room.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,8 @@ import java.util.List;
 
 @Controller
 public class ChatController {
+    @Value("${langchain4j.ollama.chat-model.model-name}")
+    private String modelName;
     private final TextMessageService textMessageService;
     private final WebSocketMessageService webSocketMessageService;
     private final ChatBotController chatBotController;
@@ -179,7 +182,7 @@ public class ChatController {
         WebSocketMessage summaryMessage =
                 WebSocketMessage.builder()
                         .messageType(MessageType.SUMMARY)
-                        .sender("ChatBot - Llama3.2 3B")
+                        .sender("ChatBot - " + modelName)
                         .content(summary)
                         .resource(pdfFileName)
                         .build();
