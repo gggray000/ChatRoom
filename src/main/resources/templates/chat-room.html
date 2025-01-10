@@ -40,11 +40,19 @@
 
         <div class="main-chat-area">
             <div class="chat-header">
-                <h2></h2>
-                <div class="button-container">
-                    <button id="endDiscussionBtn" class="admin-btn hidden">Summarize</button>
-                    <button id="disconnectBtn" class="disconnect-btn">Disconnect</button>
+                <div class="title-timer-container">
+                    <h2></h2>
+                    <div class="countdown">5:00</div>
                 </div>
+                <div class="button-container">
+                    <button id="summarizeBtn" class="admin-btn hidden">Summarize</button>
+                    <button id="timerBtn" class="timer-btn hidden">Pause/Continue</button>
+                    <button id="shutdownBtn" class="shutdown-btn hidden">Shutdown</button>
+                    <button id="disconnectBtn" class="disconnect-btn hidden">Disconnect</button>
+                </div>
+
+                <button id="disconnectBtnUser" class="disconnect-btn-user hidden">Disconnect</button>
+
                 <img src="/images/logo.png" alt="logo" class="logo">
             </div>
 

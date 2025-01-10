@@ -4,8 +4,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Countdown feature.<br>
-2. Improve room deletion logic.<br>
+
+1. Timer feature.<br>
+2. Shutdown feature.<br>
 3. Write more test cases, learn <code>@SpringBootTest</code>.<br>
 4. Configure the domain with Cloudflare again but with Nginx.<br>
 
@@ -19,8 +20,11 @@ A web application for real-time anonymous group discussions with built-in AI sum
 3. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
-<h3>v0.9.9.2</h3>
+<h3>v0.9.9.3</h3>
 
+1. Improved PDF formatting.<br>
+2. Redesigned chat page UI for future features (Timer, Shutdown).
+<h3>v0.9.9.2</h3>
 1. Improved UI design of chat page for mobile device.<br>
 2. Added empty username warning.<br>
 3. Fixed bugs for SSH Tunnel and static resource access.

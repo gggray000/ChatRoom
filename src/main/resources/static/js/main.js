@@ -55,7 +55,12 @@ async function connect(event) {
             document.querySelector('.chat-header h2').textContent = roomName;
 
             if (localStorage.getItem('isAdmin') === 'true') {
-                elements.endButton.classList.remove('hidden');
+                elements.summarizeButton.classList.remove('hidden');
+                elements.timerButton.classList.remove('hidden');
+                elements.shutdownBtn.classList.remove('hidden')
+                elements.disconnectButton.classList.remove('hidden');
+            } else {
+                elements.disconnectButtonUser.classList.remove('hidden');
             }
 
             await webSocketService.connect(username, roomId);
@@ -107,7 +112,7 @@ function initializeEventListeners() {
         elements.messageInput.addEventListener('input', () => inputHandler.handleTyping());
         elements.messageInput.addEventListener('keydown', (e) => inputHandler.handleKeyPress(e));
         elements.messageForm.addEventListener('submit', sendMessage);
-        elements.endButton.addEventListener('click', () => webSocketService.endDiscussion());
+        elements.summarizeButton.addEventListener('click', () => webSocketService.generateSummary());
         elements.disconnectButton.addEventListener('click', () => {
             if (confirm('Are you sure to disconnect or change username?')) {
                 webSocketService.disconnect();

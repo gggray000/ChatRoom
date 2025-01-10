@@ -135,15 +135,15 @@ export class WebSocketService {
         }
     }
 
-    endDiscussion() {
+    generateSummary() {
         if (this.stompClient) {
-            const endMessage = {
+            const getSummaryMessage = {
                 sender: this.username,
-                messageType: 'END',
+                messageType: 'GENERATE_SUMMARY',
                 tokenId: localStorage.getItem('userToken')
             };
-            this.stompClient.send(`/app/chat/${this.roomId}/relayEndMessage`, {}, JSON.stringify(endMessage));
-            this.stompClient.send(`/app/chat/${this.roomId}/endDiscussion`, {}, JSON.stringify(endMessage));
+            this.stompClient.send(`/app/chat/${this.roomId}/relayGetSummaryMessage`, {}, JSON.stringify(getSummaryMessage));
+            this.stompClient.send(`/app/chat/${this.roomId}/summarize`, {}, JSON.stringify(getSummaryMessage));
         }
     }
 
@@ -193,7 +193,7 @@ export class WebSocketService {
                 this.handleSummaryAndPdf(this.roomId, message);
                 return;
 
-            case 'END':
+            case 'GENERATE_SUMMARY':
                 messageElement.classList.add('event-message');
                 message.content = 'Generating discussion summary...';
                 break;

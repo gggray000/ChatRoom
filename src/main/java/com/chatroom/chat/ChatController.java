@@ -150,39 +150,41 @@ public class ChatController {
         }
     }
 
-    @MessageMapping("/chat/{roomId}/relayEndMessage")
+    @MessageMapping("/chat/{roomId}/relayGetSummaryMessage")
     @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage relayEndMessage(@Payload WebSocketMessage endMessage,
+    public WebSocketMessage relaySummarizeMessage(@Payload WebSocketMessage getSummaryMessage,
                                             @DestinationVariable String roomId,
                                             SimpMessageHeaderAccessor headerAccessor) {
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(endMessage.getTokenId(), roomId);
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(getSummaryMessage.getTokenId(), roomId);
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
         }
-        return endMessage;
+        return getSummaryMessage;
     }
 
-    @MessageMapping("/chat/{roomId}/endDiscussion")
+    @MessageMapping("/chat/{roomId}/summarize")
     @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage generateSummary(@Payload WebSocketMessage endMessage,
+    public WebSocketMessage generateSummary(@Payload WebSocketMessage getSummaryMessage,
                                             @DestinationVariable String roomId,
                                             SimpMessageHeaderAccessor headerAccessor) {
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(endMessage.getTokenId(), roomId);
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(getSummaryMessage.getTokenId(), roomId);
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
         }
 
         String summary = chatBotController.makeSummary(roomId);
         String pdfFileName = pdfService.makePdf(roomId, summary);
-
-        return WebSocketMessage.builder()
-                .messageType(MessageType.SUMMARY)
-                .sender("ChatBot - Llama3.2 3B")
-                .content(summary)
-                .resource(pdfFileName)
-                .build();
+        WebSocketMessage summaryMessage =
+                WebSocketMessage.builder()
+                        .messageType(MessageType.SUMMARY)
+                        .sender("ChatBot - Llama3.2 3B")
+                        .content(summary)
+                        .resource(pdfFileName)
+                        .build();
+        webSocketMessageService.saveWebSocketMessage(roomId, summaryMessage);
+        return summaryMessage;
     }
 
     @GetMapping("/api/pdf/{filename}")
@@ -190,7 +192,6 @@ public class ChatController {
             @PathVariable String filename,
             @RequestHeader(value = "roomId") String roomId,
             @RequestHeader(value = "token") String token) {
-
         JwtUserDetails userDetails = jwtService.validateUserToken(token, roomId);
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

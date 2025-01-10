@@ -9,6 +9,7 @@ public enum MessageType {
     TYPING_STOPPED,
     GET_HISTORY,
     SHOW_HISTORY,
-    END,
-    SUMMARY
+    GENERATE_SUMMARY,
+    SUMMARY,
+    END
 }
