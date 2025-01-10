@@ -1,17 +1,17 @@
 package com.chatroom.room;
 
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.pdf.converter.PdfConverterExtension;
+import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import com.vladsch.flexmark.util.ast.Node;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.data.MutableDataSet;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 
 @Service
 public class PdfService {
@@ -30,7 +30,60 @@ public class PdfService {
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
         Node document = parser.parse(content);
-        String html = renderer.render(document);
+        String htmlContent = renderer.render(document);
+
+        String html = String.format("""
+                 <!DOCTYPE html>
+                 <html>
+                 <head>
+                     <meta charset="UTF-8">
+                     <style>
+                         @font-face {
+                             font-family: 'Arial';
+                             src: url('fonts/Arial.ttf') format('truetype');
+                         }
+                        \s
+                         body {
+                             font-family: 'Arial', sans-serif;
+                             font-size: 12pt;
+                             line-height: 1.6;
+                             margin: 40px;
+                         }
+                        \s
+                         h1 {
+                             font-size: 24pt;
+                             font-weight: bold;
+                             color: #2c3e50;
+                         }
+                        \s
+                         h2 {
+                             font-size: 18pt;
+                             font-weight: bold;
+                             color: #34495e;
+                         }
+                        \s
+                         em {
+                             font-style: italic;
+                         }
+                        \s
+                         strong {
+                             font-weight: bold;
+                         }
+                        \s
+                         p {
+                             margin-bottom: 10px;
+                         }
+                        \s
+                         .markdown-content {
+                             font-family: 'Arial', sans-serif;
+                         }
+                     </style>
+                 </head>
+                 <body>
+                     %s
+                 </body>
+                 </html>
+                \s""", htmlContent);
 
         String filename = "Summary_Room_" + roomId + ".pdf";
         Path pdfPath = pdfStorageLocation.resolve(filename);
