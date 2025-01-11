@@ -146,41 +146,23 @@ export class Timer {
         this.webSocketService.stompClient.send(`/app/admin/${this.roomId}/timerOperation`, {}, JSON.stringify(startTimerMessage));
     }
 
-    // reset() {
-    //     this.stop();
-    //     this.isPaused = false;
-    //     this.totalSeconds = (this.initialMinutes * 60) + this.initialSeconds;
-    //     this.updateDisplay();
-    //     this.timerButton.textContent = 'Start';
-    // }
 
     onTimerEnd() {
         console.log('Timer ended');
-        // Custom end behavior can be defined in main.js
     }
 
-    // getTimeLeft() {
-    //     return {
-    //         minutes: Math.floor(this.totalSeconds / 60),
-    //         seconds: this.totalSeconds % 60,
-    //         totalSeconds: this.totalSeconds
-    //     };
-    // }
-    //
-    // setTime(minutes, seconds = 0) {
-    //     this.stop();
-    //     this.isPaused = false;
-    //     this.initialMinutes = minutes;
-    //     this.initialSeconds = seconds;
-    //     this.totalSeconds = (minutes * 60) + seconds;
-    //     this.updateDisplay();
-    // }
-    //
-    // destroy() {
-    //     this.stop();
-    //     if (this.timerButton) {
-    //         this.timerButton.removeEventListener('click', this.toggleTimer);
-    //     }
-    // }
+    destroy() {
+        if (this.countdown) {
+            clearInterval(this.countdown);
+            this.countdown = null;
+        }
+        this.isRunning = false;
+        this.isPaused = false;
+        this.isFistRun = true;
+        if (this.timerButton) {
+            this.timerButton.textContent = 'Start';
+        }
+        this.countdownElement.setAttribute('data-running', 'false');
+    }
 
 }

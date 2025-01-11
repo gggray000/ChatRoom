@@ -5,9 +5,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 
-1. Fixed bug that when Admin reconnects, the timer starts automatically.<br>
-2. Write more test cases, learn <code>@SpringBootTest</code>.<br>
-3. Configure the domain with Cloudflare again but with Nginx.<br>
+1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
+2. Configure the domain with Cloudflare again but with Nginx.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
@@ -19,7 +18,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>Update Log</h2>
 <h3>v0.9.14</h3>
-
 1. Added Timer feature.<br>
 2. Added Shutdown feature for admin.
    <h3>v0.9.13</h3>
