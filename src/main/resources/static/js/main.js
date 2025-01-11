@@ -3,12 +3,16 @@ import {UserListService} from './modules/user-list-service.js';
 import {WebSocketService} from './modules/websocket-service.js';
 import {InputHandler} from './modules/input-handler.js';
 import {generateRandomNickname} from "./modules/avatar-service.js";
+import {Timer} from "./modules/timer.js";
 
 const userListService = new UserListService();
-const webSocketService = new WebSocketService(userListService);
-const inputHandler = new InputHandler(webSocketService);
 const roomId = window.ROOM_ID;
 const roomName = window.ROOM_NAME;
+const timer = new Timer(roomId);
+const webSocketService = new WebSocketService(userListService, timer);
+const inputHandler = new InputHandler(webSocketService);
+
+timer.setWebSocketService(webSocketService);
 
 async function connect(event) {
     if (event) {
@@ -46,7 +50,7 @@ async function connect(event) {
                 const token = await response.text();
                 localStorage.setItem('userToken', token);
                 localStorage.setItem('username', username);
-                localStorage.setItem('isAdmin', isAdmin);
+                localStorage.setItem('isAdmin', isAdmin.toString());
                 localStorage.setItem('roomId', roomId);
             }
 
@@ -57,7 +61,7 @@ async function connect(event) {
             if (localStorage.getItem('isAdmin') === 'true') {
                 elements.summarizeButton.classList.remove('hidden');
                 elements.timerButton.classList.remove('hidden');
-                elements.shutdownBtn.classList.remove('hidden')
+                elements.shutdownButton.classList.remove('hidden')
                 elements.disconnectButton.classList.remove('hidden');
             } else {
                 elements.disconnectButtonUser.classList.remove('hidden');
@@ -123,6 +127,11 @@ function initializeEventListeners() {
                 webSocketService.disconnect();
             }
         });
+        elements.shutdownButton.addEventListener('click', () => {
+            if (confirm('This will terminate the chat room and disconnect all users along with chat history, are you sure?')) {
+                webSocketService.shutdownRoom();
+            }
+        })
     });
 }
 

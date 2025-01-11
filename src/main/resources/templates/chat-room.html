@@ -42,7 +42,14 @@
             <div class="chat-header">
                 <div class="title-timer-container">
                     <h2></h2>
-                    <div class="countdown">5:00</div>
+                    <div class="countdown"
+                         th:data-minutes="${timerMinutes}"
+                         th:data-seconds="${timerSeconds}"
+                         th:data-total-seconds="${timerMinutes * 60 + timerSeconds}"
+                         th:data-running="false">
+                        <span class="minutes" th:text="${#numbers.formatInteger(timerMinutes, 2)}">00</span>:<span
+                            class="seconds" th:text="${#numbers.formatInteger(timerSeconds, 2)}">00</span>
+                    </div>
                 </div>
                 <div class="button-container">
                     <button id="summarizeBtn" class="admin-btn hidden">Summarize</button>

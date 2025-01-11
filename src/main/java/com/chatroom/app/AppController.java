@@ -1,12 +1,19 @@
 package com.chatroom.app;
 
 import com.chatroom.bot.ChatBotConfiguration;
+import com.chatroom.chat.WebSocketMessage;
 import com.chatroom.room.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessageDeliveryException;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +43,9 @@ public class AppController {
     @Autowired
     private ChatBotConfiguration chatBotConfiguration;
 
+    @Autowired
+    private TimeService timeService;
+
     @GetMapping("/")
     public String home() {
         return "redirect:/admin";
@@ -60,18 +70,24 @@ public class AppController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> createChatRoom(@RequestBody Map<String, String> request) {
         String roomName = request.get("name");
+        String discussionTime = request.get("timerMinutes");
         if (roomName == null || roomName.trim().isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Room name is required"));
         }
 
         try {
             Room room = roomService.createRoom(roomName);
+            String roomId = room.getRoomId();
+            timeService.setTimeForRoom(roomId, Integer.parseInt(discussionTime) * 60);
+
             String roomUrl = urlService.createUrl(room.getRoomId());
 
             Map<String, String> response = new HashMap<>();
             response.put("url", roomUrl);
-            response.put("roomId", room.getRoomId());
-            response.put("roomName", room.getName());
+            response.put("roomId", roomId);
+            response.put("roomName", roomName);
+            response.put("timerMinutes", Integer.toString(timeService.getTimeForRoom(roomId) / 60));
+            response.put("timerSeconds", Integer.toString(timeService.getTimeForRoom(roomId) % 60));
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -86,13 +102,13 @@ public class AppController {
         String roomId = request.get("roomId");
         String originalName = "";
         String originalPrompt = "";
+        int originalMinutes = 0;
         try{
             Room roomToBeDeleted = roomService.getRoom(roomId);
             originalName = roomToBeDeleted.getName();
             originalPrompt = roomToBeDeleted.getPrompt();
-            roomService.deleteRoom(roomToBeDeleted.getRoomId());
-            chatBotConfiguration.updatePromptForRoom(roomId, "");
-            chatBotConfiguration.deleteRoomMemoryAndPrompt(roomId);
+            originalMinutes = timeService.getTimeForRoom(roomId) / 60;
+            this.deleteRoom(roomToBeDeleted);
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete room. " + e.getMessage());
         }
@@ -100,6 +116,7 @@ public class AppController {
         Map<String, String> response = new HashMap<>();
         response.put("originalName", originalName);
         response.put("originalPrompt", originalPrompt);
+        response.put("originalMinutes", Integer.toString(originalMinutes));
         return ResponseEntity.ok(response);
     }
 
@@ -162,6 +179,8 @@ public class AppController {
         }
         model.addAttribute("roomId", roomId);
         model.addAttribute("roomName", room.getName());
+        model.addAttribute("timerMinutes", Integer.toString(timeService.getTimeForRoom(roomId) / 60));
+        model.addAttribute("timerSeconds", Integer.toString(timeService.getTimeForRoom(roomId) % 60));
         return "chat-room";
     }
 
@@ -189,6 +208,67 @@ public class AppController {
             return ResponseEntity.badRequest()
                     .body("Error generating token: " + e.getMessage());
         }
+    }
+
+    @MessageMapping("/admin/{roomId}/shutdown")
+    @SendTo("/topic/public/{roomId}")
+    public WebSocketMessage shutdownChatRoom(@Payload WebSocketMessage shutdownRequest,
+                                             @DestinationVariable String roomId,
+                                             SimpMessageHeaderAccessor headerAccessor) {
+        Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(shutdownRequest.getTokenId(), roomId);
+        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+            throw new MessageDeliveryException("Unauthorized: Only admin can shutdown chat room.");
+        } else {
+            Room roomToBeDeleted = roomService.getRoom(roomId);
+            this.deleteRoom(roomToBeDeleted);
+            return shutdownRequest;
+        }
+    }
+
+    private void deleteRoom(Room roomTobeDeleted) {
+        if (roomService.getAllRooms().containsValue(roomTobeDeleted)) {
+            String roomId = roomTobeDeleted.getRoomId();
+            try {
+                roomService.deleteRoom(roomId);
+                chatBotConfiguration.updatePromptForRoom(roomId, "");
+                chatBotConfiguration.deleteRoomMemoryAndPrompt(roomId);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to delete room. " + e.getMessage());
+            }
+        }
+
+    }
+
+    @MessageMapping("/admin/{roomId}/updateTime")
+    @SendTo("/topic/public/{roomId}")
+    public WebSocketMessage updateTime(@Payload WebSocketMessage updateTimeMessage,
+                                       @DestinationVariable String roomId,
+                                       SimpMessageHeaderAccessor headerAccessor) {
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(updateTimeMessage.getTokenId(), roomId);
+        Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
+        Integer newTime = updateTimeMessage.getTimeInSeconds();
+        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+            throw new MessageDeliveryException("Unauthorized: Only admin can update time.");
+        } else if (newTime > timeService.getTimeForRoom(roomId)) {
+            throw new MessageDeliveryException("Invalid time update.");
+        } else {
+            timeService.setTimeForRoom(roomId, newTime);
+        }
+        return updateTimeMessage;
+    }
+
+    @MessageMapping("/admin/{roomId}/timerOperation")
+    @SendTo("/topic/public/{roomId}")
+    public WebSocketMessage operateTimer(@Payload WebSocketMessage operateTimerMessage,
+                                         @DestinationVariable String roomId,
+                                         SimpMessageHeaderAccessor headerAccessor) {
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(operateTimerMessage.getTokenId(), roomId);
+        Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
+        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+            throw new MessageDeliveryException("Unauthorized: Only admin can operate timer.");
+        }
+        return operateTimerMessage;
     }
 
 }

@@ -244,6 +244,12 @@ button:hover {
     font-style: italic;
 }
 
+.countdown span {
+    display: inline-block;
+    font-style: italic;
+}
+
+
 .chat-header .button-container {
     display: flex;
     gap: 0.5rem;
@@ -471,6 +477,10 @@ button:hover {
     border-radius: 50%;
     border-top-color: transparent;
     animation: spin 1s linear infinite;
+}
+
+.event-message .disconnect {
+    color: #e74c3c; /* Red color */
 }
 
 @keyframes spin {

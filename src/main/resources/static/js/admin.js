@@ -7,11 +7,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const systemPromptInput = document.getElementById('systemPrompt');
     const roomHeader = document.getElementById('room-header');
     const promptHeader = document.getElementById('prompt-header');
-    const cancelButton = document.getElementById('cancel-button')
+    const cancelButton = document.getElementById('cancel-button');
+    const timerSliderContainer = document.querySelector('.timer-slider-container');
+    const timerHeader = document.getElementById('timer-header');
+    const timerSlider = document.getElementById('timerSlider');
+    const timerValue = document.getElementById('timerValue');
+    const sliderLabels = document.querySelector('.slider-labels');
 
     async function createRoom() {
         const roomName = roomNameInput.value.trim();
         const systemPrompt = systemPromptInput ? systemPromptInput.value.trim() : '';
+        const timerMinutes = parseInt(timerSlider.value);
+
         if (!roomName) {
             alert('Please enter a room name');
             return;
@@ -24,7 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: roomName,
-                    systemPrompt: systemPrompt
+                    systemPrompt: systemPrompt,
+                    timerMinutes: timerMinutes
                 })
             });
 
@@ -34,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const roomData = await createRoomResponse.json();
             cancelButton.dataset.roomId = roomData.roomId;
-            cancelButton.dataset.roomName = roomData.name;
 
             const setPromptResponse = await fetch('/admin/set-system-prompt', {
                 method: 'POST',
@@ -50,8 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(`HTTP error! status: ${setPromptResponse.status}`);
             }
 
-            cancelButton.dataset.prompt = systemPrompt;
-
             // Update UI
             successMessage.style.display = 'block';
             roomNameInput.style.display = 'none';
@@ -59,7 +64,8 @@ document.addEventListener('DOMContentLoaded', function() {
             createRoomButton.style.display = 'none';
             roomHeader.style.display = 'none';
             promptHeader.style.display = 'none';
-
+            timerSliderContainer.style.display = 'none';
+            timerHeader.style.display = 'none';
 
             const roomUrl = window.location.origin + roomData.url;
             const roomUrlLink = roomUrlContainer.querySelector('a');
@@ -84,17 +90,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function cancelCreation(){
         const roomId = cancelButton.dataset.roomId;
-        const roomName = cancelButton.dataset.roomName;
-        const systemPrompt = cancelButton.dataset.prompt;
 
         try {
             const cancelationResponse = await fetch('/admin/cancel-room', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    name: roomName,
-                    roomId: roomId,
-                    systemPrompt: systemPrompt
+                    roomId: roomId
                 })
             });
 
@@ -112,11 +114,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show and populate input fields
             roomNameInput.style.display = 'block';
             systemPromptInput.style.display = 'block';
+            timerSliderContainer.style.display = 'block';
             createRoomButton.style.display = 'block';
+            timerHeader.style.display = 'block';
 
             // Set values from response
             roomNameInput.value = responseData.originalName;
             systemPromptInput.value = responseData.originalPrompt;
+            timerSlider.value = parseInt(responseData.originalMinutes);
+            timerValue.textContent = parseInt(responseData.originalMinutes);
 
             // Hide post-creation elements
             roomUrlContainer.style.display = 'none';
@@ -126,8 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Clear button dataset
             delete cancelButton.dataset.roomId;
-            delete cancelButton.dataset.roomName;
-            delete cancelButton.dataset.prompt;
 
         } catch (error) {
             console.error('Error:', error);
@@ -135,6 +139,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    timerSlider.addEventListener('input', function () {
+        timerValue.textContent = this.value;
+    });
+    sliderLabels.addEventListener('click', function (e) {
+        if (e.target.tagName === 'SPAN') {
+            const value = parseInt(e.target.textContent);
+            timerSlider.value = value;
+            timerValue.textContent = value;
+        }
+    });
     createRoomButton.addEventListener('click', createRoom);
     roomNameInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {

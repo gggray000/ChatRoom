@@ -2,10 +2,11 @@ import {elements} from './dom-elements.js';
 import {createUserInfo} from './avatar-service.js';
 
 export class WebSocketService {
-    constructor(userListService) {
+    constructor(userListService, timer) {
         this.stompClient = null;
         this.username = null;
         this.userListService = userListService;
+        this.timer = timer;
         this.roomId = window.ROOM_ID;
         this.md = window.markdownit({
             html: false,
@@ -75,6 +76,7 @@ export class WebSocketService {
             {},
             JSON.stringify(getHistoryRequest)
         );
+
     }
 
     onError(message) {
@@ -202,6 +204,43 @@ export class WebSocketService {
                 messageElement.classList.add('event-message');
                 message.content = `--- Previous Messages ---`;
                 break;
+
+            case 'UPDATE_TIME':
+                if (this.timer.isRunning) {
+                    this.timer.totalSeconds = message.timeInSeconds;
+                    break;
+                } else if (this.timer.isFistRun && localStorage.getItem('isAdmin') === 'false') {
+                    this.timer.totalSeconds = message.timeInSeconds;
+                    this.timer.start()
+                    break;
+                }
+                break;
+
+            case 'TIMER_START':
+                if (localStorage.getItem('isAdmin') === 'false') {
+                    this.timer.start();
+                }
+                messageElement.classList.add('event-message');
+                message.content = '--- Timer has been started ---';
+                break;
+
+            case 'TIMER_PAUSE':
+                if (localStorage.getItem('isAdmin') === 'false') {
+                    this.timer.pause();
+                }
+                messageElement.classList.add('event-message');
+                message.content = '--- Timer has been paused ---';
+                break;
+
+            case 'SHUTDOWN':
+                messageElement.classList.add('event-message');
+                message.content = '--- This discussion had been terminated by admin ---\n' +
+                    '--- History will be deleted after tab closed or refreshed  ---';
+                if (this.stompClient) {
+                    this.stompClient.disconnect();
+                }
+                localStorage.clear();
+                this.userListService.clearUserList();
         }
 
         if (message.content) {
@@ -289,5 +328,26 @@ export class WebSocketService {
         }
 
         elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
+    }
+
+    shutdownRoom() {
+        if (this.timer) {
+            this.timer.stop();
+        }
+        let roomId = localStorage.getItem('roomId');
+        if (roomId === this.roomId) {
+            const shutdownRequest = {
+                sender: this.username,
+                messageType: 'SHUTDOWN',
+                tokenId: localStorage.getItem('userToken'),
+                roomId: roomId
+            };
+
+            this.stompClient.send(
+                `/app/admin/${this.roomId}/shutdown`,
+                {},
+                JSON.stringify(shutdownRequest)
+            );
+        }
     }
 }

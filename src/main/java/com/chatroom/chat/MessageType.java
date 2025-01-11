@@ -7,9 +7,12 @@ public enum MessageType {
     USER_LIST,
     TYPING,
     TYPING_STOPPED,
+    UPDATE_TIME,
+    TIMER_START,
+    TIMER_PAUSE,
     GET_HISTORY,
     SHOW_HISTORY,
     GENERATE_SUMMARY,
     SUMMARY,
-    END
+    SHUTDOWN
 }

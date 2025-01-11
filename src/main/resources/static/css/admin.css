@@ -190,9 +190,109 @@ h4 {  /* Target all h4 elements */
     opacity: 1;
 }
 
+.timer-slider-container {
+    width: 90%;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.timer-slider {
+    width: 100%;
+    height: 4px;
+    -webkit-appearance: none;
+    background: #e1e1e1;
+    outline: none;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+}
+
+.timer-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #3498db;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.timer-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #3498db;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+}
+
+.timer-slider::-webkit-slider-thumb:hover {
+    background: #2980b9;
+}
+
+.timer-slider::-moz-range-thumb:hover {
+    background: #2980b9;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    margin-top: -1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.slider-labels span {
+    font-size: 0.8rem;
+    color: #666;
+    cursor: pointer;
+    position: relative;
+    width: 20px;
+    text-align: center;
+    margin-left: -10px;
+}
+
+.slider-labels span:first-child {
+    margin-left: 0;
+}
+
+.slider-labels span:last-child {
+    margin-right: 0;
+}
+
+.timer-display {
+    text-align: center;
+    font-size: 1rem;
+    color: #2c3e50;
+    margin-top: 1rem;
+}
+
+/* Highlight the emphasized values on the slider track */
+.slider-labels span::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background: #3498db;
+    left: 50%;
+    top: -15px;
+    transform: translateX(-50%);
+}
+
 @media screen and (max-width: 480px) {
     .admin-container {
         padding: 1rem;
         margin: 1rem;
+    }
+
+    .timer-slider-container {
+        width: 100%;
+        padding: 0 0.5rem;
+    }
+
+    .slider-labels span {
+        font-size: 0.7rem;
     }
 }

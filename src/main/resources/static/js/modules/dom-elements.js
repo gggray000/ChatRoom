@@ -14,7 +14,7 @@ export const elements = {
     disconnectButton: document.querySelector('#disconnectBtn'),
     disconnectButtonUser: document.querySelector('#disconnectBtnUser'),
     timerButton: document.querySelector('#timerBtn'),
-    shutdownBtn: document.querySelector('#shutdownBtn'),
+    shutdownButton: document.querySelector('#shutdownBtn'),
     systemMessage:document.querySelector('#systemPrompt'),
     sidebarToggle: document.querySelector('.toggle-sidebar'),
     userListSidebar: document.querySelector('.user-list-sidebar')

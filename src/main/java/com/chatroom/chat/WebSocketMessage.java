@@ -3,7 +3,6 @@ package com.chatroom.chat;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 /*@Builder enables to construct objects like this:
 * User user = User.builder()
@@ -25,5 +24,6 @@ public class WebSocketMessage {
     private List<String> userList;
     private String tokenId;
     private String resource;
+    private int timeInSeconds;
 
 }

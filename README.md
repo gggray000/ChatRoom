@@ -5,10 +5,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 
-1. Timer feature.<br>
-2. Shutdown feature.<br>
-3. Write more test cases, learn <code>@SpringBootTest</code>.<br>
-4. Configure the domain with Cloudflare again but with Nginx.<br>
+1. Fixed bug that when Admin reconnects, the timer starts automatically.<br>
+2. Write more test cases, learn <code>@SpringBootTest</code>.<br>
+3. Configure the domain with Cloudflare again but with Nginx.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
@@ -16,19 +15,23 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <br>**Pending**<br>
 1. Migrate frontend to <code>React.js</code>.<br>
-   2Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
+2. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
 
 <h2>Update Log</h2>
-<h3>v0.9.9-4</h3>
+<h3>v0.9.14</h3>
+
+1. Added Timer feature.<br>
+2. Added Shutdown feature for admin.
+   <h3>v0.9.13</h3>
 Changed local LLM from llama3.2 3B to phi4 14B.
-<h3>v0.9.9-3</h3>
+   <h3>v0.9.12</h3>
 1. Improved PDF formatting.<br>
 2. Redesigned chat page UI for future features (Timer, Shutdown).
-<h3>v0.9.9-2</h3>
+   <h3>v0.9.11</h3>
 1. Improved UI design of chat page for mobile device.<br>
 2. Added empty username warning.<br>
 3. Fixed bugs for SSH Tunnel and static resource access.
-<h3>v0.9.9-1</h3>
+   <h3>v0.9.10</h3>
 Changed web server from <code>Caddy</code> to <code>Nginx</code>, implemented refresh rate control.<br>
 <h3>v0.9.9</h3>
 1. User can now refresh or close the tab but retain his/her username, without being disconnected from the room.<br>
@@ -137,6 +140,8 @@ Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=Tyw
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in <code>main.js</code>.
 
 <h2>Acknowledgement</h2>
+@Microsoft<br>
+<URL>https://ollama.com/library/phi4</URL>
 @nginx<br>
 <URL>https://github.com/nginx/nginx</URL><br>
 @jamo<br>
