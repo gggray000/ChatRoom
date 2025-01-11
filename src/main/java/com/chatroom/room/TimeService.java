@@ -30,5 +30,11 @@ public class TimeService {
         return 0;
     }
 
+    public void deleteRoomTime(String roomId) {
+        if (this.globalTimeMap.containsKey(roomId)) {
+            globalTimeMap.remove(roomId);
+        }
+    }
+
 
 }

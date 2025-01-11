@@ -220,6 +220,7 @@ public class AppController {
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can shutdown chat room.");
         } else {
+            timeService.deleteRoomTime(roomId);
             Room roomToBeDeleted = roomService.getRoom(roomId);
             this.deleteRoom(roomToBeDeleted);
             return shutdownRequest;

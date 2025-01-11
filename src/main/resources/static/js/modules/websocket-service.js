@@ -238,6 +238,7 @@ export class WebSocketService {
                 messageElement.classList.add('event-message');
                 message.content = '--- This discussion had been terminated by admin ---\n' +
                     '--- History will be deleted after tab closed or refreshed  ---';
+                this.timer.pause();
                 if (this.stompClient) {
                     this.stompClient.disconnect();
                 }
