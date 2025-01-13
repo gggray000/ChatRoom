@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const timerSliderContainer = document.querySelector('.timer-slider-container');
     const timerHeader = document.getElementById('timer-header');
     const timerSlider = document.getElementById('timerSlider');
-    const timerValue = document.getElementById('timerValue');
-    const timerDisplay = document.getElementById('timer-display');
     const sliderLabels = document.querySelector('.slider-labels');
 
     async function createRoom() {

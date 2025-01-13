@@ -1,23 +1,16 @@
 export class Timer {
-    constructor(roomId) {
+    constructor(roomId, timerMinutes = 0, timerSeconds = 0) {
         this.countdown = null;
-        this.totalSeconds = 0;
-        this.initialMinutes = 0;
-        this.initialSeconds = 0;
-        this.isFistRun = true;
+        this.totalSeconds = (timerMinutes * 60) + timerSeconds;
+        this.isFirstRun = true;
         this.isRunning = false;
         this.isPaused = false;
-        this.countdownElement = document.querySelector('.countdown');
-        this.minutesDisplay = this.countdownElement.querySelector('.minutes');
-        this.secondsDisplay = this.countdownElement.querySelector('.seconds');
         this.timerButton = document.querySelector('#timerBtn');
+        this.minutesDisplay = document.querySelector('.minutes');
+        this.secondsDisplay = document.querySelector('.seconds');
         this.webSocketService = null;
         this.roomId = roomId;
-
         this.initialize();
-        if (this.timerButton) {
-            this.timerButton.addEventListener('click', () => this.toggleTimer());
-        }
     }
 
     setWebSocketService(webSocketService) {
@@ -25,14 +18,12 @@ export class Timer {
     }
 
     initialize() {
-        // Get initial time from data attributes
-        this.initialMinutes = parseInt(this.countdownElement.getAttribute('data-minutes'), 10) || 0;
-        if (this.initialMinutes === 0) {
-            this.countdownElement.style.display = 'none';
-            this.timerButton.style.display = 'none';
+        if (this.totalSeconds === 0) {
+            document.querySelector('.countdown').style.display = 'none';
+        } else if (localStorage.getItem('isAdmin') === 'true') {
+            this.timerButton.classList.remove('hidden');
+            this.timerButton.addEventListener('click', () => this.toggleTimer());
         }
-        this.initialSeconds = parseInt(this.countdownElement.getAttribute('data-seconds'), 10) || 0;
-        this.totalSeconds = (this.initialMinutes * 60) + this.initialSeconds;
         this.updateDisplay();
         this.timerButton.textContent = 'Start';
     }
@@ -44,115 +35,87 @@ export class Timer {
         this.secondsDisplay.textContent = seconds.toString().padStart(2, '0');
     }
 
-    start() {
-        if ((!this.isRunning && !this.isPaused && this.isFistRun && this.totalSeconds > 0) ||
-            (this.isPaused && !this.isFistRun && this.totalSeconds > 0)) {
-            this.isFistRun = false;
-            this.isRunning = true;
-            this.isPaused = false;
-            this.countdownElement.setAttribute('data-running', 'true');
-            this.countdown = setInterval(() => {
-                if (this.totalSeconds > 0) {
-                    this.totalSeconds--;
-                    this.updateDisplay();
-                    if (localStorage.getItem('isAdmin') === 'true') {
-                        this.updateGlobalTime();
-                    }
-                } else {
-                    this.stop();
-                    this.onTimerEnd();
-                }
-            }, 1000);
-            if (localStorage.getItem('isAdmin') === 'true') {
-                this.startGlobal();
-            }
-            this.timerButton.textContent = 'Pause';
+    toggleTimer() {
+        if (!this.isRunning && !this.isPaused) {
+            this.start();
+        } else if (this.isRunning) {
+            this.pause();
+        } else if (this.isPaused) {
+            this.start();
         }
     }
 
-    stop() {
-        if (this.isRunning) {
-            this.isRunning = false;
-            this.isPaused = false;
-            this.countdownElement.setAttribute('data-running', 'false');
-            clearInterval(this.countdown);
-            if (localStorage.getItem('isAdmin') === 'true') {
-                this.updateGlobalTime();
+    start() {
+        this.isFirstRun = false;
+        this.isRunning = true;
+        this.isPaused = false;
+
+        this.countdown = setInterval(() => {
+            if (this.totalSeconds > 0) {
+                this.totalSeconds--;
+                this.updateDisplay();
+                if (localStorage.getItem('isAdmin') === 'true') {
+                    this.sendWebSocketMessage('UPDATE_TIME');
+                }
+            } else {
+                this.stop();
+                this.onTimerEnd();
             }
-            //this.timerButton.textContent = 'Start';
-            // Reset timer to initial values
-            // this.totalSeconds = (this.initialMinutes * 60) + this.initialSeconds;
-            // this.updateDisplay();
+        }, 1000);
+
+        if (localStorage.getItem('isAdmin') === 'true') {
+            this.sendWebSocketMessage('TIMER_START');
         }
+
+        this.timerButton.textContent = 'Pause';
     }
 
     pause() {
-        if (this.isRunning) {
-            this.isRunning = false;
-            this.isPaused = true;
-            this.countdownElement.setAttribute('data-running', 'false');
-            clearInterval(this.countdown);
-            if (localStorage.getItem('isAdmin') === 'true') {
-                this.pauseGlobal();
-                this.updateGlobalTime();
-            }
-            this.timerButton.textContent = 'Resume';
+        this.isRunning = false;
+        this.isPaused = true;
+        clearInterval(this.countdown);
+
+        if (localStorage.getItem('isAdmin') === 'true') {
+            this.sendWebSocketMessage('TIMER_PAUSE');
         }
+
+        this.timerButton.textContent = 'Resume';
     }
 
-    resume() {
-        if (this.isPaused) {
-            this.start();
+    stop() {
+        this.isRunning = false;
+        this.isPaused = false;
+        clearInterval(this.countdown);
+
+        if (localStorage.getItem('isAdmin') === 'true') {
+            this.sendWebSocketMessage('UPDATE_TIME');
         }
+
+        this.timerButton.textContent = 'Start';
     }
 
-    toggleTimer() {
-        if (!this.isRunning && !this.isPaused) {
-            // Timer is stopped, start it
-            this.start();
-        } else if (this.isRunning) {
-            // Timer is running, pause it
-            this.pause();
-        } else if (this.isPaused) {
-            // Timer is paused, resume it
-            this.resume();
-        }
-    }
-
-    updateGlobalTime() {
-        const updateTimeMessage = {
+    sendWebSocketMessage(messageType) {
+        const message = {
             sender: localStorage.getItem('username'),
             tokenId: localStorage.getItem('userToken'),
             roomId: this.roomId,
-            messageType: 'UPDATE_TIME',
+            messageType: messageType,
             timeInSeconds: this.totalSeconds
         };
-        this.webSocketService.stompClient.send(`/app/admin/${this.roomId}/updateTime`, {}, JSON.stringify(updateTimeMessage));
-    }
 
-    startGlobal() {
-        const startTimerMessage = {
-            sender: localStorage.getItem('username'),
-            tokenId: localStorage.getItem('userToken'),
-            roomId: this.roomId,
-            messageType: 'TIMER_START',
-        };
-        this.webSocketService.stompClient.send(`/app/admin/${this.roomId}/timerOperation`, {}, JSON.stringify(startTimerMessage));
-    }
+        const endpoint = messageType === 'UPDATE_TIME' ? `/app/chat/${this.roomId}/updateTime` :
+            `/app/chat/${this.roomId}/timerOperation`;
 
-    pauseGlobal() {
-        const startTimerMessage = {
-            sender: localStorage.getItem('username'),
-            tokenId: localStorage.getItem('userToken'),
-            roomId: this.roomId,
-            messageType: 'TIMER_PAUSE',
-        };
-        this.webSocketService.stompClient.send(`/app/admin/${this.roomId}/timerOperation`, {}, JSON.stringify(startTimerMessage));
+        this.webSocketService.stompClient.send(endpoint, {}, JSON.stringify(message));
     }
-
 
     onTimerEnd() {
         console.log('Timer ended');
+        this.sendWebSocketMessage('TIMES_UP');
+        if (this.timerButton) {
+            this.timerButton.textContent = 'Time\'s up';
+            this.timerButton.disabled = true;
+        }
     }
 
     destroy() {
@@ -160,13 +123,13 @@ export class Timer {
             clearInterval(this.countdown);
             this.countdown = null;
         }
+
         this.isRunning = false;
         this.isPaused = false;
-        this.isFistRun = true;
+        this.isFirstRun = true;
+
         if (this.timerButton) {
             this.timerButton.textContent = 'Start';
         }
-        this.countdownElement.setAttribute('data-running', 'false');
     }
-
 }

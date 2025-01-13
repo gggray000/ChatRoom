@@ -8,7 +8,9 @@ import {Timer} from "./modules/timer.js";
 const userListService = new UserListService();
 const roomId = window.ROOM_ID;
 const roomName = window.ROOM_NAME;
-const timer = new Timer(roomId);
+const timerMinutes = window.TIMER_MINUTES || 0;
+const timerSeconds = window.TIMER_SECONDS || 0;
+const timer = new Timer(roomId, parseInt(timerMinutes), parseInt(timerSeconds));
 const webSocketService = new WebSocketService(userListService, timer);
 const inputHandler = new InputHandler(webSocketService);
 
@@ -60,7 +62,6 @@ async function connect(event) {
 
             if (localStorage.getItem('isAdmin') === 'true') {
                 elements.summarizeButton.classList.remove('hidden');
-                elements.timerButton.classList.remove('hidden');
                 elements.shutdownButton.classList.remove('hidden')
                 elements.disconnectButton.classList.remove('hidden');
             } else {
