@@ -27,6 +27,10 @@ export class Timer {
     initialize() {
         // Get initial time from data attributes
         this.initialMinutes = parseInt(this.countdownElement.getAttribute('data-minutes'), 10) || 0;
+        if (this.initialMinutes === 0) {
+            this.countdownElement.style.display = 'none';
+            this.timerButton.style.display = 'none';
+        }
         this.initialSeconds = parseInt(this.countdownElement.getAttribute('data-seconds'), 10) || 0;
         this.totalSeconds = (this.initialMinutes * 60) + this.initialSeconds;
         this.updateDisplay();

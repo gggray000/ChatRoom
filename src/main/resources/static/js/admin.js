@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const timerHeader = document.getElementById('timer-header');
     const timerSlider = document.getElementById('timerSlider');
     const timerValue = document.getElementById('timerValue');
+    const timerDisplay = document.getElementById('timer-display');
     const sliderLabels = document.querySelector('.slider-labels');
 
     async function createRoom() {
@@ -122,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
             roomNameInput.value = responseData.originalName;
             systemPromptInput.value = responseData.originalPrompt;
             timerSlider.value = parseInt(responseData.originalMinutes);
-            timerValue.textContent = parseInt(responseData.originalMinutes);
 
             // Hide post-creation elements
             roomUrlContainer.style.display = 'none';
@@ -139,23 +139,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function updateTimerDisplay(value) {
+        const timerDisplay = document.getElementById('timer-display');
+        if (value === 0) {
+            timerDisplay.textContent = 'Timer Disabled';
+        } else {
+            timerDisplay.textContent = `Selected time: ${value} minutes`;
+        }
+    }
+
     timerSlider.addEventListener('input', function () {
-        timerValue.textContent = this.value;
+        updateTimerDisplay(parseInt(timerSlider.value));
     });
+
     sliderLabels.addEventListener('click', function (e) {
         if (e.target.tagName === 'SPAN') {
             const value = parseInt(e.target.textContent);
             timerSlider.value = value;
-            timerValue.textContent = value;
+            updateTimerDisplay(value);
         }
     });
+
     createRoomButton.addEventListener('click', createRoom);
+
     roomNameInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             createRoom();
         }
     });
+
     cancelButton.addEventListener('click', cancelCreation);
 
 });
