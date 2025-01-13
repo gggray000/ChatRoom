@@ -210,6 +210,7 @@ export class WebSocketService {
             case 'UPDATE_TIME':
                 if (this.timer.isRunning) {
                     this.timer.totalSeconds = message.timeInSeconds;
+                    this.timer.updateDisplay();
                     break;
                 } else if (this.timer.isFistRun && localStorage.getItem('isAdmin') === 'false') {
                     this.timer.totalSeconds = message.timeInSeconds;
