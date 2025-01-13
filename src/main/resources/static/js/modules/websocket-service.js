@@ -6,8 +6,8 @@ export class WebSocketService {
         this.stompClient = null;
         this.username = null;
         this.userListService = userListService;
-        this.timer = timer;
         this.roomId = window.ROOM_ID;
+        this.timer = timer;
         this.md = window.markdownit({
             html: false,
             breaks: true,
@@ -44,7 +44,6 @@ export class WebSocketService {
     }
 
     onConnected() {
-
         this.stompClient.subscribe(`/topic/public/${this.roomId}`,
             (payload) => this.onMessageReceived(payload),
             { id: 'sub-0' }
@@ -54,7 +53,6 @@ export class WebSocketService {
             (payload) => this.onMessageReceived(payload),
             {id: 'sub-1'}
         );
-
 
         const joinMessage = {
             sender: this.username,
@@ -76,7 +74,6 @@ export class WebSocketService {
             {},
             JSON.stringify(getHistoryRequest)
         );
-
     }
 
     onError(message) {
@@ -157,36 +154,20 @@ export class WebSocketService {
 
         switch (message.messageType) {
             case 'JOIN':
-                if (message.sender === this.username) {
-                    this.updateUserInfo(message.sender);
-                }
-                this.userListService.addUserToList(message.sender, message.tokenId);
-                messageElement.classList.add('event-message');
-                message.content = `${message.sender} joined!`;
+                this.handleJoin(message, messageElement);
                 break;
 
             case 'LEAVE':
-                this.userListService.removeUserFromList(message.tokenId);
-                messageElement.classList.add('event-message');
-                message.content = `${message.sender} left!`;
+                this.handleLeave(message, messageElement);
                 break;
 
             case 'CHAT':
-                messageElement.classList.add('chat-message');
-                const { avatarElement, usernameElement } = createUserInfo(message.sender);
-                messageElement.appendChild(avatarElement);
-                messageElement.appendChild(usernameElement);
+                this.handleChat(message, messageElement);
                 break;
 
             case 'USER_LIST':
-                this.userListService.clearUserList();
-                //console.log("Received user list:", message.userList);
-                if (Array.isArray(message.userList)) {
-                    message.userList.forEach(user => {
-                        this.userListService.addUserToList(user);
-                    });
-                }
-                return;
+                this.handleUserList(message);
+                break;
 
             case 'TYPING':
             case 'TYPING_STOPPED':
@@ -198,53 +179,31 @@ export class WebSocketService {
                 return;
 
             case 'GENERATE_SUMMARY':
-                messageElement.classList.add('event-message');
-                message.content = 'Generating discussion summary...';
+                this.sendEventMessage(message, messageElement, 'Generating discussion summary...')
                 break;
 
             case 'SHOW_HISTORY':
-                messageElement.classList.add('event-message');
-                message.content = `--- Previous Messages ---`;
+                this.sendEventMessage(message, messageElement, `--- Previous Messages ---`)
                 break;
 
             case 'UPDATE_TIME':
-                if (this.timer.isRunning) {
-                    this.timer.totalSeconds = message.timeInSeconds;
-                    this.timer.updateDisplay();
-                    break;
-                } else if (this.timer.isFistRun && localStorage.getItem('isAdmin') === 'false') {
-                    this.timer.totalSeconds = message.timeInSeconds;
-                    this.timer.start()
-                    break;
-                }
+                this.handleUpdateTime(message);
                 break;
 
             case 'TIMER_START':
-                if (localStorage.getItem('isAdmin') === 'false') {
-                    this.timer.start();
-                }
-                messageElement.classList.add('event-message');
-                message.content = '--- Timer has been started ---';
+                this.handleTimerStart(message, messageElement);
                 break;
 
             case 'TIMER_PAUSE':
-                if (localStorage.getItem('isAdmin') === 'false') {
-                    this.timer.pause();
-                }
-                messageElement.classList.add('event-message');
-                message.content = '--- Timer has been paused ---';
+                this.handleTimerPause(message, messageElement);
+                break;
+
+            case 'TIMES_UP':
+                this.sendEventMessage(message, messageElement, '--- Time\'s up! ---')
                 break;
 
             case 'SHUTDOWN':
-                messageElement.classList.add('event-message');
-                message.content = '--- This discussion had been terminated by admin ---\n' +
-                    '--- History will be deleted after tab closed or refreshed  ---';
-                this.timer.pause();
-                if (this.stompClient) {
-                    this.stompClient.disconnect();
-                }
-                localStorage.clear();
-                this.userListService.clearUserList();
+                this.handleShutDown(message, messageElement);
         }
 
         if (message.content) {
@@ -255,6 +214,76 @@ export class WebSocketService {
             elements.messageArea.appendChild(messageElement);
             elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
         }
+    }
+
+    sendEventMessage(message, messageElement, content) {
+        messageElement.classList.add('event-message');
+        message.content = content;
+    }
+
+    handleJoin(message, messageElement) {
+        if (message.sender === this.username) {
+            this.updateUserInfo(message.sender);
+        }
+        this.userListService.addUserToList(message.sender, message.tokenId);
+        this.sendEventMessage(message, messageElement, `${message.sender} joined!`)
+    }
+
+    handleLeave(message, messageElement) {
+        this.userListService.removeUserFromList(message.tokenId);
+        this.sendEventMessage(message, messageElement, `${message.sender} left!`);
+    }
+
+    handleChat(message, messageElement) {
+        messageElement.classList.add('chat-message');
+        const {avatarElement, usernameElement} = createUserInfo(message.sender);
+        messageElement.appendChild(avatarElement);
+        messageElement.appendChild(usernameElement);
+    }
+
+    handleUserList(message) {
+        this.userListService.clearUserList();
+        if (Array.isArray(message.userList)) {
+            message.userList.forEach(user => {
+                this.userListService.addUserToList(user);
+            });
+        }
+    }
+
+    handleUpdateTime(message) {
+        if (this.timer.isRunning) {
+            this.timer.totalSeconds = message.timeInSeconds;
+            this.timer.updateDisplay();
+        } else if (this.timer.isFirstRun && localStorage.getItem('isAdmin') === 'false') {
+            this.timer.totalSeconds = message.timeInSeconds;
+            this.timer.start();
+        }
+    }
+
+    handleTimerStart(message, messageElement) {
+        if (localStorage.getItem('isAdmin') === 'false') {
+            this.timer.start();
+        }
+        this.sendEventMessage(message, messageElement, '--- Timer has been started ---')
+    }
+
+    handleTimerPause(message, messageElement) {
+        if (localStorage.getItem('isAdmin') === 'false') {
+            this.timer.pause();
+        }
+        this.sendEventMessage(message, messageElement, '--- Timer has been paused ---')
+    }
+
+    handleShutDown(message, messageElement) {
+        this.sendEventMessage(message, messageElement,
+            '--- This discussion had been terminated by admin ---\n' +
+            '--- History will be deleted after tab closed or refreshed  ---');
+        this.timer.pause();
+        if (this.stompClient) {
+            this.stompClient.disconnect();
+        }
+        localStorage.clear();
+        this.userListService.clearUserList();
     }
 
     async handleSummaryAndPdf(roomId, message) {
@@ -292,31 +321,24 @@ export class WebSocketService {
                             token: token
                         }
                     });
-
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-
                     // Convert the response to a blob
                     const blob = await response.blob();
-
                     // Create a URL for the blob
                     const url = window.URL.createObjectURL(blob);
-
                     // Create a temporary anchor element
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = url;
                     a.download = message.resource;
-
                     // Add to document, click it, and remove it
                     document.body.appendChild(a);
                     a.click();
-
                     // Clean up
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a);
-
                     // Reset button state
                     downloadButton.textContent = 'Download Discussion Summary PDF';
                     downloadButton.disabled = false;
@@ -326,11 +348,9 @@ export class WebSocketService {
                     downloadButton.disabled = false;
                 }
             });
-
             pdfElement.appendChild(downloadButton);
             elements.messageArea.appendChild(pdfElement);
         }
-
         elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
     }
 
