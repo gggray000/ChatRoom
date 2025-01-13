@@ -7,7 +7,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
 2. Configure the domain with Cloudflare again but with Nginx.<br>
-3. Add no timer option.
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
