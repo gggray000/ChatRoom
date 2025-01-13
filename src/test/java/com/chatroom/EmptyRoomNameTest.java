@@ -2,10 +2,7 @@ package com.chatroom;
 
 import com.chatroom.app.AppController;
 import com.chatroom.bot.ChatBotConfiguration;
-import com.chatroom.room.JwtService;
-import com.chatroom.room.QrCodeService;
-import com.chatroom.room.RoomService;
-import com.chatroom.room.UrlService;
+import com.chatroom.room.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,11 +35,14 @@ public class EmptyRoomNameTest {
 	@MockBean
 	private JwtService jwtService;
 
+	@MockBean
+	private TimeService timeService;
+
 	@Test
-    public void testRoomCreationWithEmptyName() throws Exception {
+	public void testRoomCreationWithEmptyName() throws Exception {
 		this.mockMvc.perform(post("/admin/create-room")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"name\": \"\", \"systemPrompt\": \"test prompt\"}"))
+						.content("{\"name\": \"\", \"systemPrompt\": \"test prompt\", \"timerMinutes\": \"5\"}"))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.error").value("Room name is required"));
 	}

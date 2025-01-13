@@ -10,6 +10,7 @@ public enum MessageType {
     UPDATE_TIME,
     TIMER_START,
     TIMER_PAUSE,
+    TIMES_UP,
     GET_HISTORY,
     SHOW_HISTORY,
     GENERATE_SUMMARY,

@@ -13,7 +13,8 @@ public class ChatBotConfiguration {
     private final Map<String, String> roomPrompts = new ConcurrentHashMap<>();
     private final Map<String, ChatMemory> roomMemories = new ConcurrentHashMap<>();
 
-    private final String PROMPT_TEMPLATE = """
+    private final String PROMPT_TEMPLATE =
+            """
             You are an AI assistant that helps summarize chat discussions, based on the main topic
             provided by admin.
             When provided with a chat history, make sure to follow the following guidelines:

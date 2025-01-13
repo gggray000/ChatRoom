@@ -4,7 +4,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-
 1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
 2. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
 
@@ -16,6 +15,12 @@ A web application for real-time anonymous group discussions with built-in AI sum
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.15</h3>
+
+1. Refactored <code>timer.js</code>.<br>
+2. Added broadcast message when time's up.<br>
+3. Refactored <code>AppController.java</code>, <code>ChatController.java</code>.<br>
+4. Refactored <code>websocket-service.js</code>.
 <h3>v0.9.14</h3>
 1. Added Timer feature.<br>
 2. Added Shutdown feature for admin.

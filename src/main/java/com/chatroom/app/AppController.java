@@ -241,35 +241,4 @@ public class AppController {
 
     }
 
-    @MessageMapping("/admin/{roomId}/updateTime")
-    @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage updateTime(@Payload WebSocketMessage updateTimeMessage,
-                                       @DestinationVariable String roomId,
-                                       SimpMessageHeaderAccessor headerAccessor) {
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(updateTimeMessage.getTokenId(), roomId);
-        Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        Integer newTime = updateTimeMessage.getTimeInSeconds();
-        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
-            throw new MessageDeliveryException("Unauthorized: Only admin can update time.");
-        } else if (newTime > timeService.getTimeForRoom(roomId)) {
-            throw new MessageDeliveryException("Invalid time update.");
-        } else {
-            timeService.setTimeForRoom(roomId, newTime);
-        }
-        return updateTimeMessage;
-    }
-
-    @MessageMapping("/admin/{roomId}/timerOperation")
-    @SendTo("/topic/public/{roomId}")
-    public WebSocketMessage operateTimer(@Payload WebSocketMessage operateTimerMessage,
-                                         @DestinationVariable String roomId,
-                                         SimpMessageHeaderAccessor headerAccessor) {
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(operateTimerMessage.getTokenId(), roomId);
-        Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
-            throw new MessageDeliveryException("Unauthorized: Only admin can operate timer.");
-        }
-        return operateTimerMessage;
-    }
-
 }

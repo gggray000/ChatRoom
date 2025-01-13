@@ -36,6 +36,7 @@ public class ChatController {
     private final JwtService jwtService;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final RoomService roomService;
+    private final TimeService timeService;
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
     @Autowired
@@ -44,7 +45,7 @@ public class ChatController {
                           PdfService pdfService,
                           JwtService jwtService,
                           SimpMessagingTemplate simpMessagingTemplate,
-                          RoomService roomService) {
+                          RoomService roomService, TimeService timeService) {
         this.textMessageService = textMessageService;
         this.webSocketMessageService = webSocketMessageService;
         this.chatBotController = chatBotController;
@@ -52,6 +53,7 @@ public class ChatController {
         this.jwtService = jwtService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.roomService = roomService;
+        this.timeService = timeService;
     }
 
     @MessageMapping("/chat/{roomId}/addUser")
@@ -213,6 +215,37 @@ public class ChatController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @MessageMapping("/chat/{roomId}/updateTime")
+    @SendTo("/topic/public/{roomId}")
+    public WebSocketMessage updateTime(@Payload WebSocketMessage updateTimeMessage,
+                                       @DestinationVariable String roomId,
+                                       SimpMessageHeaderAccessor headerAccessor) {
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(updateTimeMessage.getTokenId(), roomId);
+        Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
+        Integer newTime = updateTimeMessage.getTimeInSeconds();
+        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+            throw new MessageDeliveryException("Unauthorized: Only admin can update time.");
+        } else if (newTime > timeService.getTimeForRoom(roomId)) {
+            throw new MessageDeliveryException("Invalid time update.");
+        } else {
+            timeService.setTimeForRoom(roomId, newTime);
+        }
+        return updateTimeMessage;
+    }
+
+    @MessageMapping("/chat/{roomId}/timerOperation")
+    @SendTo("/topic/public/{roomId}")
+    public WebSocketMessage operateTimer(@Payload WebSocketMessage operateTimerMessage,
+                                         @DestinationVariable String roomId,
+                                         SimpMessageHeaderAccessor headerAccessor) {
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(operateTimerMessage.getTokenId(), roomId);
+        Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
+        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+            throw new MessageDeliveryException("Unauthorized: Only admin can operate timer.");
+        }
+        return operateTimerMessage;
     }
 
 }

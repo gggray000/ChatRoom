@@ -45,8 +45,9 @@ class RoomCancellationIntegrationTest {
                         5. In the "Key Contributions from Participants" part, identify and mention key contributions from participants.
                         6. In the "Decision or Follow-ups" part, highlight any decisions or follow-up actions that were commonly agreed upon.
                         7. If there were any unresolved questions or topics, mention them.
-                        8. Seperate the four sections with blank new line.
-                        9. Always say "Thank you for your participation!" at the end of summary, add a new blank line before this sentence.
+                        8. Seperate the four sections with blank new line. Begin each section with a new line.
+                        9. Use markdown strong (bold text) for important points.
+                        10. Always say "Thank you for your participation!" at the end of summary, add a new blank line before this sentence.
                         
                         Main Topic from Admin:
                         %s
@@ -55,7 +56,7 @@ class RoomCancellationIntegrationTest {
         // First create a room
         MvcResult createResult = mockMvc.perform(post("/admin/create-room")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"" + roomName + "\"}"))
+                        .content("{\"name\":\"" + roomName + "\", \"timerMinutes\": \"5\"}"))
                 .andExpect(status().isOk())
                 .andReturn();
 
