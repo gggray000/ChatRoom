@@ -6,15 +6,14 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h3>Short-term</h3>
 
 1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
-2. Configure the domain with Cloudflare again but with Nginx.<br>
+2. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
 2. ChatBot Moderation.<br>
 
 <br>**Pending**<br>
-1. Migrate frontend to <code>React.js</code>.<br>
-2. Figure out how to host the domain by CloudFlare, while keeping WebSocket working.<br>
+Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
 <h3>v0.9.14</h3>
