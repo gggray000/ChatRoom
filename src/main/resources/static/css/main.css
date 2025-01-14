@@ -80,6 +80,24 @@ button:hover {
     opacity: 0.9;
 }
 
+.redirect-landing {
+    background-color: white; /* White background */
+    color: #2ecc71; /* Green text */
+    border: 2px solid #2ecc71; /* Green border */
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.redirect-landing:hover {
+    background-color: #2ecc71; /* Green background on hover */
+    color: white; /* White text on hover */
+}
+
 #chat-page {
     height: 100vh;
 }

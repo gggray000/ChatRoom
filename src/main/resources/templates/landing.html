@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enter Chat Room</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/access-denied.css">
+</head>
+<body>
+<div class="access-denied-container">
+    <img src="/images/logo.png" alt="logo" class="logo">
+    <div class="redirect-content">
+        <h1>Welcome!</h1>
+        <h3>Enter room ID to enter Chat Room</h3>
+        <form id="roomForm">
+            <input type="text" id="roomId" placeholder="Enter Room ID" class="form-control">
+            <button type="submit" class="redirect-button">Go to Chat Room</button>
+        </form>
+    </div>
+</div>
+<script>
+    document.getElementById('roomForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const roomId = document.getElementById('roomId').value.trim();
+        if (roomId) {
+            window.location.href = `/chat/${roomId}`;
+        } else {
+            alert('Please enter a valid Room ID');
+        }
+    });
+</script>
+</body>
+</html>

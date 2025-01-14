@@ -66,6 +66,11 @@ public class AppController {
         return "access-denied";
     }
 
+    @GetMapping("/landing")
+    public String landingPage() {
+        return "landing";
+    }
+
     @PostMapping("/admin/create-room")
     @ResponseBody
     public ResponseEntity<Map<String, String>> createChatRoom(@RequestBody Map<String, String> request) {

@@ -34,7 +34,6 @@ public class UrlService {
                 return entry.getKey();
             }
         }
-
         Integer urlNumber = (int) (Math.random() * 1000) + 1;
         roomUrlTable.put(urlNumber, roomId);
         return urlNumber;

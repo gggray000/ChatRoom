@@ -15,8 +15,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.16</h3>
+Added landing page, and a new button at access-denied page and username page.<br>
 <h3>v0.9.15</h3>
-
 1. Refactored <code>timer.js</code>.<br>
 2. Added broadcast message when time's up.<br>
 3. Refactored <code>AppController.java</code>, <code>ChatController.java</code>.<br>
