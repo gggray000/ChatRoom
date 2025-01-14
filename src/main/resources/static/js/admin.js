@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const roomId = cancelButton.dataset.roomId;
 
         try {
-            const cancelationResponse = await fetch('/admin/cancel-room', {
+            const cancelResponse = await fetch('/admin/cancel-room', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -99,11 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
             });
 
-            if (!cancelationResponse.ok) {
-                throw new Error(`HTTP error! status: ${cancelationResponse.status}`);
+            if (!cancelResponse.ok) {
+                throw new Error(`HTTP error! status: ${cancelResponse.status}`);
             }
 
-            const responseData = await cancelationResponse.json();
+            const responseData = await cancelResponse.json();
 
             // Reset UI first
             successMessage.style.display = 'none';
@@ -166,7 +166,5 @@ document.addEventListener('DOMContentLoaded', function() {
             createRoom();
         }
     });
-
     cancelButton.addEventListener('click', cancelCreation);
-
 });
