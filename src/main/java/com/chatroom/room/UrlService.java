@@ -46,4 +46,11 @@ public class UrlService {
             return null;
         }
     }
+
+    public void deleteRoomUrl(String roomId) {
+        if (roomService.getAllRooms().containsKey(roomId) && this.roomUrlTable.containsValue(roomId)) {
+            Integer keyToRemove = this.generateUrlNumber(roomId);
+            this.roomUrlTable.remove(keyToRemove);
+        }
+    }
 }

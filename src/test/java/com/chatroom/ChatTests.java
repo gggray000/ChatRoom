@@ -3,6 +3,7 @@ package com.chatroom;
 import com.chatroom.chat.*;
 import com.chatroom.room.Room;
 import com.chatroom.room.RoomService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,10 +14,15 @@ public class ChatTests {
     private WebSocketMessageService webSocketMessageService;
     private RoomService roomService;
 
+    @BeforeEach
+    void setUp() {
+        roomService = new RoomService();
+        textMessageService = new TextMessageService(roomService);
+        webSocketMessageService = new WebSocketMessageService(roomService);
+    }
+
     @Test
     void testInvalidTextMessages() {
-        textMessageService = new TextMessageService();
-
         TextMessage msg3 = new TextMessage(null, "003", "I'm a ghost!");
         textMessageService.saveTextMessage(msg3);
         assertEquals(0, textMessageService.messageList.size());
@@ -24,8 +30,6 @@ public class ChatTests {
 
     @Test
     void testTextMessageExport() {
-        textMessageService = new TextMessageService();
-
         TextMessage msg1 = new TextMessage("a", "001", "Hi!");
         TextMessage msg2 = new TextMessage("b", "001", "Hello!!!");
         textMessageService.saveTextMessage(msg1);
@@ -39,8 +43,6 @@ public class ChatTests {
 
     @Test
     void testInvalidWebSocketMessage() {
-        roomService = new RoomService();
-        webSocketMessageService = new WebSocketMessageService(roomService);
 
         Room room1 = roomService.createRoom("room1");
         String roomId1 = room1.getRoomId();
@@ -67,8 +69,6 @@ public class ChatTests {
 
     @Test
     void testWebSocketMessageExport() {
-        roomService = new RoomService();
-        webSocketMessageService = new WebSocketMessageService(roomService);
 
         Room room2 = roomService.createRoom("room2");
         String roomId2 = room2.getRoomId();

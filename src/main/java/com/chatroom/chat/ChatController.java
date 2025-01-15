@@ -227,8 +227,6 @@ public class ChatController {
         Integer newTime = updateTimeMessage.getTimeInSeconds();
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can update time.");
-        } else if (newTime > timeService.getTimeForRoom(roomId)) {
-            throw new MessageDeliveryException("Invalid time update.");
         } else {
             timeService.setTimeForRoom(roomId, newTime);
         }

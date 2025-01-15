@@ -1,6 +1,7 @@
 package com.chatroom.app;
 
 import com.chatroom.bot.ChatBotConfiguration;
+import com.chatroom.chat.TextMessageService;
 import com.chatroom.chat.WebSocketMessage;
 import com.chatroom.room.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,6 +46,9 @@ public class AppController {
 
     @Autowired
     private TimeService timeService;
+
+    @Autowired
+    private TextMessageService textMessageService;
 
     @GetMapping("/")
     public String home() {
@@ -225,7 +229,6 @@ public class AppController {
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can shutdown chat room.");
         } else {
-            timeService.deleteRoomTime(roomId);
             Room roomToBeDeleted = roomService.getRoom(roomId);
             this.deleteRoom(roomToBeDeleted);
             return shutdownRequest;
@@ -236,14 +239,16 @@ public class AppController {
         if (roomService.getAllRooms().containsValue(roomTobeDeleted)) {
             String roomId = roomTobeDeleted.getRoomId();
             try {
-                roomService.deleteRoom(roomId);
+                urlService.deleteRoomUrl(roomId);
+                timeService.deleteRoomTime(roomId);
+                textMessageService.deleteRoomMessageHistory(roomId);
                 chatBotConfiguration.updatePromptForRoom(roomId, "");
                 chatBotConfiguration.deleteRoomMemoryAndPrompt(roomId);
+                roomService.deleteRoom(roomId);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to delete room. " + e.getMessage());
             }
         }
-
     }
 
 }
