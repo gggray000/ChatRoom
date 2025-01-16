@@ -13,8 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,14 +58,10 @@ public class RoomCancellationIntegrationTest2 {
 
         TextMessage msg1 = new TextMessage("a", roomId, "Hi!");
         TextMessage msg2 = new TextMessage("b", roomId, "Hello!!!");
-        textMessageService.saveTextMessage(msg1);
-        textMessageService.saveTextMessage(msg2);
+        textMessageService.saveTextMessage(roomId, msg1);
+        textMessageService.saveTextMessage(roomId, msg2);
 
-        List<TextMessage> storedMessages = textMessageService.messageList.stream()
-                .filter(message -> message.getRoomId().equals(roomId))
-                .toList();
-
-        assertEquals(2, storedMessages.size());
+        assertEquals(2, textMessageService.messageHistoryMap.get(roomId).size());
 
         WebSocketMessage wsMsg = WebSocketMessage.builder()
                 .messageType(MessageType.CHAT)
@@ -91,12 +85,8 @@ public class RoomCancellationIntegrationTest2 {
                         .content("{\"roomId\":\"" + roomId + "\"}"))
                 .andExpect(status().isOk());
 
-        List<TextMessage> storedMessagesAfterDeletion = textMessageService.messageList.stream()
-                .filter(message -> message.getRoomId().equals(roomId))
-                .toList();
-
-        assertEquals(0, storedMessagesAfterDeletion.size());
-        assertEquals(0, textMessageService.messageList.size());
+        assertNull(textMessageService.messageHistoryMap.get(roomId));
+        assertNull(webSocketMessageService.getWebSocketMessageMap().get(roomId));
         assertEquals(0, timeService.getGlobalTimeMap().size());
         assertNull(roomService.getRoom(roomId));
     }

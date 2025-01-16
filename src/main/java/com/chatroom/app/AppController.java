@@ -3,6 +3,7 @@ package com.chatroom.app;
 import com.chatroom.bot.ChatBotConfiguration;
 import com.chatroom.chat.TextMessageService;
 import com.chatroom.chat.WebSocketMessage;
+import com.chatroom.chat.WebSocketMessageService;
 import com.chatroom.room.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import java.util.Map;
 
 @Controller
 public class AppController {
-
+    // Better use constructor injection.
     @Autowired
     private RoomService roomService;
 
@@ -49,6 +50,9 @@ public class AppController {
 
     @Autowired
     private TextMessageService textMessageService;
+
+    @Autowired
+    private WebSocketMessageService webSocketMessageService;
 
     @GetMapping("/")
     public String home() {
@@ -88,8 +92,9 @@ public class AppController {
             Room room = roomService.createRoom(roomName);
             String roomId = room.getRoomId();
             timeService.setTimeForRoom(roomId, Integer.parseInt(discussionTime) * 60);
-
             String roomUrl = urlService.createUrl(room.getRoomId());
+            webSocketMessageService.createWebSocketListForRoom(roomId);
+            textMessageService.createMessageListForRoom(roomId);
 
             Map<String, String> response = new HashMap<>();
             response.put("url", roomUrl);
@@ -242,6 +247,7 @@ public class AppController {
                 urlService.deleteRoomUrl(roomId);
                 timeService.deleteRoomTime(roomId);
                 textMessageService.deleteRoomMessageHistory(roomId);
+                webSocketMessageService.deleteRoomWebSocketMessageHistory(roomId);
                 chatBotConfiguration.updatePromptForRoom(roomId, "");
                 chatBotConfiguration.deleteRoomMemoryAndPrompt(roomId);
                 roomService.deleteRoom(roomId);

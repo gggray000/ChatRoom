@@ -23,47 +23,63 @@ public class ChatTests {
 
     @Test
     void testInvalidTextMessages() {
-        TextMessage msg3 = new TextMessage(null, "003", "I'm a ghost!");
-        textMessageService.saveTextMessage(msg3);
-        assertEquals(0, textMessageService.messageList.size());
+
+        Room testRoom = roomService.createRoom("test");
+        String testRoomId = testRoom.getRoomId();
+        textMessageService.createMessageListForRoom(testRoomId);
+
+        TextMessage msg = new TextMessage(null, testRoomId, "I'm a ghost!");
+        textMessageService.saveTextMessage(testRoomId, msg);
+        assertEquals(0, textMessageService.messageHistoryMap.get(testRoomId).size());
     }
 
     @Test
-    void testTextMessageExport() {
-        TextMessage msg1 = new TextMessage("a", "001", "Hi!");
-        TextMessage msg2 = new TextMessage("b", "001", "Hello!!!");
-        textMessageService.saveTextMessage(msg1);
-        textMessageService.saveTextMessage(msg2);
-        assertEquals(2, textMessageService.messageList.size());
+    void testTextMessageStorageAndExport() {
 
-        TextMessage msg3 = new TextMessage("c", "002", "Hello from another room!");
-        System.out.println(textMessageService.exportStoredMessages("001"));
-        assertEquals(2, textMessageService.exportStoredMessages("001").lines().count());
+        Room testRoom = roomService.createRoom("test");
+        String testRoomId = testRoom.getRoomId();
+        textMessageService.createMessageListForRoom(testRoomId);
+
+        Room testRoom2 = roomService.createRoom("test2");
+        String testRoomId2 = testRoom2.getRoomId();
+        textMessageService.createMessageListForRoom(testRoomId2);
+
+        TextMessage msg1 = new TextMessage("a", testRoomId, "Hi!");
+        TextMessage msg2 = new TextMessage("b", testRoomId, "Hello!!!");
+        textMessageService.saveTextMessage(testRoomId, msg1);
+        textMessageService.saveTextMessage(testRoomId, msg2);
+        assertEquals(2, textMessageService.messageHistoryMap.get(testRoomId).size());
+
+        TextMessage msg3 = new TextMessage("c", testRoomId2, "Hello from another room!");
+        textMessageService.saveTextMessage(testRoomId2, msg3);
+        assertEquals(2, textMessageService.messageHistoryMap.size());
+        assertEquals(2, textMessageService.exportStoredMessages(testRoomId).lines().count());
     }
 
     @Test
     void testInvalidWebSocketMessage() {
 
-        Room room1 = roomService.createRoom("room1");
-        String roomId1 = room1.getRoomId();
+        Room testRoom = roomService.createRoom("test");
+        String testRoomId = testRoom.getRoomId();
+        webSocketMessageService.createWebSocketListForRoom(testRoomId);
 
-        WebSocketMessage msg1 = WebSocketMessage.builder()
+        WebSocketMessage wsMsg1 = WebSocketMessage.builder()
                 .messageType(MessageType.CHAT)
                 .sender("Ray")
                 .content("Msg from Ray")
                 .build();
 
-        WebSocketMessage msg2 = WebSocketMessage.builder()
+        WebSocketMessage wsMsg2 = WebSocketMessage.builder()
                 .messageType(MessageType.CHAT)
                 .content("Msg without sender")
                 .build();
 
-        webSocketMessageService.saveWebSocketMessage(roomId1, msg1);
+        webSocketMessageService.saveWebSocketMessage(testRoomId, wsMsg1);
         // test storing WebSocketMessage without sender
-        webSocketMessageService.saveWebSocketMessage(roomId1, msg2);
-        assertEquals(1, webSocketMessageService.getWebSocketMessageMap().get(roomId1).size());
+        webSocketMessageService.saveWebSocketMessage(testRoomId, wsMsg2);
+        assertEquals(1, webSocketMessageService.getWebSocketMessageMap().get(testRoomId).size());
         // test storing WebSocketMessage with invalid roomId
-        webSocketMessageService.saveWebSocketMessage("999", msg1);
+        webSocketMessageService.saveWebSocketMessage("999", wsMsg1);
         assertNull(webSocketMessageService.getWebSocketMessageMap().get("999"));
     }
 
@@ -72,36 +88,37 @@ public class ChatTests {
 
         Room room2 = roomService.createRoom("room2");
         String roomId2 = room2.getRoomId();
+        webSocketMessageService.createWebSocketListForRoom(roomId2);
 
         Room room3 = roomService.createRoom("room3");
-        String roomId1 = room3.getRoomId();
+        String roomId3 = room3.getRoomId();
+        webSocketMessageService.createWebSocketListForRoom(roomId3);
 
-        WebSocketMessage msg1 = WebSocketMessage.builder()
+        WebSocketMessage wsMsg1 = WebSocketMessage.builder()
                 .messageType(MessageType.CHAT)
                 .sender("Ray")
                 .content("Msg from Ray")
                 .build();
 
-        WebSocketMessage msg2 = WebSocketMessage.builder()
+        WebSocketMessage wsMsg2 = WebSocketMessage.builder()
                 .messageType(MessageType.CHAT)
                 .sender("Ray")
-                .content("Msg without sender")
+                .content("Ray again")
                 .build();
 
-        webSocketMessageService.saveWebSocketMessage(roomId1, msg1);
-        webSocketMessageService.saveWebSocketMessage(roomId1, msg2);
+        webSocketMessageService.saveWebSocketMessage(roomId2, wsMsg1);
+        webSocketMessageService.saveWebSocketMessage(roomId2, wsMsg2);
 
-        WebSocketMessage msg3 = WebSocketMessage.builder()
+        WebSocketMessage wsMsg3 = WebSocketMessage.builder()
                 .messageType(MessageType.CHAT)
                 .sender("Ray")
-                .content("Msg from Ray")
+                .content("Ray in another room")
                 .build();
 
-        webSocketMessageService.saveWebSocketMessage(roomId2, msg3);
+        webSocketMessageService.saveWebSocketMessage(roomId3, wsMsg3);
 
-        assertEquals(2, webSocketMessageService.exportWebSocketMessage(roomId1).size());
-        assertEquals(1, webSocketMessageService.exportWebSocketMessage(roomId2).size());
-
+        assertEquals(2, webSocketMessageService.exportWebSocketMessage(roomId2).size());
+        assertEquals(1, webSocketMessageService.exportWebSocketMessage(roomId3).size());
 
     }
 

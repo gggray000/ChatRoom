@@ -41,7 +41,7 @@ public class RoomTests {
     void testDuplicatedRoom(){
         Room room3 = roomService.createRoom("test");
         Room room4 = roomService.createRoom("test");
-        assertFalse(room3.getRoomId()==room4.getRoomId());
+        assertFalse(Objects.equals(room3.getRoomId(), room4.getRoomId()));
         assertEquals(2, roomService.getAllRooms().size());
     }
 

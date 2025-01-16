@@ -2,6 +2,8 @@ package com.chatroom;
 
 import com.chatroom.app.AppController;
 import com.chatroom.bot.ChatBotConfiguration;
+import com.chatroom.chat.TextMessageService;
+import com.chatroom.chat.WebSocketMessageService;
 import com.chatroom.room.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ public class EmptyRoomNameTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-
+	// Need to mock everything because they are necessary for the instantiation of AppController.class.
 	@MockBean
 	private RoomService roomService;
 
@@ -37,6 +39,12 @@ public class EmptyRoomNameTest {
 
 	@MockBean
 	private TimeService timeService;
+
+	@MockBean
+	private TextMessageService textMessageService;
+
+	@MockBean
+	private WebSocketMessageService webSocketMessageService;
 
 	@Test
 	public void testRoomCreationWithEmptyName() throws Exception {

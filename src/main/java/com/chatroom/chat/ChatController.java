@@ -130,7 +130,7 @@ public class ChatController {
                     roomId,
                     webSocketMessage.getContent()
             );
-            textMessageService.saveTextMessage(textMessage);
+            textMessageService.saveTextMessage(roomId, textMessage);
         }
         return webSocketMessage;
     }

@@ -23,14 +23,17 @@ public class WebSocketMessageService {
         this.roomService = roomService;
     }
 
+    public void createWebSocketListForRoom(String roomId) {
+        if (roomService.getAllRooms().containsKey(roomId) && !webSocketMessageMap.containsKey(roomId)) {
+            webSocketMessageMap.put(roomId, new ArrayList<>());
+        }
+    }
+
     public void saveWebSocketMessage(String roomId, WebSocketMessage webSocketMessage) {
         if (roomService.getRoom(roomId) == null) {
             return;
         }
         if (webSocketMessage.getSender() != null) {
-            if (!webSocketMessageMap.containsKey(roomId)) {
-                webSocketMessageMap.put(roomId, new ArrayList<>());
-            }
             List<WebSocketMessage> messages = webSocketMessageMap.get(roomId);
             messages.add(webSocketMessage);
         }
@@ -39,6 +42,13 @@ public class WebSocketMessageService {
     public List<WebSocketMessage> exportWebSocketMessage(String roomId) {
         // Return the list of messages for this room, or empty list if none exist
         return webSocketMessageMap.getOrDefault(roomId, Collections.emptyList());
+    }
+
+    public void deleteRoomWebSocketMessageHistory(String roomId) {
+        if (roomService.getAllRooms().containsKey(roomId)) {
+            webSocketMessageMap.remove(roomId);
+            //messageList.removeIf(textMessage -> textMessage.getRoomId().equals(roomId));
+        }
     }
 
 }
