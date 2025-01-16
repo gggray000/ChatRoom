@@ -1,5 +1,6 @@
 package com.chatroom.room;
 
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class TimeService {
+    @Getter
     private Map<String, Integer> globalTimeMap;
     private RoomService roomService;
 
@@ -35,6 +37,4 @@ public class TimeService {
             globalTimeMap.remove(roomId);
         }
     }
-
-
 }
