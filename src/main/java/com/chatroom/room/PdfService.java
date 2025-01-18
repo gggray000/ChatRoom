@@ -38,11 +38,6 @@ public class PdfService {
                  <head>
                      <meta charset="UTF-8">
                      <style>
-                         @font-face {
-                             font-family: 'Arial';
-                             src: url('fonts/Arial.ttf') format('truetype');
-                         }
-                        \s
                          body {
                              font-family: 'Arial', sans-serif;
                              font-size: 12pt;
