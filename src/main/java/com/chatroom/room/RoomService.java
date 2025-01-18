@@ -3,6 +3,7 @@ package com.chatroom.room;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,6 +30,21 @@ public class RoomService {
     public Room getRoom(String roomId) {
         if (rooms.containsKey(roomId)) {
             return rooms.get(roomId);
+        }
+        return null;
+    }
+
+    public void addUsers(String roomId, User user) {
+        if (!this.getRoom(roomId).getUsers().contains(user)) {
+            this.getRoom(roomId).getUsers().add(user);
+        }
+    }
+
+    public User findUser(String roomId, String name) {
+        for (User user : this.getRoom(roomId).getUsers()) {
+            if (Objects.equals(user.getUsername(), name)) {
+                return user;
+            }
         }
         return null;
     }

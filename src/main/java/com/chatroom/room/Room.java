@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @Getter
@@ -25,20 +24,6 @@ public class Room {
         this.name = name;
         this.users = new ArrayList<>();
         this.prompt = "";
-    }
-
-    public void addUsers(User user){
-        if (!this.getUsers().contains(user)) {
-            this.getUsers().add(user);
-        }
-    }
-
-    public User findUser(String name){
-        for(User user: this.users){
-            if (Objects.equals(user.getUsername(), name)){
-                return user;
-            }
-        } return null;
     }
 
 }

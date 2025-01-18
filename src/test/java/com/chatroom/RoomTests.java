@@ -53,7 +53,7 @@ public class RoomTests {
         Room room5 = roomService.createRoom("test");
         User user3 = new User("token3", "Ray");
         User user4 = new User("token4", "Ray");
-        room5.addUsers(user3);
+        roomService.addUsers(room5.getRoomId(), user3);
         String username4 = roomService.generateUniqueUsername(user4.getUsername(), room5.getRoomId());
         assertFalse(Objects.equals(user3.getUsername(), username4));
     }
@@ -64,11 +64,11 @@ public class RoomTests {
         User user4 = new User("token4", "user4");
         Room room6 = roomService.createRoom("test");
         String roomId6 = room6.getRoomId();
-        roomService.getRoom(roomId6).addUsers(user3);
-        roomService.getRoom(roomId6).addUsers(user4);
+        roomService.addUsers(room6.getRoomId(), user3);
+        roomService.addUsers(room6.getRoomId(), user4);
         assertEquals(2, room6.getUsers().size());
         // test duplicated adding
-        roomService.getRoom(roomId6).addUsers(user3);
+        roomService.addUsers(room6.getRoomId(), user3);
         assertEquals(2, room6.getUsers().size());
         // test deletion and deleting not existed user
         roomService.getRoom(roomId6).getUsers().remove(user3);
