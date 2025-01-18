@@ -1,29 +1,28 @@
 package com.chatroom.chat;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-/*@Builder enables to construct objects like this:
-* User user = User.builder()
-                .name("Alice")
-                .age(25)
-                .email("alice@example.com")
-                .build();
-* */
 @Getter
 @Setter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class WebSocketMessage {
+public class WebSocketMessage extends Message {
 
-    private String sender;
-    private String content;
     private MessageType messageType;
     private List<String> userList;
     private String tokenId;
     private String resource;
     private int timeInSeconds;
+
+    public void setSender(String username) {
+        this.sender = username;
+    }
 
 }

@@ -15,6 +15,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.17</h3>
+Refactored <code>TextMessage.java</code>, <code>WebSocketMessage.java</code>, <code>TextMessageService.java</code>
+and <code>WebSocketMessageService.java</code>.
 <h3>v0.9.16</h3>
 Added landing page, and a new button at access-denied page and username page.<br>
 <h3>v0.9.15</h3>

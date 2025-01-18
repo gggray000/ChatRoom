@@ -93,7 +93,7 @@ public class AppController {
             String roomId = room.getRoomId();
             timeService.setTimeForRoom(roomId, Integer.parseInt(discussionTime) * 60);
             String roomUrl = urlService.createUrl(room.getRoomId());
-            webSocketMessageService.createWebSocketListForRoom(roomId);
+            webSocketMessageService.createMessageListForRoom(roomId);
             textMessageService.createMessageListForRoom(roomId);
 
             Map<String, String> response = new HashMap<>();
@@ -246,8 +246,8 @@ public class AppController {
             try {
                 urlService.deleteRoomUrl(roomId);
                 timeService.deleteRoomTime(roomId);
-                textMessageService.deleteRoomMessageHistory(roomId);
-                webSocketMessageService.deleteRoomWebSocketMessageHistory(roomId);
+                textMessageService.deleteRoomMessages(roomId);
+                webSocketMessageService.deleteRoomMessages(roomId);
                 chatBotConfiguration.updatePromptForRoom(roomId, "");
                 chatBotConfiguration.deleteRoomMemoryAndPrompt(roomId);
                 roomService.deleteRoom(roomId);

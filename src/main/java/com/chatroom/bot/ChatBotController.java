@@ -30,6 +30,6 @@ public class ChatBotController {
                 .systemMessageProvider(memoryId -> systemPrompt)
                 .build();
 
-        return chatBot.summarize(textMessageService.exportStoredMessages(roomId));
+        return chatBot.summarize(textMessageService.messageHistoryToString(roomId));
     }
 }

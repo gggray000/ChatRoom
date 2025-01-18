@@ -123,14 +123,13 @@ public class ChatController {
     public WebSocketMessage sendMessage(@Payload WebSocketMessage webSocketMessage,
                                         @DestinationVariable String roomId) {
         if(MessageType.CHAT.equals(webSocketMessage.getMessageType())){
-            webSocketMessageService.saveWebSocketMessage(roomId, webSocketMessage);
+            webSocketMessageService.saveMessage(roomId, webSocketMessage);
 
             TextMessage textMessage = new TextMessage(
                     webSocketMessage.getSender(),
-                    roomId,
                     webSocketMessage.getContent()
             );
-            textMessageService.saveTextMessage(roomId, textMessage);
+            textMessageService.saveMessage(roomId, textMessage);
         }
         return webSocketMessage;
     }
@@ -139,7 +138,7 @@ public class ChatController {
     public void displayHistory(@DestinationVariable String roomId,
                                SimpMessageHeaderAccessor headerAccessor) {
         String username = headerAccessor.getSessionAttributes().get("username").toString();
-        List<WebSocketMessage> history = webSocketMessageService.exportWebSocketMessage(roomId);
+        List<WebSocketMessage> history = webSocketMessageService.exportMessages(roomId);
         if (!history.isEmpty()) {
             for (WebSocketMessage message : history) {
                 simpMessagingTemplate.convertAndSend(
@@ -188,7 +187,7 @@ public class ChatController {
                         .content(summary)
                         .resource(pdfFileName)
                         .build();
-        webSocketMessageService.saveWebSocketMessage(roomId, summaryMessage);
+        webSocketMessageService.saveMessage(roomId, summaryMessage);
         return summaryMessage;
     }
 

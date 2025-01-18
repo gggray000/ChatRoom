@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class WebSocketMessageService {
+public class WebSocketMessageService implements MessageService<WebSocketMessage> {
 
     @Getter
-    private Map<String, List<WebSocketMessage>> webSocketMessageMap = new ConcurrentHashMap<>();
+    private Map<String, List<WebSocketMessage>> messageHistoryMap = new ConcurrentHashMap<>();
     private final RoomService roomService;
 
     @Autowired
@@ -23,31 +23,30 @@ public class WebSocketMessageService {
         this.roomService = roomService;
     }
 
-    public void createWebSocketListForRoom(String roomId) {
-        if (roomService.getAllRooms().containsKey(roomId) && !webSocketMessageMap.containsKey(roomId)) {
-            webSocketMessageMap.put(roomId, new ArrayList<>());
+    @Override
+    public void createMessageListForRoom(String roomId) {
+        if (roomService.getAllRooms().containsKey(roomId) && !messageHistoryMap.containsKey(roomId)) {
+            messageHistoryMap.put(roomId, new ArrayList<>());
         }
     }
 
-    public void saveWebSocketMessage(String roomId, WebSocketMessage webSocketMessage) {
-        if (roomService.getRoom(roomId) == null) {
-            return;
-        }
-        if (webSocketMessage.getSender() != null) {
-            List<WebSocketMessage> messages = webSocketMessageMap.get(roomId);
-            messages.add(webSocketMessage);
+    @Override
+    public void saveMessage(String roomId, WebSocketMessage message) {
+        if (roomService.getAllRooms().containsKey(roomId) && message.getSender() != null) {
+            messageHistoryMap.get(roomId).add(message);
         }
     }
 
-    public List<WebSocketMessage> exportWebSocketMessage(String roomId) {
+    @Override
+    public List<WebSocketMessage> exportMessages(String roomId) {
         // Return the list of messages for this room, or empty list if none exist
-        return webSocketMessageMap.getOrDefault(roomId, Collections.emptyList());
+        return messageHistoryMap.getOrDefault(roomId, Collections.emptyList());
     }
 
-    public void deleteRoomWebSocketMessageHistory(String roomId) {
+    @Override
+    public void deleteRoomMessages(String roomId) {
         if (roomService.getAllRooms().containsKey(roomId)) {
-            webSocketMessageMap.remove(roomId);
-            //messageList.removeIf(textMessage -> textMessage.getRoomId().equals(roomId));
+            messageHistoryMap.remove(roomId);
         }
     }
 
