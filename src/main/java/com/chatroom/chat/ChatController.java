@@ -19,11 +19,10 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ChatController {
@@ -56,6 +55,23 @@ public class ChatController {
         this.timeService = timeService;
     }
 
+    @PostMapping("/chat/{roomId}/verifyUsername")
+    @ResponseBody
+    public ResponseEntity<String> verifyUsername(@RequestBody Map<String, String> request,
+                                                 @PathVariable String roomId) {
+        try {
+            String originalUsername = request.get("username");
+            System.out.println("originalUsername: " + originalUsername);
+            System.out.println("roomId: " + roomId);
+            String finalUsername = roomService.generateUniqueUsername(originalUsername, roomId);
+            System.out.println("finalUsername: " + finalUsername);
+            return ResponseEntity.ok(finalUsername);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body("Error verifying username: " + e.getMessage());
+        }
+    }
+
     @MessageMapping("/chat/{roomId}/addUser")
     @SendTo("/topic/public/{roomId}")
     public WebSocketMessage addUser(@Payload WebSocketMessage webSocketMessage,
@@ -66,24 +82,24 @@ public class ChatController {
         logger.info("Adding user to room {} with token {}", roomId, tokenId);
 
         JwtUserDetails userDetails = jwtService.validateUserToken(tokenId, roomId);
-        String originalUsername = webSocketMessage.getSender();
-        String finalUsername = roomService.generateUniqueUsername(originalUsername, roomId);
+        //String originalUsername = webSocketMessage.getSender();
+        //String finalUsername = roomService.generateUniqueUsername(originalUsername, roomId);
 
-        if (userDetails != null && finalUsername != null) {
-            User user = new User(tokenId, finalUsername);
-            roomService.getRoom(roomId).addUsers(user);
-            webSocketMessage.setSender(finalUsername);
+        if (userDetails != null) {
+            User user = new User(tokenId, webSocketMessage.getSender());
+            roomService.addUsers(roomId, user);
+
             logger.info("Current users in room {}: {}", roomId,
                     roomService.getRoom(roomId).getUsers().size());
 
-            headerAccessor.getSessionAttributes().put("username", finalUsername);
+            headerAccessor.getSessionAttributes().put("username", webSocketMessage.getSender());
             headerAccessor.getSessionAttributes().put("roomId", roomId);
             headerAccessor.getSessionAttributes().put("tokenId", tokenId);
             headerAccessor.getSessionAttributes().put("isAdmin", userDetails.isAdmin());
 
             simpMessagingTemplate.convertAndSend("/topic/public/" + roomId,
                     WebSocketMessage.builder()
-                            .sender(finalUsername)
+                            .sender(webSocketMessage.getSender())
                             .messageType(MessageType.JOIN)
                             .tokenId(tokenId)
                             .build());
@@ -97,7 +113,7 @@ public class ChatController {
         if (roomId != null && roomService.getRoom(roomId) != null) {
             roomService.getRoom(roomId)
                          .getUsers()
-                         .remove(roomService.getRoom(roomId).findUser(username));
+                    .remove(roomService.findUser(roomId, username));
             WebSocketMessage userListMessage =  updateUserList(roomId);
             simpMessagingTemplate.convertAndSend(
                     "/topic/public/" + roomId, userListMessage);
