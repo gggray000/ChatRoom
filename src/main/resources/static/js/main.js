@@ -26,8 +26,31 @@ async function connect(event) {
         elements.usernameForm.querySelector('#name').value.trim() :
         localStorage.getItem('username');
 
-    if (username) {
-        try {
+    if (!username) {
+        alert("Please enter a username or get a random nickname.");
+        return;
+    }
+    console.log("roomId: " + roomId);
+
+    try {
+        const verifyResponse = await fetch(`/chat/${roomId}/verifyUsername`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+
+        if (!verifyResponse.ok) {
+            throw new Error('Failed to verify username.');
+        }
+
+        const verifiedUsername = await verifyResponse.text();
+        console.log("Verified username: " + verifiedUsername);
+        localStorage.setItem('username', verifiedUsername);
+
             const isAdmin = document.referrer.includes('/admin') ||
                 localStorage.getItem('isAdmin') === 'true';
 
@@ -39,7 +62,7 @@ async function connect(event) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        username: username,
+                        username: verifiedUsername,
                         roomId: roomId,
                         isAdmin: isAdmin
                     })
@@ -51,7 +74,6 @@ async function connect(event) {
 
                 const token = await response.text();
                 localStorage.setItem('userToken', token);
-                localStorage.setItem('username', username);
                 localStorage.setItem('isAdmin', isAdmin.toString());
                 localStorage.setItem('roomId', roomId);
             }
@@ -68,16 +90,12 @@ async function connect(event) {
                 elements.disconnectButtonUser.classList.remove('hidden');
             }
 
-            await webSocketService.connect(username, roomId);
+        await webSocketService.connect(verifiedUsername, roomId);
 
-        } catch (error) {
-            console.error('Connection error:', error);
-            alert('Failed to connect. Please try again.');
-            // Clear storage on connection error
-            localStorage.clear();
-        }
-    } else {
-        alert("Please enter a username or get a random nickname.")
+    } catch (error) {
+        console.error('Connection error:', error);
+        alert('Failed to connect. Please try again.');
+        localStorage.clear();
     }
 }
 
