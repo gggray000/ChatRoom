@@ -149,7 +149,7 @@ There's a bug in his video, <code>message.type</code> should be <code>message.me
 
 <h2>Acknowledgement</h2>
 @Microsoft<br>
-<URL>https://ollama.com/library/phi4</URL>
+<URL>https://ollama.com/library/phi4</URL><br>
 @nginx<br>
 <URL>https://github.com/nginx/nginx</URL><br>
 @jamo<br>
