@@ -6,6 +6,8 @@ import com.chatroom.room.RoomService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -98,12 +100,14 @@ public class ChatTests {
                 .messageType(MessageType.CHAT)
                 .sender("Ray")
                 .content("Msg from Ray")
+                .timestamp(System.currentTimeMillis())
                 .build();
 
         WebSocketMessage wsMsg2 = WebSocketMessage.builder()
                 .messageType(MessageType.CHAT)
                 .sender("Ray")
                 .content("Ray again")
+                .timestamp(System.currentTimeMillis())
                 .build();
 
         webSocketMessageService.saveMessage(roomId2, wsMsg1);
@@ -119,6 +123,21 @@ public class ChatTests {
 
         assertEquals(2, webSocketMessageService.exportMessages(roomId2).size());
         assertEquals(1, webSocketMessageService.exportMessages(roomId3).size());
+
+        WebSocketMessage wsMsg4 = WebSocketMessage.builder()
+                .messageType(MessageType.SUMMARY)
+                .sender("Bot")
+                .content("A Summary")
+                .timestamp(System.currentTimeMillis())
+                .build();
+
+        webSocketMessageService.saveMessage(roomId2, wsMsg4);
+        assertEquals(3, webSocketMessageService.exportMessages(roomId2).size());
+
+        List<WebSocketMessage> exportedMessagesRoom2 = webSocketMessageService.exportMessages(roomId2);
+        assertEquals("Msg from Ray", exportedMessagesRoom2.get(0).getContent());
+        assertEquals("Ray again", exportedMessagesRoom2.get(1).getContent());
+        assertEquals("A Summary", exportedMessagesRoom2.get(2).getContent());
 
     }
 
