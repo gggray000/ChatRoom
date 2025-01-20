@@ -5,10 +5,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -40,7 +37,9 @@ public class WebSocketMessageService implements MessageService<WebSocketMessage>
     @Override
     public List<WebSocketMessage> exportMessages(String roomId) {
         // Return the list of messages for this room, or empty list if none exist
-        return messageHistoryMap.getOrDefault(roomId, Collections.emptyList());
+        List<WebSocketMessage> history = messageHistoryMap.getOrDefault(roomId, Collections.emptyList());
+        history.sort(Comparator.comparingLong(WebSocketMessage::getTimestamp));
+        return history;
     }
 
     @Override

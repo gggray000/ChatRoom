@@ -137,6 +137,7 @@ public class ChatController {
     public WebSocketMessage sendMessage(@Payload WebSocketMessage webSocketMessage,
                                         @DestinationVariable String roomId) {
         if(MessageType.CHAT.equals(webSocketMessage.getMessageType())){
+            webSocketMessage.setTimestamp(System.currentTimeMillis());
             webSocketMessageService.saveMessage(roomId, webSocketMessage);
 
             TextMessage textMessage = new TextMessage(
@@ -200,6 +201,7 @@ public class ChatController {
                         .sender("ChatBot - " + modelName)
                         .content(summary)
                         .resource(pdfFileName)
+                        .timestamp(System.currentTimeMillis())
                         .build();
         webSocketMessageService.saveMessage(roomId, summaryMessage);
         return summaryMessage;
