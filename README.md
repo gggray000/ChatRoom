@@ -17,7 +17,7 @@ Migrate frontend to <code>React.js</code>.<br>
 <h2>Update Log</h2>
 <h3>v0.9.17</h3>
 1. Refactored <code>TextMessage.java</code>, <code>WebSocketMessage.java</code>, <code>TextMessageService.java</code>
-, <code>WebSocketMessageService.java</code>, <code>Room</code> and <code>RoomService</code>.<br>
+, <code>WebSocketMessageService.java</code>, <code>Room.java</code> and <code>RoomService.java</code>.<br>
 2. Fixed bugs with duplicated username.<br>
 3. Resolved error messages from <code>openhtmltopdf</code>.
 <h3>v0.9.16</h3>
