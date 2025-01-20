@@ -82,8 +82,6 @@ public class ChatController {
         logger.info("Adding user to room {} with token {}", roomId, tokenId);
 
         JwtUserDetails userDetails = jwtService.validateUserToken(tokenId, roomId);
-        //String originalUsername = webSocketMessage.getSender();
-        //String finalUsername = roomService.generateUniqueUsername(originalUsername, roomId);
 
         if (userDetails != null) {
             User user = new User(tokenId, webSocketMessage.getSender());
@@ -248,7 +246,7 @@ public class ChatController {
         return updateTimeMessage;
     }
 
-    @MessageMapping("/chat/{roomId}/timerOperation")
+    @MessageMapping("/chat/{roomId}/operateTimer")
     @SendTo("/topic/public/{roomId}")
     public WebSocketMessage operateTimer(@Payload WebSocketMessage operateTimerMessage,
                                          @DestinationVariable String roomId,

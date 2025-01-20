@@ -2,7 +2,6 @@ export class Timer {
     constructor(roomId, timerMinutes = 0, timerSeconds = 0) {
         this.countdown = null;
         this.totalSeconds = (timerMinutes * 60) + timerSeconds;
-        this.isFirstRun = true;
         this.isRunning = false;
         this.isPaused = false;
         this.timerButton = document.querySelector('#timerBtn');
@@ -46,26 +45,22 @@ export class Timer {
     }
 
     start() {
-        this.isFirstRun = false;
         this.isRunning = true;
         this.isPaused = false;
+        this.sendWebSocketMessage('TIMER_START')
 
         this.countdown = setInterval(() => {
             if (this.totalSeconds > 0) {
                 this.totalSeconds--;
                 this.updateDisplay();
                 if (localStorage.getItem('isAdmin') === 'true') {
-                    this.sendWebSocketMessage('UPDATE_TIME');
+                    this.sendWebSocketMessage('UPDATE_TIME')
                 }
             } else {
                 this.stop();
                 this.onTimerEnd();
             }
         }, 1000);
-
-        if (localStorage.getItem('isAdmin') === 'true') {
-            this.sendWebSocketMessage('TIMER_START');
-        }
 
         this.timerButton.textContent = 'Pause';
     }
@@ -76,7 +71,7 @@ export class Timer {
         clearInterval(this.countdown);
 
         if (localStorage.getItem('isAdmin') === 'true') {
-            this.sendWebSocketMessage('TIMER_PAUSE');
+            this.sendWebSocketMessage('TIMER_PAUSE')
         }
 
         this.timerButton.textContent = 'Resume';
@@ -89,6 +84,7 @@ export class Timer {
 
         if (localStorage.getItem('isAdmin') === 'true') {
             this.sendWebSocketMessage('UPDATE_TIME');
+            this.sendWebSocketMessage('TIMER_PAUSE')
         }
 
         this.timerButton.textContent = 'Start';
@@ -104,7 +100,7 @@ export class Timer {
         };
 
         const endpoint = messageType === 'UPDATE_TIME' ? `/app/chat/${this.roomId}/updateTime` :
-            `/app/chat/${this.roomId}/timerOperation`;
+            `/app/chat/${this.roomId}/operateTimer`;
 
         this.webSocketService.stompClient.send(endpoint, {}, JSON.stringify(message));
     }
@@ -126,7 +122,6 @@ export class Timer {
 
         this.isRunning = false;
         this.isPaused = false;
-        this.isFirstRun = true;
 
         if (this.timerButton) {
             this.timerButton.textContent = 'Start';

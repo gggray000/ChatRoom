@@ -191,11 +191,11 @@ export class WebSocketService {
                 break;
 
             case 'TIMER_START':
-                this.handleTimerStart(message, messageElement);
+                this.sendEventMessage(message, messageElement, '--- Timer has been started ---')
                 break;
 
             case 'TIMER_PAUSE':
-                this.handleTimerPause(message, messageElement);
+                this.sendEventMessage(message, messageElement, '--- Timer has been paused ---')
                 break;
 
             case 'TIMES_UP':
@@ -251,27 +251,8 @@ export class WebSocketService {
     }
 
     handleUpdateTime(message) {
-        if (this.timer.isRunning) {
             this.timer.totalSeconds = message.timeInSeconds;
             this.timer.updateDisplay();
-        } else if (this.timer.isFirstRun && localStorage.getItem('isAdmin') === 'false') {
-            this.timer.totalSeconds = message.timeInSeconds;
-            this.timer.start();
-        }
-    }
-
-    handleTimerStart(message, messageElement) {
-        if (localStorage.getItem('isAdmin') === 'false') {
-            this.timer.start();
-        }
-        this.sendEventMessage(message, messageElement, '--- Timer has been started ---')
-    }
-
-    handleTimerPause(message, messageElement) {
-        if (localStorage.getItem('isAdmin') === 'false') {
-            this.timer.pause();
-        }
-        this.sendEventMessage(message, messageElement, '--- Timer has been paused ---')
     }
 
     handleShutDown(message, messageElement) {

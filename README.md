@@ -15,6 +15,8 @@ A web application for real-time anonymous group discussions with built-in AI sum
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.18</h3>
+Simplified Timer's logic.
 <h3>v0.9.17</h3>
 1. Refactored <code>TextMessage.java</code>, <code>WebSocketMessage.java</code>, <code>TextMessageService.java</code>
 , <code>WebSocketMessageService.java</code>, <code>Room.java</code> and <code>RoomService.java</code>.<br>
