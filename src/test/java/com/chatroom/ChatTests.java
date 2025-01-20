@@ -48,14 +48,24 @@ public class ChatTests {
 
         TextMessage msg1 = new TextMessage("a", "Hi!");
         TextMessage msg2 = new TextMessage("b", "Hello!!!");
+        TextMessage msg3 = new TextMessage("c", "Hello but later!");
+        msg1.setTimestamp(System.currentTimeMillis());
+        msg2.setTimestamp(System.currentTimeMillis());
+        msg3.setTimestamp(System.currentTimeMillis());
         textMessageService.saveMessage(testRoomId, msg1);
         textMessageService.saveMessage(testRoomId, msg2);
-        assertEquals(2, textMessageService.getMessageHistoryMap().get(testRoomId).size());
+        textMessageService.saveMessage(testRoomId, msg3);
+        assertEquals(3, textMessageService.getMessageHistoryMap().get(testRoomId).size());
 
-        TextMessage msg3 = new TextMessage("c", "Hello from another room!");
-        textMessageService.saveMessage(testRoomId2, msg3);
+        TextMessage msg4 = new TextMessage("d", "Hello from another room!");
         assertEquals(2, textMessageService.getMessageHistoryMap().size());
-        assertEquals(2, textMessageService.messageHistoryToString(testRoomId).lines().count());
+
+        List<TextMessage> exportedMessages = textMessageService.exportMessages(testRoomId);
+        assertEquals("Hi!", exportedMessages.get(0).getContent());
+        assertEquals("Hello!!!", exportedMessages.get(1).getContent());
+        assertEquals("Hello but later!", exportedMessages.get(2).getContent());
+        assertEquals(3, textMessageService.messageHistoryToString(testRoomId).lines().count());
+        
     }
 
     @Test
