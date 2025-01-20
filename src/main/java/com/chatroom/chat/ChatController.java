@@ -137,13 +137,15 @@ public class ChatController {
     public WebSocketMessage sendMessage(@Payload WebSocketMessage webSocketMessage,
                                         @DestinationVariable String roomId) {
         if(MessageType.CHAT.equals(webSocketMessage.getMessageType())){
-            webSocketMessage.setTimestamp(System.currentTimeMillis());
+            long timeStamp = System.currentTimeMillis();
+            webSocketMessage.setTimestamp(timeStamp);
             webSocketMessageService.saveMessage(roomId, webSocketMessage);
 
             TextMessage textMessage = new TextMessage(
                     webSocketMessage.getSender(),
                     webSocketMessage.getContent()
             );
+            textMessage.setTimestamp(timeStamp);
             textMessageService.saveMessage(roomId, textMessage);
         }
         return webSocketMessage;

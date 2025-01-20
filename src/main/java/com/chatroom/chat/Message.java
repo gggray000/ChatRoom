@@ -4,6 +4,7 @@ package com.chatroom.chat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -11,6 +12,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class Message {
-    String sender;
-    String content;
+    protected String sender;
+    protected String content;
+    @Setter
+    protected long timestamp;
+
 }

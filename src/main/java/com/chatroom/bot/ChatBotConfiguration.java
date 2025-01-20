@@ -38,7 +38,7 @@ public class ChatBotConfiguration {
     }
 
     public void createMemoryForRoom(String roomId) {
-        roomMemories.put(roomId, MessageWindowChatMemory.withMaxMessages(50));
+        roomMemories.put(roomId, MessageWindowChatMemory.withMaxMessages(500));
     }
 
     public String getPromptForRoom(String roomId) {
