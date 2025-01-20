@@ -21,8 +21,4 @@ public class WebSocketMessage extends Message {
     private String resource;
     private int timeInSeconds;
 
-    public void setSender(String username) {
-        this.sender = username;
-    }
-
 }
