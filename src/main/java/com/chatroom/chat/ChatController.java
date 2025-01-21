@@ -157,19 +157,16 @@ public class ChatController {
         String username = headerAccessor.getSessionAttributes().get("username").toString();
         List<WebSocketMessage> history = webSocketMessageService.exportMessages(roomId);
         if (!history.isEmpty()) {
-            for (WebSocketMessage message : history) {
-                simpMessagingTemplate.convertAndSend(
-                        "/topic/private/" + roomId + "/" + username, message
-                );
-            }
-            WebSocketMessage notice = WebSocketMessage.builder()
-                    .messageType(MessageType.SHOW_HISTORY)
-                    .build();
             simpMessagingTemplate.convertAndSend(
-                    "/topic/private/" + roomId + "/" + username, notice
+                    "/topic/private/" + roomId + "/" + username,
+                    WebSocketMessage.builder()
+                            .messageType(MessageType.SHOW_HISTORY)
+                            .history(history)
+                            .build()
             );
         }
     }
+
 
     @MessageMapping("/chat/{roomId}/relayGetSummaryMessage")
     @SendTo("/topic/public/{roomId}")

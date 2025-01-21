@@ -179,11 +179,11 @@ export class WebSocketService {
                 return;
 
             case 'GENERATE_SUMMARY':
-                this.sendEventMessage(message, messageElement, 'Generating discussion summary...')
+                this.sendEventMessage(message, messageElement, 'Generating discussion summary...');
                 break;
 
             case 'SHOW_HISTORY':
-                this.sendEventMessage(message, messageElement, `--- Previous Messages ---`)
+                this.handleHistory(message, messageElement);
                 break;
 
             case 'UPDATE_TIME':
@@ -191,15 +191,15 @@ export class WebSocketService {
                 break;
 
             case 'TIMER_START':
-                this.sendEventMessage(message, messageElement, '--- Timer has been started ---')
+                this.sendEventMessage(message, messageElement, '--- Timer has been started ---');
                 break;
 
             case 'TIMER_PAUSE':
-                this.sendEventMessage(message, messageElement, '--- Timer has been paused ---')
+                this.sendEventMessage(message, messageElement, '--- Timer has been paused ---');
                 break;
 
             case 'TIMES_UP':
-                this.sendEventMessage(message, messageElement, '--- Time\'s up! ---')
+                this.sendEventMessage(message, messageElement, '--- Time\'s up! ---');
                 break;
 
             case 'SHUTDOWN':
@@ -247,6 +247,36 @@ export class WebSocketService {
             message.userList.forEach(user => {
                 this.userListService.addUserToList(user);
             });
+        }
+    }
+
+    async handleHistory(message) {
+        if (Array.isArray(message.history)) {
+            for (const msg of message.history) {
+                if (msg.messageType === 'SUMMARY') {
+                    await this.handleSummaryAndPdf(this.roomId, msg);
+                } else {
+                    // Default handling for other message types
+                    const messageElement = document.createElement('li');
+                    messageElement.classList.add('chat-message');
+                    const {avatarElement, usernameElement} = createUserInfo(msg.sender);
+                    messageElement.appendChild(avatarElement);
+                    messageElement.appendChild(usernameElement);
+
+                    const textElement = document.createElement('p');
+                    textElement.style.whiteSpace = 'pre-wrap';
+                    textElement.textContent = msg.content;
+                    messageElement.appendChild(textElement);
+
+                    elements.messageArea.appendChild(messageElement);
+                }
+                elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
+            }
+            const eventMessageElement = document.createElement('li');
+            eventMessageElement.classList.add('event-message');
+            eventMessageElement.textContent = '--- Previous Messages ---';
+            elements.messageArea.appendChild(eventMessageElement);
+            elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
         }
     }
 
