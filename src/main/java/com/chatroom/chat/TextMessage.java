@@ -1,8 +1,12 @@
 package com.chatroom.chat;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
+@AllArgsConstructor
+@SuperBuilder
 public class TextMessage extends Message {
 
     public TextMessage(String sender, String content) {

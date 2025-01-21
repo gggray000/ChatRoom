@@ -141,10 +141,12 @@ public class ChatController {
             webSocketMessage.setTimestamp(timeStamp);
             webSocketMessageService.saveMessage(roomId, webSocketMessage);
 
-            TextMessage textMessage = new TextMessage(
-                    webSocketMessage.getSender(),
-                    webSocketMessage.getContent()
-            );
+            TextMessage textMessage = TextMessage.builder()
+                    .sender(webSocketMessage.getSender())
+                    .content(webSocketMessage.getContent())
+                    .timestamp(timeStamp)
+                    .build();
+
             textMessage.setTimestamp(timeStamp);
             textMessageService.saveMessage(roomId, textMessage);
         }
