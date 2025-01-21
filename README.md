@@ -4,8 +4,9 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
-2. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
+1. Fixed bug related to the display order of chat history.<br>
+2. Write more test cases, learn <code>@SpringBootTest</code>.<br>
+3. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>
@@ -15,8 +16,6 @@ A web application for real-time anonymous group discussions with built-in AI sum
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
-<h3>v0.9.19</h3>
-Fixed bug related to the display order of chat history.
 <h3>v0.9.18</h3>
 Simplified Timer's logic.
 <h3>v0.9.17</h3>
