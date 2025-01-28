@@ -28,10 +28,10 @@ public class ChatBotConfiguration {
             8. Seperate the four sections with blank new line. Begin each section with a new line.
             9. Use markdown strong (bold text) for important points.
             10. Always say "Thank you for your participation!" at the end of summary, add a new blank line before this sentence.
-                    
+                            \s
             Main Topic from Admin:
             %s
-            """;
+                    \s""";
 
     public ChatMemory getChatMemoryForRoom(String roomId) {
         return roomMemories.get(roomId);

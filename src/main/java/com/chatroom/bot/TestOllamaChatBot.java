@@ -12,7 +12,7 @@ public class TestOllamaChatBot {
 
         StreamingChatLanguageModel model = OllamaStreamingChatModel.builder()
                 .baseUrl("http://localhost:11434")
-                .modelName("deepseek-r1:14b")
+                .modelName("phi4")
                 .build();
 
         String userMessage = "Provide 3 short bullet points explaining why Java is awesome";
