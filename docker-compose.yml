@@ -20,4 +20,5 @@ services:
       - JWT_SECRET=chat-room-validate
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
+      - LANGCHAIN4J_OLLAMA_CHAT_MODEL_MODEL_NAME=gemma3:4b
     restart: unless-stopped

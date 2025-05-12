@@ -19,6 +19,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -257,4 +258,8 @@ public class AppController {
         }
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public String handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        return "redirect:/denied";
+    }
 }

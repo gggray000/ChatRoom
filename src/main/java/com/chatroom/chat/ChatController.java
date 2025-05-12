@@ -240,7 +240,7 @@ public class ChatController {
                                        SimpMessageHeaderAccessor headerAccessor) {
         JwtUserDetails jwtUserDetails = jwtService.validateUserToken(updateTimeMessage.getTokenId(), roomId);
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        Integer newTime = updateTimeMessage.getTimeInSeconds();
+        int newTime = updateTimeMessage.getTimeInSeconds();
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can update time.");
         } else {
