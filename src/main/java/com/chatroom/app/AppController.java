@@ -19,7 +19,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -182,8 +181,14 @@ public class AppController {
         }
     }
 
-    @GetMapping("/chat/{urlNumber}")
-    public String enterChatRoom(@PathVariable Integer urlNumber, Model model) {
+    @GetMapping("/chat/{input}")
+    public String enterChatRoom(@PathVariable String input, Model model) {
+        int urlNumber;
+        try {
+            urlNumber = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return "redirect:/denied";
+        }
         String roomId = urlService.getRoomIdFromTable(urlNumber);
         if (roomId == null) {
             return "redirect:/denied";
@@ -258,8 +263,8 @@ public class AppController {
         }
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    /*@ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public String handleTypeMismatch(MethodArgumentTypeMismatchException e) {
         return "redirect:/denied";
-    }
+    }*/
 }
