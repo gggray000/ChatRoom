@@ -15,7 +15,10 @@ A web application for real-time anonymous group discussions with built-in AI sum
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
-<h3>v9.19</h3>
+<h3>v0.9.20</h3>
+1. Changed implementation for timer feature.<br>
+2. Changed local LLM from phi4:14b to gemma3:4b.<br>
+<h3>v0.9.19</h3>
 Fixed bugs related to the display order of chat history.
 <h3>v0.9.18</h3>
 Simplified Timer's logic.
@@ -35,7 +38,7 @@ Added landing page, and a new button at access-denied page and username page.<br
 1. Added Timer feature.<br>
 2. Added Shutdown feature for admin.
    <h3>v0.9.13</h3>
-Changed local LLM from llama3.2 3B to phi4 14B.
+Changed local LLM from llama3.2:3b to phi4:14b.
    <h3>v0.9.12</h3>
 1. Improved PDF formatting.<br>
 2. Redesigned chat page UI for future features (Timer, Shutdown).
@@ -120,7 +123,7 @@ Fixed a bug that leads to duplicated "Generating summary..." messages and summar
 <h3>v0.6</h3>
 Implemented local run Llama3.2 3B in the application, using LangChain4j with Ollama.
 <h3>v0.5.2</h3>
-1. Added a ChatBot prototype, using LangChain4j, Ollama and Llama3.2 3B.<br>
+1. Added a ChatBot prototype, using LangChain4j, Ollama and Llama3.2:3b.<br>
 2. Added a feature that allows user to click the URL generated at the admin page.
 <h3>v0.5.1</h3>
 Added QR-Code generation feature.
