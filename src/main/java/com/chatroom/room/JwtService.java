@@ -43,19 +43,20 @@ public class JwtService {
                     .getBody();
 
             String roomIdInToken = claims.get("roomId", String.class);
-            String username = claims.get("username", String.class);
+            String username = claims.getSubject();
             boolean isAdmin = claims.get("isAdmin", Boolean.class);
 
             logger.info("Token validation - Room: {}, User: {}, Admin: {}",
                     roomIdInToken, username, isAdmin);
 
             JwtUserDetails jwtUserDetails = new JwtUserDetails(
-                    claims.getSubject(),  // username
-                    claims.getId(),       // unique token id
+                    claims.getSubject(),
+                    claims.getId(),
                     claims.get("roomId", String.class),
-                    claims.get("isAdmin", Boolean.class));  // Add isAdmin claim
+                    claims.get("isAdmin", Boolean.class));
 
             if (!jwtUserDetails.getRoomId().equals(roomId)) {
+                logger.warn("Room ID mismatch: token has {}, but got {}", jwtUserDetails.getRoomId(), roomId);
                 return null;
             }
             return jwtUserDetails;

@@ -234,7 +234,7 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}/setTimer")
     public void setUpTimer(@Payload WebSocketMessage updateTimeMessage,
-                           @PathVariable("roomId") String roomId,
+                           @DestinationVariable("roomId") String roomId,
                            SimpMessageHeaderAccessor headerAccessor) {
         JwtUserDetails jwtUserDetails = jwtService.validateUserToken(updateTimeMessage.getTokenId(), roomId);
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
@@ -248,7 +248,7 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}/pauseTimer")
     public void operateTimer(@Payload WebSocketMessage operateTimerMessage,
-                             @PathVariable("roomId") String roomId,
+                             @DestinationVariable("roomId") String roomId,
                              SimpMessageHeaderAccessor headerAccessor) {
         JwtUserDetails jwtUserDetails = jwtService.validateUserToken(operateTimerMessage.getTokenId(), roomId);
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");

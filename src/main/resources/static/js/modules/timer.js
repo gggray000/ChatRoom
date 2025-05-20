@@ -19,8 +19,11 @@ export class Timer {
             document.querySelector('.countdown').style.display = 'none';
         } else if (localStorage.getItem('isAdmin') === 'true') {
             this.timerButton.classList.remove('hidden');
-
             this.timerButton.addEventListener('click', () => this.onClick());
+            if (this.timerState === 'terminated' && this.totalSeconds > 0) {
+                localStorage.setItem('timerState', null);
+                this.timerState = null;
+            }
 
             switch (this.timerState) {
                 case 'running':
@@ -49,15 +52,13 @@ export class Timer {
             case 'paused':
                 this.start();
                 break;
-            case 'terminated':
-                break;
             default:
                 this.start();
         }
     }
 
     updateDisplay() {
-        if (this.totalSeconds === 0) {
+        if (this.totalSeconds === 0 && this.timerState === 'running') {
             localStorage.setItem('timerState', 'terminated');
             this.timerState = 'terminated';
             this.timerButton.textContent = 'Ended';
@@ -84,17 +85,12 @@ export class Timer {
         this.timerButton.textContent = 'Resume';
     }
 
-    stop() {
-        this.sendWebSocketMessage('TIMER_PAUSE')
-        localStorage.setItem('timerState', 'paused');
-        this.timerState = 'paused';
-        this.timerButton.textContent = 'Start';
-    }
-
-    destroy() {
+    terminate() {
         localStorage.setItem('timerState', 'terminated');
-        this.timerState = 'paused';
+        this.timerState = 'terminated';
         this.timerButton.textContent = 'Start';
+        this.timerButton.style.backgroundColor = 'gray';
+        this.timerButton.disabled = true;
     }
 
     sendWebSocketMessage(messageType) {

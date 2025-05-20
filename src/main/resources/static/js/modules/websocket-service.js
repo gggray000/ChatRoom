@@ -84,7 +84,7 @@ export class WebSocketService {
 
     disconnect() {
         if (this.timer) {
-            this.timer.destroy();
+            this.timer.pause();
         }
 
         if (this.stompClient) {
@@ -369,7 +369,7 @@ export class WebSocketService {
 
     shutdownRoom() {
         if (this.timer) {
-            this.timer.stop();
+            this.timer.terminate();
         }
         let roomId = localStorage.getItem('roomId');
         if (roomId === this.roomId) {

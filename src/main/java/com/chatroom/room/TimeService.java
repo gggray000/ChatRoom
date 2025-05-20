@@ -96,6 +96,8 @@ public class TimeService {
     public void deleteRoomTime(String roomId) {
         if (this.timesOfRooms.containsKey(roomId)) {
             timesOfRooms.remove(roomId);
+        }
+        if (this.timers.containsKey(roomId)) {
             timers.remove(roomId);
         }
     }
