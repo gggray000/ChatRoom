@@ -83,7 +83,9 @@ export class WebSocketService {
     }
 
     disconnect() {
-        this.timer.destroy();
+        if (this.timer) {
+            this.timer.destroy();
+        }
 
         if (this.stompClient) {
             this.stompClient.disconnect();

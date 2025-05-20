@@ -87,7 +87,7 @@ public class RoomCancellationIntegrationTest2 {
 
         assertNull(textMessageService.getMessageHistoryMap().get(roomId));
         assertNull(webSocketMessageService.getMessageHistoryMap().get(roomId));
-        assertEquals(0, timeService.getGlobalTimeMap().size());
+        assertEquals(0, timeService.getTimesOfRooms().size());
         assertNull(roomService.getRoom(roomId));
     }
 }
