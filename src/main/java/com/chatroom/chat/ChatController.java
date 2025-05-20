@@ -169,7 +169,6 @@ public class ChatController {
         }
     }
 
-
     @MessageMapping("/chat/{roomId}/relayGetSummaryMessage")
     @SendTo("/topic/public/{roomId}")
     public WebSocketMessage relaySummarizeMessage(@Payload WebSocketMessage getSummaryMessage,
@@ -234,10 +233,9 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/{roomId}/setTimer")
-    //@SendTo("/topic/public/{roomId}")
     public void setUpTimer(@Payload WebSocketMessage updateTimeMessage,
-                                       @DestinationVariable String roomId,
-                                       SimpMessageHeaderAccessor headerAccessor) {
+                           @PathVariable("roomId") String roomId,
+                           SimpMessageHeaderAccessor headerAccessor) {
         JwtUserDetails jwtUserDetails = jwtService.validateUserToken(updateTimeMessage.getTokenId(), roomId);
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
 
@@ -245,24 +243,19 @@ public class ChatController {
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can set timer.");
         }
-
         timeService.setUpRoomTimer(roomId, timeLimit);
     }
 
     @MessageMapping("/chat/{roomId}/pauseTimer")
-    //@SendTo("/topic/public/{roomId}")
     public void operateTimer(@Payload WebSocketMessage operateTimerMessage,
-                                         @DestinationVariable String roomId,
-                                         SimpMessageHeaderAccessor headerAccessor) {
+                             @PathVariable("roomId") String roomId,
+                             SimpMessageHeaderAccessor headerAccessor) {
         JwtUserDetails jwtUserDetails = jwtService.validateUserToken(operateTimerMessage.getTokenId(), roomId);
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can operate timer.");
         }
-
         timeService.stopRoomTimer(roomId, false);
-
-        //return operateTimerMessage;
     }
 
 }
