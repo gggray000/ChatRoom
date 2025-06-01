@@ -120,6 +120,14 @@ function initializeEventListeners() {
     elements.nickNameButton.addEventListener('click', getRandomName);
 
     document.addEventListener('DOMContentLoaded', () => {
+        const roomId = window.ROOM_ID;
+        const existingUsername = localStorage.getItem('username');
+        const existingToken = localStorage.getItem('userToken');
+
+        if (existingUsername && existingToken && roomId === localStorage.getItem('roomId')) {
+            connect();
+        }
+
         if (elements.messageInput.tagName.toLowerCase() === 'input') {
             const textarea = document.createElement('textarea');
             textarea.id = 'textArea';
@@ -155,14 +163,3 @@ function initializeEventListeners() {
 }
 
 initializeEventListeners();
-
-// Check for existing session on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const roomId = window.ROOM_ID;
-    const existingUsername = localStorage.getItem('username');
-    const existingToken = localStorage.getItem('userToken');
-
-    if (existingUsername && existingToken && roomId === localStorage.getItem('roomId')) {
-        connect();
-    }
-});
