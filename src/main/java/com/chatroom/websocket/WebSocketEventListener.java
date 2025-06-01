@@ -7,6 +7,7 @@ import com.chatroom.room.JwtService;
 import com.chatroom.room.JwtUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -22,6 +23,7 @@ public class WebSocketEventListener {
     private final SimpMessageSendingOperations messagingTemplate;
     private final JwtService jwtService;
 
+    @Autowired
     public WebSocketEventListener(ChatController chatController, SimpMessageSendingOperations messagingTemplate, JwtService jwtService) {
         this.chatController = chatController;
         this.messagingTemplate = messagingTemplate;

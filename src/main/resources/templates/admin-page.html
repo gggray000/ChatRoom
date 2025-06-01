@@ -6,17 +6,12 @@
 </head>
 <body>
 <div class="admin-container">
-    <h1>Chat Room Configuration</h1>
-
-    <div id="successMessage" class="success-message">
-        Settings successfully saved!
-    </div>
-
+    <h2>Chat Room Configuration</h2>
     <div class="form-group">
         <h4 id="room-header">Chat Room Name</h4>
         <input type="text" id="roomName" class="form-control" placeholder="Enter a name for the Chat Room">
     </div>
-    <h4 id="prompt-header">Main Topic and Instructions for ChatBot</h4>
+    <h4 id="prompt-header">Discussion Topic and Instructions for ChatBot</h4>
     <textarea class="form-control" id="systemPrompt" rows="5"
               placeholder="Enter main topic of the discussion and provide custom instructions for the chatbot (optional)."></textarea>
 
@@ -41,22 +36,6 @@
         <button id="createRoom" class="accent">Create Room</button>
     </div>
 
-    <div id="roomUrl" class="room-url">
-        <h3>Room URL:</h3>
-        <a href="" target="_blank"></a>
-    </div>
-
-    <div id="qrCodeContainer" class="qr-code-container">
-        <h3>QR Code:</h3>
-        <img id="qrCode"/>
-    </div>
-
-    <div id = "cancel-button" class="button-group" >
-        <div class="tooltip-container">
-            <button id="cancelRoom" class="danger">Cancel Room Creation</button>
-            <span class="tooltip">This will delete the room along with URL, QR-Code. Room name and prompt will be available to change.</span>
-        </div>
-    </div>
 </div>
 
 <script src="/js/admin.js"></script>

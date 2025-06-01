@@ -191,7 +191,7 @@ button:hover {
     max-width: 150px;
 }
 
-.username-tooltip .tooltiptext {
+.username-tooltip .tooltip-text {
     display: none;
     position: fixed;
     background-color: rgba(0, 0, 0, 0.9);
@@ -206,7 +206,7 @@ button:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.username-tooltip:hover .tooltiptext {
+.username-tooltip:hover .tooltip-text {
     display: block;
 }
 

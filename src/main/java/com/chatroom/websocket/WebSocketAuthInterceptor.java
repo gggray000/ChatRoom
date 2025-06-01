@@ -2,6 +2,8 @@ package com.chatroom.websocket;
 
 import com.chatroom.room.JwtService;
 import com.chatroom.room.JwtUserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -12,14 +14,15 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Component
 public class WebSocketAuthInterceptor implements ChannelInterceptor {
 
+    private final JwtService jwtService;
+
     @Autowired
-    private JwtService jwtService;
+    public WebSocketAuthInterceptor(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -30,7 +33,6 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
             String tokenId = accessor.getFirstNativeHeader("token");
             String roomId = accessor.getFirstNativeHeader("roomId");
             logger.info("Connection attempt - Room ID: {}, Token: {}", roomId, tokenId);
-
 
             if (tokenId != null) {
                 JwtUserDetails userDetails = jwtService.validateUserToken(tokenId, roomId);

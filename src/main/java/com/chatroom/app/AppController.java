@@ -29,30 +29,34 @@ import java.util.Map;
 
 @Controller
 public class AppController {
-    // Better use constructor injection.
-    @Autowired
-    private RoomService roomService;
+
+    private final RoomService roomService;
+    private final UrlService urlService;
+    private final QrCodeService qrCodeService;
+    private final JwtService jwtService;
+    private final ChatBotConfiguration chatBotConfiguration;
+    private final TimeService timeService;
+    private final TextMessageService textMessageService;
+    private final WebSocketMessageService webSocketMessageService;
 
     @Autowired
-    private UrlService urlService;
-
-    @Autowired
-    private QrCodeService qrCodeService;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private ChatBotConfiguration chatBotConfiguration;
-
-    @Autowired
-    private TimeService timeService;
-
-    @Autowired
-    private TextMessageService textMessageService;
-
-    @Autowired
-    private WebSocketMessageService webSocketMessageService;
+    public AppController(RoomService roomService,
+                         UrlService urlService,
+                         QrCodeService qrCodeService,
+                         JwtService jwtService,
+                         ChatBotConfiguration chatBotConfiguration,
+                         TimeService timeService,
+                         TextMessageService textMessageService,
+                         WebSocketMessageService webSocketMessageService) {
+        this.roomService = roomService;
+        this.urlService = urlService;
+        this.qrCodeService = qrCodeService;
+        this.jwtService = jwtService;
+        this.chatBotConfiguration = chatBotConfiguration;
+        this.timeService = timeService;
+        this.textMessageService = textMessageService;
+        this.webSocketMessageService = webSocketMessageService;
+    }
 
     @GetMapping("/")
     public String home() {
@@ -108,6 +112,11 @@ public class AppController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to create room: " + e.getMessage()));
         }
+    }
+
+    @GetMapping("/admin/confirm")
+    public String confirmCreation() {
+        return "create-confirm";
     }
     
     @PostMapping("/admin/cancel-room")
@@ -182,7 +191,7 @@ public class AppController {
     }
 
     @GetMapping("/chat/{input}")
-    public String enterChatRoom(@PathVariable String input, Model model) {
+    public String enterChataRoom(@PathVariable String input, Model model) {
         int urlNumber;
         try {
             urlNumber = Integer.parseInt(input);

@@ -1,5 +1,4 @@
-import { elements } from './dom-elements.js';
-import { createUserInfo } from './avatar-service.js';
+import {createUserInfo} from './avatar-service.js';
 
 function setupTooltip(usernameTooltip, tooltipText) {
     let hideTimeout;
@@ -83,7 +82,7 @@ export class UserListService {
             usernameTooltip.appendChild(usernameText);
 
             const tooltipText = document.createElement('span');
-            tooltipText.classList.add('tooltiptext');
+            tooltipText.classList.add('tooltip-text');
             tooltipText.textContent = username;
             usernameTooltip.appendChild(tooltipText);
 

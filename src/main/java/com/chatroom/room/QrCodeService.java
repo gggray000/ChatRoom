@@ -62,12 +62,10 @@ public class QrCodeService {
         settings.setX(2);
         //Set error correction level
         settings.setQRCodeECL(QRCodeECL.M);
-
         //Set top text
         settings.setTopText("User Name");
         //Set bottom text
         settings.setBottomText("Event Name");
-
         //Set text visibility
         settings.setShowText(false);
         settings.setShowTopText(true);

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Room Created Successfully</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+<div class="admin-container">
+    <h1 id="header"></h1>
+
+    <div class="success-message" style="display: block">
+        Room created successfully!
+    </div>
+
+    <div id="room-url" class="room-url">
+        <h3>Link</h3>
+        <a href="" target="_blank"></a>
+    </div>
+
+    <div class="qr-code-container" style="display: block">
+        <h3>QR Code</h3>
+        <img id="qrCode" alt="QR Code"/>
+    </div>
+
+    <div id="cancel-button" class="cancel-button">
+        <div class="tooltip-container">
+            <button id="cancelRoom" class="danger">Cancel Room Creation</button>
+            <span class="tooltip">This will delete the room along with URL, QR-Code. Room name and prompt will be available to change.</span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const roomName = params.get('name')
+    const roomId = params.get('id');
+    const roomUrl = `${window.location.origin}/chat/${params.get('url')}`;
+    const cancelButton = document.getElementById('cancel-button');
+    const roomUrlLink = document.getElementById('room-url').querySelector('a');
+    const qrCode = document.getElementById('qrCode');
+    const header = document.getElementById('header');
+
+    document.addEventListener('DOMContentLoaded', function () {
+        header.textContent = `ChatRoom: ${roomName}`
+        roomUrlLink.href = roomUrl;
+        roomUrlLink.textContent = roomUrl;
+
+        qrCode.src = `/admin/qrcode/${roomId}`;
+
+        cancelButton.addEventListener('click', () => {
+            cancelCreation(params.get('roomId'))
+        })
+    });
+
+    async function cancelCreation(roomId) {
+
+        try {
+            const cancelResponse = await fetch('/admin/cancel-room', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    roomId: roomId
+                })
+            });
+
+            if (!cancelResponse.ok) {
+                throw new Error(`HTTP error! status: ${cancelResponse.status}`);
+            }
+
+            alert('ChatRoom Canceled successfully!');
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to cancel room. Please try again.');
+        }
+    }
+
+</script>
+</body>
+</html>
