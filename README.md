@@ -4,8 +4,10 @@ A web application for real-time anonymous group discussions with built-in AI sum
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
-1. Write more test cases, learn <code>@SpringBootTest</code>.<br>
-2. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
+
+1. Add i18n for all pages, and configure javascript i18n.<br>
+2. Write more test cases, learn <code>@SpringBootTest</code>.<br>
+3. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
 
 <h3>Long-term</h3>
 1. JPA implementation.<br>

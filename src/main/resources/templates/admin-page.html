@@ -1,21 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Chat Room Configuration</title>
+    <meta charset="UTF-8">
+    <title th:text="#{config}"></title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
 <div class="admin-container">
-    <h2>Chat Room Configuration</h2>
-    <div class="form-group">
-        <h4 id="room-header">Chat Room Name</h4>
-        <input type="text" id="roomName" class="form-control" placeholder="Enter a name for the Chat Room">
+    <div class="languageSelect">
+        <label for="languageSelect" th:text="#{lang-dropdown}"></label>
+        <select id="languageSelect" class="form-control">
+            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+            <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
+            <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
+        </select>
     </div>
-    <h4 id="prompt-header">Discussion Topic and Instructions for ChatBot</h4>
-    <textarea class="form-control" id="systemPrompt" rows="5"
-              placeholder="Enter main topic of the discussion and provide custom instructions for the chatbot (optional)."></textarea>
 
-    <h4 id="timer-header">Set Discussion Timer</h4>
+    <h2 th:text="#{config}"></h2>
+    <div class="form-group">
+        <h4 id="room-header" th:text="#{roomName}"></h4>
+        <input type="text" id="roomName" class="form-control" th:placeholder="#{roomName.placeholder}">
+    </div>
+    <h4 id="prompt-header" th:text="#{prompt}"
+    ></h4>
+    <textarea class="form-control" id="systemPrompt" rows="5"
+              th:placeholder="#{prompt.placeholder}"></textarea>
+
+    <h4 id="timer-header" th:text="#{timer}"></h4>
     <div class="timer-slider-container">
         <input type="range" id="timerSlider" min="0" max="30" value="5" step="1" class="timer-slider">
         <div class="slider-labels">
@@ -27,17 +38,25 @@
             <span>25</span>
             <span>30</span>
         </div>
-        <div class="timer-display" id="timer-display">
-            Selected time: 5 minutes
+        <div class="timer-display" id="timer-display" th:text="#{timer.display}">
         </div>
     </div>
 
     <div class="form-group">
-        <button id="createRoom" class="accent">Create Room</button>
+        <button id="createRoom" class="accent" th:text="#{create-button}"></button>
     </div>
 
 </div>
 
+<script>
+    document.getElementById("languageSelect").addEventListener("change", function () {
+        const selectedLocale = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set("locale", selectedLocale);
+        window.location.href = url.toString();
+    });
+</script>
 <script src="/js/admin.js"></script>
+
 </body>
 </html>
