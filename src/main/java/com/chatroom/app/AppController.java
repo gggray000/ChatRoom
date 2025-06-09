@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -191,20 +192,20 @@ public class AppController {
     }
 
     @GetMapping("/chat/{input}")
-    public String enterChataRoom(@PathVariable String input, Model model) {
+    public String enterChataRoom(@PathVariable String input, Model model, Locale locale) {
         int urlNumber;
         try {
             urlNumber = Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            return "redirect:/denied";
+            return "redirect:/denied?locale=" + locale.getLanguage();
         }
         String roomId = urlService.getRoomIdFromTable(urlNumber);
         if (roomId == null) {
-            return "redirect:/denied";
+            return "redirect:/denied?locale=" + locale.getLanguage();
         }
         Room room = roomService.getRoom(roomId);
         if (room == null) {
-            return "redirect:/denied";
+            return "redirect:/denied?locale=" + locale.getLanguage();
         }
         model.addAttribute("roomId", roomId);
         model.addAttribute("roomName", room.getName());
