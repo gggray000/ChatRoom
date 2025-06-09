@@ -25,6 +25,24 @@ body {
     text-align: center;
 }
 
+.languageSelect {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.6rem;
+    margin-top: -1rem;
+    max-width: fit-content;
+    max-height: min-content;
+    white-space: nowrap;
+}
+
+.languageSelect label {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: #333;
+}
+
 .logo {
     height: 60px;
     margin-bottom: 1.5rem;

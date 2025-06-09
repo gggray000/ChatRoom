@@ -1,24 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Enter Chat Room</title>
+    <title th:text="#{landing-title}"></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/access-denied.css">
 </head>
 <body>
 <div class="access-denied-container">
+    <div class="languageSelect">
+        <label for="languageSelect" th:text="#{lang-dropdown}"></label>
+        <select id="languageSelect" class="form-control">
+            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+            <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
+            <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
+        </select>
+    </div>
     <img src="/images/logo.png" alt="logo" class="logo">
     <div class="redirect-content">
-        <h1>Welcome!</h1>
-        <h3>Enter room ID to enter Chat Room</h3>
+        <h1 th:text="#{welcome}">Welcome!</h1>
+        <h3 th:text="#{landing-form-h3}"></h3>
         <form id="roomForm">
-            <input type="text" id="roomId" placeholder="Enter Room ID" class="form-control">
-            <button type="submit" class="redirect-button">Go to Chat Room</button>
+            <input type="text" id="roomId" class="form-control" th:placeholder="#{landing-form-placeholder}">
+            <button type="submit" class="redirect-button" th:text="#{landing-button}"></button>
         </form>
     </div>
 </div>
 <script>
+    document.getElementById("languageSelect").addEventListener("change", function () {
+        const selectedLocale = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set("locale", selectedLocale);
+        window.location.href = url.toString();
+    });
+
     document.getElementById('roomForm').addEventListener('submit', function (e) {
         e.preventDefault();
         const roomId = document.getElementById('roomId').value.trim();

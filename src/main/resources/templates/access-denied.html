@@ -1,19 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Access Denied</title>
+  <title th:text="#{access-denied}"></title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/access-denied.css">
 </head>
 <body>
 <div class="access-denied-container">
+  <div class="languageSelect">
+    <label for="languageSelect" th:text="#{lang-dropdown}"></label>
+    <select id="languageSelect" class="form-control">
+      <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+      <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
+      <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
+    </select>
+  </div>
   <img src="/images/logo.png" alt="logo" class="logo">
   <div class="content">
-    <h1>Access Denied</h1>
-    <p>Please enter the chat with a valid URL</p>
-    <button class="redirect-button" onclick="window.location.href='/landing'">Go to Start Page</button>
+    <h1 th:text="#{access-denied}"></h1>
+    <p th:text="#{access-denied-text}"></p>
+    <button class="redirect-button" onclick="window.location.href='/landing'" th:text="#{go-back-button}">Go to Start
+      Page
+    </button>
   </div>
 </div>
+
+<script>
+  document.getElementById("languageSelect").addEventListener("change", function () {
+    const selectedLocale = this.value;
+    const url = new URL(window.location.href);
+    url.searchParams.set("locale", selectedLocale);
+    window.location.href = url.toString();
+  });
+</script>
+
 </body>
 </html>
