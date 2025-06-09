@@ -1,31 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Room Created Successfully</title>
+    <title th:text="#{success-title}"></title>
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
 <div class="admin-container">
-    <h1 id="header"></h1>
-
-    <div class="success-message" style="display: block">
-        Room created successfully!
+    <div class="languageSelect">
+        <label for="languageSelect" th:text="#{lang-dropdown}"></label>
+        <select id="languageSelect" class="form-control">
+            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+            <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
+            <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
+        </select>
     </div>
+    <h1 id="header" th:text="#{room-created-prefix}"></h1>
+
+    <div class="success-message" style="display: block" th:text="#{success-message}"></div>
 
     <div id="room-url" class="room-url">
-        <h3>Link</h3>
+        <h3 th:text="#{link}"></h3>
         <a href="" target="_blank"></a>
     </div>
 
     <div class="qr-code-container" style="display: block">
-        <h3>QR Code</h3>
+        <h3 th:text="#{qrCode}"></h3>
         <img id="qrCode" alt="QR Code"/>
     </div>
 
     <div id="cancel-button" class="cancel-button">
         <div class="tooltip-container">
-            <button id="cancelRoom" class="danger">Cancel Room Creation</button>
-            <span class="tooltip">This will delete the room along with URL, QR-Code. Room name and prompt will be available to change.</span>
+            <button id="cancelRoom" class="danger" th:text="#{cancel-button}"></button>
+            <span class="tooltip" th:text="#{cancel-button-tooltip}"></span>
         </div>
     </div>
 
@@ -42,7 +48,7 @@
     const header = document.getElementById('header');
 
     document.addEventListener('DOMContentLoaded', function () {
-        header.textContent = `ChatRoom: ${roomName}`
+        header.textContent += `${roomName}`
         roomUrlLink.href = roomUrl;
         roomUrlLink.textContent = roomUrl;
 
@@ -51,6 +57,13 @@
         cancelButton.addEventListener('click', () => {
             cancelCreation(params.get('roomId'))
         })
+    });
+
+    document.getElementById("languageSelect").addEventListener("change", function () {
+        const selectedLocale = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set("locale", selectedLocale);
+        window.location.href = url.toString();
     });
 
     async function cancelCreation(roomId) {

@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sliderLabels = document.querySelector('.slider-labels');
 
     async function createRoom() {
+        const currentLocale = new URL(window.location.href).searchParams.get("locale") || "en";
         const roomName = roomNameInput.value.trim();
         const systemPrompt = systemPromptInput ? systemPromptInput.value.trim() : '';
         const timerMinutes = parseInt(timerSlider.value);
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const urlId = roomData.url.split('/').pop();
-            const confirmUrl = `/admin/confirm?name=${roomName}&id=${roomData.roomId}&url=${urlId}`;
+            const confirmUrl = `/admin/confirm?name=${roomName}&id=${roomData.roomId}&url=${urlId}&locale=${currentLocale}`;
             window.open(confirmUrl, '_blank');
 
         } catch (error) {
