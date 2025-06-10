@@ -28,6 +28,24 @@ body {
     max-width: 400px;
 }
 
+.username-page-container .languageSelect {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.6rem;
+    margin-bottom: 2rem;
+    max-width: fit-content;
+    max-height: min-content;
+    white-space: nowrap;
+}
+
+.languageSelect label {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: #333;
+}
+
 .title {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
@@ -272,7 +290,37 @@ button:hover {
     display: flex;
     gap: 0.5rem;
     margin-left: auto;
-    width: 200%;
+    width: 300%;
+    align-items: center;
+}
+
+.button-container .languageSelect-chat-page {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    height: 100%;
+    white-space: nowrap;
+    margin-top: -0.5rem;
+    margin-left: auto;
+}
+
+.button-container .languageSelect-chat-page label {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: #333;
+}
+
+.button-container .languageSelect-chat-page .form-control {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    height: 36px;
+    line-height: 1;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 .button-container .admin-btn {
@@ -286,7 +334,6 @@ button:hover {
     transition: background-color 0.2s;
     white-space: nowrap;
     width: auto;
-    margin-left: auto;
 }
 
 .button-container .admin-btn:hover {
@@ -355,7 +402,6 @@ button:hover {
     transition: background-color 0.2s;
     white-space: nowrap;
     width: auto;
-    margin-left: auto;
 }
 
 .disconnect-btn-user:hover {

@@ -3,23 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Room</title>
+    <title th:text="#{chat-room-page-title}"></title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
 <div id="username-page">
     <div class="username-page-container">
-        <h1 class="title">Type a username to enter Chatroom</h1>
+        <div class="languageSelect">
+            <label for="languageSelect" th:text="#{lang-dropdown}"></label>
+            <select id="languageSelect" class="form-control">
+                <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+                <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
+                <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
+            </select>
+        </div>
+        <h1 class="title" th:text="#{username-form}"></h1>
         <form id="usernameForm" name="usernameForm">
             <div class="form-group">
-                <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
+                <input type="text" id="name" th:placeholder="#{username-form-placeholder}" autocomplete="off"
+                       class="form-control"/>
             </div>
             <div class="form-group">
-                <button type="button" class="nickname-generate">Get Nickname</button>
-                <button type="submit" class="username-submit">Start Chatting</button>
-                <button type="button" class="redirect-landing" onclick="window.location.href='/landing'">
-                    Back to Landing Page
+                <button type="button" class="nickname-generate" th:text="#{get-nickname}"></button>
+                <button type="submit" class="username-submit" th:text="#{start-chatting}"></button>
+                <button type="button" class="redirect-landing" onclick="window.location.href='/landing'"
+                        th:text="#{to-landing-page}">
                 </button>
             </div>
         </form>
@@ -46,28 +55,36 @@
                     </div>
                 </div>
                 <div class="button-container">
-                    <button id="summarizeBtn" class="admin-btn hidden">Summarize</button>
+                    <div class="languageSelect-chat-page">
+                        <label for="languageSelect-chat-page" th:text="#{lang-dropdown}"></label>
+                        <select id="languageSelect-chat-page" class="form-control">
+                            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+                            <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
+                            <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
+                        </select>
+                    </div>
+                    <button id="summarizeBtn" class="admin-btn hidden" th:text="#{summarize-button}"></button>
                     <button id="timerBtn" class="timer-btn hidden">Pause/Continue</button>
-                    <button id="shutdownBtn" class="shutdown-btn hidden">Shutdown</button>
-                    <button id="disconnectBtn" class="disconnect-btn hidden">Disconnect</button>
+                    <button id="shutdownBtn" class="shutdown-btn hidden" th:text="#{shutdown-button}"></button>
+                    <button id="disconnectBtn" class="disconnect-btn hidden" th:text="#{disconnect-button}"></button>
                 </div>
 
-                <button id="disconnectBtnUser" class="disconnect-btn-user hidden">Disconnect</button>
+                <button id="disconnectBtnUser" class="disconnect-btn-user hidden"
+                        th:text="#{disconnect-button}"></button>
 
                 <img src="/images/logo.png" alt="logo" class="logo">
             </div>
 
-            <div class="connecting">
-                Connecting...
-            </div>
+            <div class="connecting" th:text="#{connecting}"></div>
 
             <ul id="messageArea"></ul>
 
             <form id="messageForm" name="messageForm">
                 <div class="form-group">
                     <div class="input-group clearfix">
-                        <textarea id="textArea" placeholder="Type a message..." autocomplete="off" class="form-control"></textarea>
-                        <button type="submit" class="primary">Send</button>
+                        <textarea id="textArea" th:placeholder="#{textarea-placeholder}" autocomplete="off"
+                                  class="form-control"></textarea>
+                        <button type="submit" class="primary" th:text="#{send-button}"></button>
                     </div>
                 </div>
             </form>
@@ -80,6 +97,21 @@
     window.ROOM_NAME = /*[[${roomName}]]*/ null;
     window.TIMER_MINUTES = /*[[${timerMinutes}]]*/ '0';
     window.TIMER_SECONDS = /*[[${timerSeconds}]]*/ '0';
+
+    document.getElementById("languageSelect").addEventListener("change", function () {
+        const selectedLocale = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set("locale", selectedLocale);
+        window.location.href = url.toString();
+    });
+
+    document.getElementById("languageSelect-chat-page").addEventListener("change", function () {
+        const selectedLocale = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set("locale", selectedLocale);
+        window.location.href = url.toString();
+    });
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
