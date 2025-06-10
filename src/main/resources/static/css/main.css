@@ -640,13 +640,10 @@ button:hover {
         margin-top: -0.5rem;
     }
 
+    /*TODO: make two containers for admin and user*/
     .chat-header .button-container {
         display: grid;
-    !important;
-        grid-template-columns: 5rem 5rem;
-    !important;
-        grid-template-rows: auto auto;
-    !important;
+        grid-template-columns: 1fr 1fr;
     }
 
     .button-container .admin-btn,
@@ -660,11 +657,20 @@ button:hover {
         margin-bottom: 0.25rem;
     }
 
+    .button-container .languageSelect-chat-page {
+        padding: 5px;
+        font-size: 0.6rem;
+        width: max-content;
+        margin-top: -0.25rem;
+        margin-bottom: 0.25rem;
+        grid-column: 1/2;
+        margin-left: auto
+    }
+
     .chat-header .disconnect-btn-user {
-        width: 6rem !important;
-        padding: 6px 12px !important;
-        font-size: 0.85rem !important;
-        margin-left: -10rem;
+        width: 6rem;
+        padding: 6px 12px;
+        font-size: 0.85rem;
     }
 
     .chat-header .logo {
