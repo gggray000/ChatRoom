@@ -41,7 +41,8 @@
     const params = new URLSearchParams(window.location.search);
     const roomName = params.get('name')
     const roomId = params.get('id');
-    const roomUrl = `${window.location.origin}/chat/${params.get('url')}`;
+    const locale = params.get('locale') || 'en';
+    const roomUrl = `${window.location.origin}/chat/${params.get('url')}?locale=${locale}`;
     const cancelButton = document.getElementById('cancel-button');
     const roomUrlLink = document.getElementById('room-url').querySelector('a');
     const qrCode = document.getElementById('qrCode');

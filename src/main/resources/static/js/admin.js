@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const timerMinutes = parseInt(timerSlider.value);
 
         if (!roomName) {
-            alert('Please enter a room name');
+            alert(i18next.t('admin_page.enter_name'));
             return;
         }
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!createRoomResponse.ok) {
-                throw new Error(`HTTP error! status: ${createRoomResponse.status}`);
+                throw new Error(createRoomResponse.statusText);
             }
 
             const roomData = await createRoomResponse.json();
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!setPromptResponse.ok) {
-                throw new Error(`HTTP error! status: ${setPromptResponse.status}`);
+                throw new Error(setPromptResponse.statusText);
             }
 
             const urlId = roomData.url.split('/').pop();
@@ -52,17 +52,16 @@ document.addEventListener('DOMContentLoaded', function() {
             window.open(confirmUrl, '_blank');
 
         } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to create room. Please try again.');
+            alert(i18next.t('admin_page.fail_create', {error}));
         }
     }
 
     function updateTimerDisplay(value) {
         const timerDisplay = document.getElementById('timer-display');
         if (value === 0) {
-            timerDisplay.textContent = 'Timer Disabled';
+            timerDisplay.textContent = i18next.t('admin_page_timer.disabled');
         } else {
-            timerDisplay.textContent = `Selected time: ${value} minutes`;
+            timerDisplay.textContent = i18next.t('admin_page_timer.display', {value});
         }
     }
 

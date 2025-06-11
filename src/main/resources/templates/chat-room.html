@@ -64,7 +64,7 @@
                         </select>
                     </div>
                     <button id="summarizeBtn" class="admin-btn" th:text="#{summarize-button}"></button>
-                    <button id="timerBtn" class="timer-btn">Pause/Continue</button>
+                    <button id="timerBtn" class="timer-btn" th:text="#{timer-button}"></button>
                     <button id="shutdownBtn" class="shutdown-btn" th:text="#{shutdown-button}"></button>
                     <button id="disconnectBtn" class="disconnect-btn" th:text="#{disconnect-button}"></button>
                 </div>
@@ -118,10 +118,15 @@
         });
     });
 </script>
+<script type="module" src="/js/modules/i18n.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
+<script src="https://unpkg.com/i18next@25.2.1/i18next.min.js"></script>
+<script src="https://unpkg.com/i18next-http-backend@3.0.2/i18nextHttpBackend.min.js"></script>
+<script src="https://unpkg.com/i18next-browser-languagedetector@8.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+<script type="module" src="/js/modules/timer.js"></script>
 <script type="module" src="/js/main.js"></script>
 </body>
 </html>

@@ -22,7 +22,7 @@ function setupTooltip(usernameTooltip, tooltipText) {
             tooltip.style.left = `${window.innerWidth - tooltipRect.width - 5}px`;
         }
         if (tooltipRect.top < 0) {
-            // If tooltip would go above viewport, show it below instead
+            // If tooltip go above viewport, show it below instead
             tooltip.style.top = `${rect.bottom + 10}px`;
         }
     });
@@ -51,7 +51,8 @@ export class UserListService {
     updateUserCounter() {
         const userCountElement = document.querySelector('#user-count');
         if (userCountElement) {
-            userCountElement.textContent = `Online Users: ${this.connectedUsers.size}`;
+            let count = this.connectedUsers.size;
+            userCountElement.textContent = i18next.t('user_list.count', {count});
         }
     }
 
@@ -88,7 +89,7 @@ export class UserListService {
 
             const typingIndicator = document.createElement('div');
             typingIndicator.classList.add('typing-indicator');
-            typingIndicator.textContent = 'typing...';
+            typingIndicator.textContent = i18next.t('user_list.typing');
 
             userInfoContainer.appendChild(usernameTooltip);
             userInfoContainer.appendChild(typingIndicator);

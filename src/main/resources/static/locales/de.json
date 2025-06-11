@@ -1,0 +1,42 @@
+{
+  "admin_page": {
+    "enter_name": "Bitte den Namen des Chatrooms eingeben.",
+    "fail_create": "Chatroom konnte nicht erstellt werden. Bitte erneut versuchen. Fehler: {{error}}"
+  },
+  "admin_page_timer": {
+    "display": "Eingestellte Zeit: {{value}} Minuten",
+    "disabled": "Timer Deaktiviert"
+  },
+  "timer_button": {
+    "pause": "Pause",
+    "resume": "Fortsetzen",
+    "ended": "Beendet",
+    "start": "Starten"
+  },
+  "user_list": {
+    "count": "Online-Benutzer: {{count}}",
+    "typing": "schreibt..."
+  },
+  "username_page": {
+    "username_null": "Bitten geben einen Benutzernamen ein, oder bekommen einen zufälligen Spitznamen",
+    "connect_fail": "Verbindung fehlgeschlagen. Bitte erneut versuchen."
+  },
+  "chat_page": {
+    "disconnect_confirm": "Möchten Sie sich wirklich trennen oder den Benutzernamen ändern?",
+    "shutdown_confirm": "Dies wird den Chatroom schließen und alle Benutzer trennen sowie den Chatverlauf löschen. Sind Sie sicher?"
+  },
+  "ws_msg": {
+    "error": "Verbindung zum WebSocket-Server fehlgeschlagen. Bitte erneut versuchen! Fehler: {{message}}",
+    "generate_summary": "Diskussionszusammenfassung wird erstellt...",
+    "timer_started": "--- Timer wurde gestartet ---",
+    "timer_paused": "--- Timer wurde pausiert ---",
+    "times_up": "--- Die Zeit ist abgelaufen! ---",
+    "user_joined": "{{user}} ist beigetreten!",
+    "user_left": "{{user}} hat den Chat verlassen!",
+    "history": "--- Frühere Nachrichten ---",
+    "shutdown": "--- Diese Diskussion wurde vom Administrator beendet --- \n --- Der Verlauf wird nach dem Schließen oder Aktualisieren des Tabs gelöscht ---",
+    "download_link": "Diskussionszusammenfassung als PDF Datei herunterladen",
+    "downloading": "Wird heruntergeladen...",
+    "download_fail": "Herunterladen fehlgeschlagen – bitte erneut versuchen"
+  }
+}

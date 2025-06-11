@@ -1,0 +1,42 @@
+{
+  "admin_page": {
+    "enter_name": "请输入聊天室名称",
+    "fail_create": "未能创建聊天室，请重试。错误： {{error}}"
+  },
+  "admin_page_timer": {
+    "display": "已选择时间： {{value}} 分钟",
+    "disabled": "计时器未启用"
+  },
+  "timer_button": {
+    "pause": "暂停",
+    "resume": "继续",
+    "ended": "完结",
+    "start": "开始"
+  },
+  "user_list": {
+    "count": "在线人数: {{count}}",
+    "typing": "输入中..."
+  },
+  "username_page": {
+    "username_null": "请输入用户名或获取随机昵称",
+    "connect_fail": "连接失败，请稍后重试。"
+  },
+  "chat_page": {
+    "disconnect_confirm": "确定要退出聊天室或者前往更改昵称？",
+    "shutdown_confirm": "此按钮将关闭聊天室、下线所有用户并删除聊天记录，是否确定？"
+  },
+  "ws_msg": {
+    "error": "无法连接WebSocket服务器，请重新尝试！错误：{{message}}",
+    "generate_summary": "正在生成讨论总结......",
+    "timer_started": "--- 计时开始 ---",
+    "timer_paused": "--- 计时暂停 ---",
+    "times_up": "--- 时间到！ ---",
+    "user_joined": "{{user}} 加入了！",
+    "user_left": "{{user}} 离开了！",
+    "history": "--- 聊天记录 ---",
+    "shutdown": "--- 此聊天室已被管理员关闭 --- \n --- 聊天记录将在关闭或刷新标签页后被删除 ---",
+    "download_link": "下载讨论总结PDF文件",
+    "downloading": "正在下载...",
+    "download_fail": "下载失败 - 请重新尝试"
+  }
+}

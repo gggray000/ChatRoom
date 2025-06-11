@@ -77,7 +77,7 @@ export class WebSocketService {
     }
 
     onError(message) {
-        elements.connectingElement.textContent = message || 'Could not connect to WebSocket server. Please refresh this page to try again!';
+        elements.connectingElement.textContent = i18next.t('ws_msg.error', {message});
         elements.connectingElement.style.color = 'red';
         elements.connectingElement.classList.remove('hidden');
     }
@@ -181,7 +181,7 @@ export class WebSocketService {
                 return;
 
             case 'GENERATE_SUMMARY':
-                this.sendEventMessage(message, messageElement, 'Generating discussion summary...');
+                this.sendEventMessage(message, messageElement, i18next.t('ws_msg.generate_summary'));
                 break;
 
             case 'SHOW_HISTORY':
@@ -193,15 +193,15 @@ export class WebSocketService {
                 break;
 
             case 'TIMER_START':
-                this.sendEventMessage(message, messageElement, '--- Timer has been started ---');
+                this.sendEventMessage(message, messageElement, i18next.t('ws_msg.timer_started'));
                 break;
 
             case 'TIMER_PAUSE':
-                this.sendEventMessage(message, messageElement, '--- Timer has been paused ---');
+                this.sendEventMessage(message, messageElement, i18next.t('ws_msg.timer_paused'));
                 break;
 
             case 'TIMES_UP':
-                this.sendEventMessage(message, messageElement, '--- Time\'s up! ---');
+                this.sendEventMessage(message, messageElement, i18next.t('ws_msg.times_up'));
                 break;
 
             case 'SHUTDOWN':
@@ -224,16 +224,18 @@ export class WebSocketService {
     }
 
     handleJoin(message, messageElement) {
-        if (message.sender === this.username) {
-            this.updateUserInfo(message.sender);
+        let user = message.sender;
+        if (user === this.username) {
+            this.updateUserInfo(user);
         }
-        this.userListService.addUserToList(message.sender, message.tokenId);
-        this.sendEventMessage(message, messageElement, `${message.sender} joined!`)
+        this.userListService.addUserToList(user, message.tokenId);
+        this.sendEventMessage(message, messageElement, i18next.t('ws_msg.user_joined', {user}))
     }
 
     handleLeave(message, messageElement) {
+        let user = message.sender;
         this.userListService.removeUserFromList(message.tokenId);
-        this.sendEventMessage(message, messageElement, `${message.sender} left!`);
+        this.sendEventMessage(message, messageElement, i18next.t('ws_msg.user_left', {user}));
     }
 
     handleChat(message, messageElement) {
@@ -276,7 +278,7 @@ export class WebSocketService {
             }
             const eventMessageElement = document.createElement('li');
             eventMessageElement.classList.add('event-message');
-            eventMessageElement.textContent = '--- Previous Messages ---';
+            eventMessageElement.textContent = i18next.t('ws_msg.history');
             elements.messageArea.appendChild(eventMessageElement);
             elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
         }
@@ -288,9 +290,7 @@ export class WebSocketService {
     }
 
     handleShutDown(message, messageElement) {
-        this.sendEventMessage(message, messageElement,
-            '--- This discussion had been terminated by admin ---\n' +
-            '--- History will be deleted after tab closed or refreshed  ---');
+        this.sendEventMessage(message, messageElement, i18next.t('ws_msg.shutdown'));
         this.timer.pause();
         if (this.stompClient) {
             this.stompClient.disconnect();
@@ -318,13 +318,13 @@ export class WebSocketService {
             const pdfElement = document.createElement('li');
             pdfElement.classList.add('event-message');
             const downloadButton = document.createElement('button');
-            downloadButton.textContent = 'Download Discussion Summary PDF';
+            downloadButton.textContent = i18next.t('ws_msg.download_link');
             downloadButton.classList.add('pdf-download-link');
 
             downloadButton.addEventListener('click', async () => {
                 try {
                     // Show loading state
-                    downloadButton.textContent = 'Downloading...';
+                    downloadButton.textContent = i18next.t('ws_msg.downloading');
                     downloadButton.disabled = true;
 
                     const token = localStorage.getItem('userToken');
@@ -353,11 +353,11 @@ export class WebSocketService {
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a);
                     // Reset button state
-                    downloadButton.textContent = 'Download Discussion Summary PDF';
+                    downloadButton.textContent = i18next.t('ws_msg.download_link');
                     downloadButton.disabled = false;
                 } catch (error) {
                     console.error('Download failed:', error);
-                    downloadButton.textContent = 'Download Failed - Try Again';
+                    downloadButton.textContent = i18next.t('ws_msg.download_fail');
                     downloadButton.disabled = false;
                 }
             });

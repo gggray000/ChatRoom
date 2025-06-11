@@ -262,7 +262,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: -0.2rem;
-    width: 300rem;
+    width: 150rem;
 }
 
 .title-timer-container h2 {
@@ -290,7 +290,7 @@ button:hover {
     display: flex;
     gap: 0.5rem;
     margin-left: auto;
-    width: 300%;
+    width: 400%;
     align-items: center;
 }
 

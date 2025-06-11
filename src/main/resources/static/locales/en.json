@@ -1,0 +1,42 @@
+{
+  "admin_page": {
+    "enter_name": "Please enter a name for the room",
+    "fail_create": "Failed to create room. Please try again. Error: {{error}}"
+  },
+  "admin_page_timer": {
+    "display": "Selected time: {{value}} minutes",
+    "disabled": "Timer Disabled"
+  },
+  "timer_button": {
+    "pause": "Pause",
+    "resume": "Resume",
+    "ended": "Ended",
+    "start": "Start"
+  },
+  "user_list": {
+    "count": "Online Users: {{count}}",
+    "typing": "typing..."
+  },
+  "username_page": {
+    "username_null": "Please enter a username or get a random nickname.",
+    "connect_fail": "Failed to connect. Please try again."
+  },
+  "chat_page": {
+    "disconnect_confirm": "Are you sure to disconnect or change username?",
+    "shutdown_confirm": "This will terminate the chat room, disconnecting all users and deleting chat history, are you sure?"
+  },
+  "ws_msg": {
+    "error": "Could not connect to WebSocket server. Please refresh this page to try again! Error: {{message}}",
+    "generate_summary": "Generating discussion summary...",
+    "timer_started": "--- Timer has been started ---",
+    "timer_paused": "--- Timer has been paused ---",
+    "times_up": "--- Time's up! ---",
+    "user_joined": "{{user}} joined!",
+    "user_left": "{{user}} left!",
+    "history": "--- Previous Messages ---",
+    "shutdown": "--- This discussion had been terminated by admin --- \n --- History will be deleted after tab closed or refreshed ---",
+    "download_link": "Download Discussion Summary PDF",
+    "downloading": "Downloading...",
+    "download_fail": "Download Failed - Try Again"
+  }
+}

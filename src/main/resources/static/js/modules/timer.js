@@ -27,18 +27,18 @@ export class Timer {
 
             switch (this.timerState) {
                 case 'running':
-                    this.timerButton.textContent = 'Pause';
+                    this.timerButton.textContent = i18next.t('timer_button.pause');
                     break;
                 case 'paused':
-                    this.timerButton.textContent = 'Resume';
+                    this.timerButton.textContent = i18next.t('timer_button.resume');
                     break;
                 case 'terminated':
-                    this.timerButton.textContent = 'Ended';
+                    this.timerButton.textContent = i18next.t('timer_button.ended');
                     this.timerButton.style.backgroundColor = 'gray';
                     this.timerButton.disabled = true;
                     break;
                 default:
-                    this.timerButton.textContent = 'Start';
+                    this.timerButton.textContent = i18next.t('timer_button.start');
             }
         }
         this.updateDisplay();
@@ -61,7 +61,7 @@ export class Timer {
         if (this.totalSeconds === 0 && this.timerState === 'running') {
             localStorage.setItem('timerState', 'terminated');
             this.timerState = 'terminated';
-            this.timerButton.textContent = 'Ended';
+            this.timerButton.textContent = i18next.t('timer_button.ended');
             this.timerButton.style.backgroundColor = 'gray';
             this.timerButton.disabled = true;
         }
@@ -75,20 +75,20 @@ export class Timer {
         this.sendWebSocketMessage('TIMER_START')
         localStorage.setItem('timerState', 'running');
         this.timerState = 'running';
-        this.timerButton.textContent = 'Pause';
+        this.timerButton.textContent = i18next.t('timer_button.pause');
     }
 
     pause() {
         this.sendWebSocketMessage('TIMER_PAUSE')
         localStorage.setItem('timerState', 'paused');
         this.timerState = 'paused';
-        this.timerButton.textContent = 'Resume';
+        this.timerButton.textContent = i18next.t('timer_button.resume');
     }
 
     terminate() {
         localStorage.setItem('timerState', 'terminated');
         this.timerState = 'terminated';
-        this.timerButton.textContent = 'Start';
+        this.timerButton.textContent = i18next.t('timer_button.start');
         this.timerButton.style.backgroundColor = 'gray';
         this.timerButton.disabled = true;
     }
