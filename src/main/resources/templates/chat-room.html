@@ -12,7 +12,7 @@
     <div class="username-page-container">
         <div class="languageSelect">
             <label for="languageSelect" th:text="#{lang-dropdown}"></label>
-            <select id="languageSelect" class="form-control">
+            <select id="languageSelect" class="form-control language-selector">
                 <option value="en" th:selected="${#locale.language == 'en'}">English</option>
                 <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
                 <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
@@ -54,24 +54,34 @@
                         <span class="minutes">00</span>:<span class="seconds">00</span>
                     </div>
                 </div>
-                <!--TODO: Make two button-containers for admin and user-->
-                <div class="button-container">
-                    <div class="languageSelect-chat-page">
-                        <label for="languageSelect-chat-page" th:text="#{lang-dropdown}"></label>
-                        <select id="languageSelect-chat-page" class="form-control">
+                <div class="button-container-admin hidden">
+                    <div class="languageSelect-admin">
+                        <label for="languageSelect-admin" th:text="#{lang-dropdown}"></label>
+                        <select id="languageSelect-admin" class="form-control language-selector">
                             <option value="en" th:selected="${#locale.language == 'en'}">English</option>
                             <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
                             <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
                         </select>
                     </div>
-                    <button id="summarizeBtn" class="admin-btn hidden" th:text="#{summarize-button}"></button>
-                    <button id="timerBtn" class="timer-btn hidden">Pause/Continue</button>
-                    <button id="shutdownBtn" class="shutdown-btn hidden" th:text="#{shutdown-button}"></button>
-                    <button id="disconnectBtn" class="disconnect-btn hidden" th:text="#{disconnect-button}"></button>
+                    <button id="summarizeBtn" class="admin-btn" th:text="#{summarize-button}"></button>
+                    <button id="timerBtn" class="timer-btn">Pause/Continue</button>
+                    <button id="shutdownBtn" class="shutdown-btn" th:text="#{shutdown-button}"></button>
+                    <button id="disconnectBtn" class="disconnect-btn" th:text="#{disconnect-button}"></button>
                 </div>
 
-                <button id="disconnectBtnUser" class="disconnect-btn-user hidden"
-                        th:text="#{disconnect-button}"></button>
+                <div class="button-container-user hidden">
+                    <div class="languageSelect-user">
+                        <label for="languageSelect-user" th:text="#{lang-dropdown}"></label>
+                        <select id="languageSelect-user" class="form-control language-selector">
+                            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+                            <option value="de" th:selected="${#locale.language == 'de'}">Deutsch</option>
+                            <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
+                        </select>
+                    </div>
+                    <button id="disconnectBtnUser" class="disconnect-btn-user"
+                            th:text="#{disconnect-button}"></button>
+                </div>
+
 
                 <img src="/images/logo.png" alt="logo" class="logo">
             </div>
@@ -99,20 +109,14 @@
     window.TIMER_MINUTES = /*[[${timerMinutes}]]*/ '0';
     window.TIMER_SECONDS = /*[[${timerSeconds}]]*/ '0';
 
-    document.getElementById("languageSelect").addEventListener("change", function () {
-        const selectedLocale = this.value;
-        const url = new URL(window.location.href);
-        url.searchParams.set("locale", selectedLocale);
-        window.location.href = url.toString();
+    document.querySelectorAll('.language-selector').forEach(selector => {
+        selector.addEventListener('change', function () {
+            const selectedLocale = this.value;
+            const url = new URL(window.location.href);
+            url.searchParams.set("locale", selectedLocale);
+            window.location.href = url.toString();
+        });
     });
-
-    document.getElementById("languageSelect-chat-page").addEventListener("change", function () {
-        const selectedLocale = this.value;
-        const url = new URL(window.location.href);
-        url.searchParams.set("locale", selectedLocale);
-        window.location.href = url.toString();
-    });
-
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>

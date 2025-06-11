@@ -17,5 +17,7 @@ export const elements = {
     shutdownButton: document.querySelector('#shutdownBtn'),
     systemMessage:document.querySelector('#systemPrompt'),
     sidebarToggle: document.querySelector('.toggle-sidebar'),
-    userListSidebar: document.querySelector('.user-list-sidebar')
+    userListSidebar: document.querySelector('.user-list-sidebar'),
+    buttonContainerAdmin: document.querySelector('.button-container-admin'),
+    buttonContainerUser: document.querySelector('.button-container-user')
 };

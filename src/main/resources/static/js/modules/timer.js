@@ -17,8 +17,8 @@ export class Timer {
     initialize() {
         if (this.totalSeconds === 0) {
             document.querySelector('.countdown').style.display = 'none';
+            this.timerButton.style.display = 'none';
         } else if (localStorage.getItem('isAdmin') === 'true') {
-            this.timerButton.classList.remove('hidden');
             this.timerButton.addEventListener('click', () => this.onClick());
             if (this.timerState === 'terminated' && this.totalSeconds > 0) {
                 localStorage.setItem('timerState', null);

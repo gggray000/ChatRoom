@@ -83,11 +83,9 @@ async function connect(event) {
             document.querySelector('.chat-header h2').textContent = roomName;
 
             if (localStorage.getItem('isAdmin') === 'true') {
-                elements.summarizeButton.classList.remove('hidden');
-                elements.shutdownButton.classList.remove('hidden')
-                elements.disconnectButton.classList.remove('hidden');
+                elements.buttonContainerAdmin.classList.remove('hidden');
             } else {
-                elements.disconnectButtonUser.classList.remove('hidden');
+                elements.buttonContainerUser.classList.remove('hidden');
             }
 
         await webSocketService.connect(verifiedUsername, roomId);
