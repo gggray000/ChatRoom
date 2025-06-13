@@ -246,7 +246,7 @@ public class ChatController {
         timeService.setUpRoomTimer(roomId, timeLimit);
     }
 
-    @MessageMapping("/chat/{roomId}/pauseTimer")
+    @MessageMapping("/chat/{roomId}/operateTimer")
     public void operateTimer(@Payload WebSocketMessage operateTimerMessage,
                              @DestinationVariable("roomId") String roomId,
                              SimpMessageHeaderAccessor headerAccessor) {
@@ -255,7 +255,13 @@ public class ChatController {
         if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
             throw new MessageDeliveryException("Unauthorized: Only admin can operate timer.");
         }
-        timeService.stopRoomTimer(roomId, false);
+        MessageType type = operateTimerMessage.getMessageType();
+
+        if (type == MessageType.TIMES_UP) {
+            timeService.stopRoomTimer(roomId, true);
+        } else {
+            timeService.stopRoomTimer(roomId, false);
+        }
     }
 
 }

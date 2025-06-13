@@ -26,7 +26,7 @@
     "shutdown_confirm": "Dies wird den Chatroom schließen und alle Benutzer trennen sowie den Chatverlauf löschen. Sind Sie sicher?"
   },
   "ws_msg": {
-    "error": "Verbindung zum WebSocket-Server fehlgeschlagen. Bitte erneut versuchen! Fehler: {{message}}",
+    "error": "Verbindung zum WebSocket-Server fehlgeschlagen. Bitte erneut versuchen!",
     "generate_summary": "Diskussionszusammenfassung wird erstellt...",
     "timer_started": "--- Timer wurde gestartet ---",
     "timer_paused": "--- Timer wurde pausiert ---",

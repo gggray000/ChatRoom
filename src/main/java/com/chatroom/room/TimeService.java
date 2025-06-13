@@ -15,21 +15,21 @@ public class TimeService {
     @Getter
     private Map<String, Integer> timesOfRooms;
     @Getter
-    private Map<String, ScheduledFuture<?>> timers;
+    private Map<String, ScheduledFuture<?>> timersOfRooms;
     private final RoomService roomService;
     private final int threadsLimit = Runtime.getRuntime().availableProcessors();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(threadsLimit);
 
     public TimeService(RoomService roomService, SimpMessagingTemplate simpMessagingTemplate) {
         this.timesOfRooms = new ConcurrentHashMap<>();
-        this.timers = new ConcurrentHashMap<>();
+        this.timersOfRooms = new ConcurrentHashMap<>();
         this.roomService = roomService;
         this.simpMessagingTemplate = simpMessagingTemplate;
         System.out.println("Thread Limits: " + threadsLimit);
     }
 
     public void setUpRoomTimer(String roomId, int timeInSeconds) {
-        if (timers.containsKey(roomId)) {
+        if (timersOfRooms.containsKey(roomId)) {
             System.out.println("Timer already running for Room " + roomId);
             return;
         }
@@ -56,7 +56,7 @@ public class TimeService {
 
         final ScheduledFuture<?> timerHandler =
                 scheduler.scheduleAtFixedRate(timer, 0, 1, TimeUnit.SECONDS);
-        timers.put(roomId, timerHandler);
+        timersOfRooms.put(roomId, timerHandler);
 
         WebSocketMessage message = WebSocketMessage.builder()
                 .messageType(MessageType.TIMER_START)
@@ -65,9 +65,11 @@ public class TimeService {
     }
 
     public void stopRoomTimer(String roomId, boolean ifTimesUp) {
-        ScheduledFuture<?> future = timers.remove(roomId);
+        ScheduledFuture<?> future = timersOfRooms.get(roomId);
         if (future != null) {
             future.cancel(true);
+            timersOfRooms.remove(roomId);
+            deleteRoomTime(roomId);
         } else {
             System.out.println("No active timer found for room: " + roomId);
         }
@@ -97,8 +99,8 @@ public class TimeService {
         if (this.timesOfRooms.containsKey(roomId)) {
             timesOfRooms.remove(roomId);
         }
-        if (this.timers.containsKey(roomId)) {
-            timers.remove(roomId);
+        if (this.timersOfRooms.containsKey(roomId)) {
+            timersOfRooms.remove(roomId);
         }
     }
 }

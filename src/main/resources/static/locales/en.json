@@ -26,7 +26,7 @@
     "shutdown_confirm": "This will terminate the chat room, disconnecting all users and deleting chat history, are you sure?"
   },
   "ws_msg": {
-    "error": "Could not connect to WebSocket server. Please refresh this page to try again! Error: {{message}}",
+    "error": "Could not connect to WebSocket server. Please refresh this page to try again!",
     "generate_summary": "Generating discussion summary...",
     "timer_started": "--- Timer has been started ---",
     "timer_paused": "--- Timer has been paused ---",

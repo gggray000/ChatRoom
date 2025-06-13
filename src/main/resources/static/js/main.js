@@ -11,11 +11,8 @@ const roomId = window.ROOM_ID;
 const roomName = window.ROOM_NAME;
 const timerMinutes = window.TIMER_MINUTES || 0;
 const timerSeconds = window.TIMER_SECONDS || 0;
-const timer = new Timer(roomId, parseInt(timerMinutes), parseInt(timerSeconds));
-const webSocketService = new WebSocketService(userListService, timer);
+const webSocketService = new WebSocketService(userListService);
 const inputHandler = new InputHandler(webSocketService);
-
-timer.setWebSocketService(webSocketService);
 
 async function connect(event) {
     if (event) {
@@ -91,6 +88,27 @@ async function connect(event) {
 
         await webSocketService.connect(verifiedUsername, roomId);
 
+        const timer = new Timer(roomId, parseInt(timerMinutes), parseInt(timerSeconds));
+        timer.initialize();
+        webSocketService.setTimer(timer);
+
+        if (isAdmin) {
+            timer.setOnTimerAction((actionType, timeInSeconds) => {
+                const message = {
+                    sender: localStorage.getItem('username'),
+                    tokenId: localStorage.getItem('userToken'),
+                    roomId: roomId,
+                    messageType: actionType,
+                    timeInSeconds: timeInSeconds
+                };
+
+                const endpoint = actionType === 'TIMER_START'
+                    ? `/app/chat/${roomId}/setTimer`
+                    : `/app/chat/${roomId}/operateTimer`;
+
+                webSocketService.stompClient.send(endpoint, {}, JSON.stringify(message));
+            });
+        }
     } catch (error) {
         console.error('Connection error:', error);
         alert(i18next.t('username_page.connect_fail'));
@@ -127,14 +145,6 @@ function initializeEventListeners() {
             connect();
         }
 
-        /*       if (elements.messageInput.tagName.toLowerCase() === 'input') {
-                   const textarea = document.createElement('textarea');
-                   textarea.id = 'textArea';
-                   textarea.className = elements.messageInput.className;
-                   textarea.placeholder = 'Ctrl+Enter or hit send button to send message';
-                   elements.messageInput.parentNode.replaceChild(textarea, elements.messageInput);
-                   elements.messageInput = textarea;
-               }*/
         elements.sidebarToggle.addEventListener('click', () => {
             elements.userListSidebar.classList.toggle('expanded');
         });
@@ -144,13 +154,13 @@ function initializeEventListeners() {
         elements.messageForm.addEventListener('submit', sendMessage);
         elements.summarizeButton.addEventListener('click', () => webSocketService.generateSummary());
         elements.disconnectButton.addEventListener('click', () => {
-            let warning = i18next.t('chat_page.diconnect_confirm')
+            let warning = i18next.t('chat_page.disconnect_confirm')
             if (confirm(warning)) {
                 webSocketService.disconnect();
             }
         });
         elements.disconnectButtonUser.addEventListener('click', () => {
-            let warning = i18next.t('chat_page.diconnect_confirm')
+            let warning = i18next.t('chat_page.disconnect_confirm')
             if (confirm(warning)) {
                 webSocketService.disconnect();
             }

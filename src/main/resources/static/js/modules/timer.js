@@ -1,17 +1,13 @@
+import i18next from "./i18n.js";
+
 export class Timer {
     constructor(roomId, timerMinutes = 0, timerSeconds = 0) {
         this.totalSeconds = (timerMinutes * 60) + timerSeconds;
         this.timerButton = document.querySelector('#timerBtn');
         this.minutesDisplay = document.querySelector('.minutes');
         this.secondsDisplay = document.querySelector('.seconds');
-        this.webSocketService = null;
         this.roomId = roomId;
-        this.timerState = localStorage.getItem('timerState')
-        this.initialize();
-    }
-
-    setWebSocketService(webSocketService) {
-        this.webSocketService = webSocketService;
+        this.timerState = null;
     }
 
     initialize() {
@@ -20,10 +16,6 @@ export class Timer {
             this.timerButton.style.display = 'none';
         } else if (localStorage.getItem('isAdmin') === 'true') {
             this.timerButton.addEventListener('click', () => this.onClick());
-            if (this.timerState === 'terminated' && this.totalSeconds > 0) {
-                localStorage.setItem('timerState', null);
-                this.timerState = null;
-            }
 
             switch (this.timerState) {
                 case 'running':
@@ -42,6 +34,10 @@ export class Timer {
             }
         }
         this.updateDisplay();
+    }
+
+    setOnTimerAction(callback) {
+        this.onTimerAction = callback;
     }
 
     onClick() {
@@ -72,39 +68,27 @@ export class Timer {
     }
 
     start() {
-        this.sendWebSocketMessage('TIMER_START')
+        this.onTimerAction('TIMER_START', this.totalSeconds);
         localStorage.setItem('timerState', 'running');
         this.timerState = 'running';
         this.timerButton.textContent = i18next.t('timer_button.pause');
     }
 
     pause() {
-        this.sendWebSocketMessage('TIMER_PAUSE')
+        this.onTimerAction('TIMER_PAUSE', this.totalSeconds);
         localStorage.setItem('timerState', 'paused');
         this.timerState = 'paused';
         this.timerButton.textContent = i18next.t('timer_button.resume');
     }
 
     terminate() {
-        localStorage.setItem('timerState', 'terminated');
+        if (localStorage.getItem('isAdmin') === 'true') {
+            this.onTimerAction('TIMES_UP', this.totalSeconds);
+        }
+        localStorage.setItem('timerState', 'terminated')
         this.timerState = 'terminated';
-        this.timerButton.textContent = i18next.t('timer_button.start');
+        this.timerButton.textContent = i18next.t('timer_button.ended');
         this.timerButton.style.backgroundColor = 'gray';
         this.timerButton.disabled = true;
-    }
-
-    sendWebSocketMessage(messageType) {
-        const message = {
-            sender: localStorage.getItem('username'),
-            tokenId: localStorage.getItem('userToken'),
-            roomId: this.roomId,
-            messageType: messageType,
-            timeInSeconds: this.totalSeconds
-        };
-
-        const endpoint = messageType === 'TIMER_START' ? `/app/chat/${this.roomId}/setTimer` :
-            `/app/chat/${this.roomId}/pauseTimer`;
-
-        this.webSocketService.stompClient.send(endpoint, {}, JSON.stringify(message));
     }
 }

@@ -56,7 +56,7 @@
         qrCode.src = `/admin/qrcode/${roomId}`;
 
         cancelButton.addEventListener('click', () => {
-            cancelCreation(params.get('roomId'))
+            cancelCreation(roomId)
         })
     });
 

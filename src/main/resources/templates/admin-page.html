@@ -49,12 +49,20 @@
 </div>
 
 <script>
-    document.getElementById("languageSelect").addEventListener("change", function () {
-        const selectedLocale = this.value;
+    function updateLocale() {
+        const selectedLocale = document.getElementById("languageSelect").value;
         const url = new URL(window.location.href);
-        url.searchParams.set("locale", selectedLocale);
-        window.location.href = url.toString();
+        const currentLocale = url.searchParams.get("locale");
+        if (currentLocale !== selectedLocale) {
+            url.searchParams.set("locale", selectedLocale);
+            window.location.href = url.toString();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateLocale()
     });
+    document.getElementById("languageSelect").addEventListener("change", updateLocale);
 </script>
 <script src="https://unpkg.com/i18next@25.2.1/i18next.min.js"></script>
 <script src="https://unpkg.com/i18next-http-backend@3.0.2/i18nextHttpBackend.min.js"></script>

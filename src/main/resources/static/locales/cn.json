@@ -26,7 +26,7 @@
     "shutdown_confirm": "此按钮将关闭聊天室、下线所有用户并删除聊天记录，是否确定？"
   },
   "ws_msg": {
-    "error": "无法连接WebSocket服务器，请重新尝试！错误：{{message}}",
+    "error": "无法连接WebSocket服务器，请重新尝试!",
     "generate_summary": "正在生成讨论总结......",
     "timer_started": "--- 计时开始 ---",
     "timer_paused": "--- 计时暂停 ---",

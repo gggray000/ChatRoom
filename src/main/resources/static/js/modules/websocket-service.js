@@ -2,12 +2,12 @@ import {elements} from './dom-elements.js';
 import {createUserInfo} from './avatar-service.js';
 
 export class WebSocketService {
-    constructor(userListService, timer) {
+    constructor(userListService) {
         this.stompClient = null;
         this.username = null;
         this.userListService = userListService;
         this.roomId = window.ROOM_ID;
-        this.timer = timer;
+        this.timer = null;
         this.md = window.markdownit({
             html: false,
             breaks: true,
@@ -77,9 +77,13 @@ export class WebSocketService {
     }
 
     onError(message) {
-        elements.connectingElement.textContent = i18next.t('ws_msg.error', {message});
+        elements.connectingElement.textContent = i18next.t('ws_msg.error');
         elements.connectingElement.style.color = 'red';
         elements.connectingElement.classList.remove('hidden');
+    }
+
+    setTimer(timer) {
+        this.timer = timer;
     }
 
     disconnect() {
@@ -205,6 +209,7 @@ export class WebSocketService {
                 break;
 
             case 'SHUTDOWN':
+                this.sendEventMessage(message, messageElement, i18next.t('ws_msg.shutdown'));
                 this.handleShutDown(message, messageElement);
         }
 
@@ -289,9 +294,8 @@ export class WebSocketService {
             this.timer.updateDisplay();
     }
 
-    handleShutDown(message, messageElement) {
-        this.sendEventMessage(message, messageElement, i18next.t('ws_msg.shutdown'));
-        this.timer.pause();
+    handleShutDown() {
+        this.timer.terminate();
         if (this.stompClient) {
             this.stompClient.disconnect();
         }
