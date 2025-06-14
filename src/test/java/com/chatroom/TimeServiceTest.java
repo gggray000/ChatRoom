@@ -55,7 +55,7 @@ class TimeServiceTest {
 
     @Test
     void testMultipleTimer() {
-        timeService.getTimers().put(roomId, mock(ScheduledFuture.class));
+        timeService.getTimersOfRooms().put(roomId, mock(ScheduledFuture.class));
         timeService.setUpRoomTimer(roomId, 60);
         verify(messagingTemplate, never()).convertAndSend((String) eq("/topic/public/" + roomId), (Object) any());
     }
@@ -63,7 +63,7 @@ class TimeServiceTest {
     @Test
     void testStopRoomTimer() {
         ScheduledFuture<?> mockFuture = mock(ScheduledFuture.class);
-        timeService.getTimers().put(roomId, mockFuture);
+        timeService.getTimersOfRooms().put(roomId, mockFuture);
         timeService.stopRoomTimer(roomId, true);
         verify(mockFuture).cancel(true);
 
@@ -76,6 +76,6 @@ class TimeServiceTest {
         WebSocketMessage wsMessage = (WebSocketMessage) capturedMessage;
         assertEquals(MessageType.TIMES_UP, wsMessage.getMessageType());
 
-        assertFalse(timeService.getTimers().containsKey(roomId));
+        assertFalse(timeService.getTimersOfRooms().containsKey(roomId));
     }
 }

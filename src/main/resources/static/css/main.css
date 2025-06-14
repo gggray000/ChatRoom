@@ -42,7 +42,6 @@ body {
 
 .languageSelect label {
     font-size: 0.8rem;
-    font-weight: 300;
     color: #333;
 }
 
@@ -309,7 +308,6 @@ button:hover {
 
 .button-container-admin .languageSelect-admin label {
     font-size: 0.8rem;
-    font-weight: 300;
     color: #333;
 }
 
@@ -414,7 +412,6 @@ button:hover {
 
 .button-container-user .languageSelect-user label {
     font-size: 0.8rem;
-    font-weight: 300;
     color: #333;
 }
 

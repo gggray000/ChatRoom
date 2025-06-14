@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(setPromptResponse.statusText);
             }
 
+            localStorage.setItem('isAdmin', true);
             const urlId = roomData.url.split('/').pop();
             const confirmUrl = `/admin/confirm?name=${roomName}&id=${roomData.roomId}&url=${urlId}&locale=${currentLocale}`;
             window.open(confirmUrl, '_blank');
