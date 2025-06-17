@@ -5,18 +5,21 @@ A web application for real-time anonymous group discussions with built-in AI sum
 <h2>TODO</h2>
 <h3>Short-term</h3>
 
-1. Fix i18n bugs.<br>
-2. Write more test cases, learn <code>@SpringBootTest</code>.<br>
-3. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
+1. Write more test cases.<br>
+2. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
 
 <h3>Long-term</h3>
-1. JPA implementation.<br>
-2. ChatBot Moderation.<br>
+
+1. Timer improvement or re-implementation.<br>
+2. JPA implementation.<br>
+3. ChatBot Moderation.<br>
 
 <br>**Pending**<br>
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.22</h3>
+Implemented CAPTCHA features.<br>
 <h3>v0.9.21</h3>
 Implemented i18n features.<br>
 <h3>v0.9.20</h3>
@@ -159,7 +162,8 @@ Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=Tyw
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in <code>main.js</code>.
 
 <h2>Acknowledgement</h2>
-
+@tiagorangel1<br>
+<URL>https://github.com/tiagorangel1/cap</URL><br>
 @i18next<br>
 <URL>https://github.com/i18next/i18next</URL><br>
 @Google<br>

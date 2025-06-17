@@ -1,7 +1,8 @@
 {
   "admin_page": {
     "enter_name": "Bitte den Namen des Chatrooms eingeben.",
-    "fail_create": "Chatroom konnte nicht erstellt werden. Bitte erneut versuchen. Fehler: {{error}}"
+    "fail_create": "Chatroom konnte nicht erstellt werden. Bitte erneut versuchen. Fehler: {{error}}",
+    "cap_failed": "CAPTCHA fehlgeschlagen. Bitte später erneut versuchen."
   },
   "admin_page_timer": {
     "display": "Eingestellte Zeit: {{value}} Minuten",
@@ -19,7 +20,8 @@
   },
   "username_page": {
     "username_null": "Bitten geben einen Benutzernamen ein, oder bekommen einen zufälligen Spitznamen",
-    "connect_fail": "Verbindung fehlgeschlagen. Bitte erneut versuchen."
+    "connect_fail": "Verbindung fehlgeschlagen. Bitte erneut versuchen.",
+    "cap_failed": "CAPTCHA fehlgeschlagen. Bitte später erneut versuchen."
   },
   "chat_page": {
     "disconnect_confirm": "Möchten Sie sich wirklich trennen oder den Benutzernamen ändern?",

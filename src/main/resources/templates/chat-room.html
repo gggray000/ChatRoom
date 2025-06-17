@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<script type="module" src="https://unpkg.com/@cap.js/widget@0.1.20/cap.min.js"></script>
+<script type="module" src="https://unpkg.com/@cap.js/widget@0.1.20/cap-floating.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,13 +20,21 @@
                 <option value="cn" th:selected="${#locale.language == 'cn'}">中文</option>
             </select>
         </div>
+
         <h1 class="title" th:text="#{username-form}"></h1>
         <form id="usernameForm" name="usernameForm">
-            <div class="form-group">
+            <div class="form-group username-page-forms">
                 <input type="text" id="name" th:placeholder="#{username-form-placeholder}" autocomplete="off"
                        class="form-control"/>
-            </div>
-            <div class="form-group">
+                <cap-widget
+                        class="cap-widget"
+                        id="cap"
+                        th:attr="data-cap-api-endpoint=@{'/' + ${keyId} + '/api/'},
+                                 data-cap-i18n-verifying-label=#{cap.verifying},
+                                 data-cap-i18n-initial-state=#{cap.initial},
+                                 data-cap-i18n-solved-label=#{cap.solved},
+                                 data-cap-i18n-error-label=#{cap.error}"
+                ></cap-widget>
                 <button type="button" class="nickname-generate" th:text="#{get-nickname}"></button>
                 <button type="submit" class="username-submit" th:text="#{start-chatting}"></button>
                 <button type="button" class="redirect-landing" onclick="window.location.href='/landing'"

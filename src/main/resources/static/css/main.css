@@ -24,11 +24,11 @@ body {
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: max-content;
     max-width: 400px;
 }
 
-.username-page-container .languageSelect {
+.languageSelect {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -43,6 +43,15 @@ body {
 .languageSelect label {
     font-size: 0.8rem;
     color: #333;
+}
+
+.username-page-forms {
+    display: grid;
+    justify-items: center;
+}
+
+.username-page-forms .cap-widget {
+    margin-top: 1rem;
 }
 
 .title {
@@ -84,6 +93,7 @@ button {
 }
 
 .nickname-generate {
+    margin-top: 1rem;
     background: #3498db;  /* Blue */
     color: white;
 }

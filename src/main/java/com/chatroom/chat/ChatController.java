@@ -250,9 +250,12 @@ public class ChatController {
     public void operateTimer(@Payload WebSocketMessage operateTimerMessage,
                              @DestinationVariable("roomId") String roomId,
                              SimpMessageHeaderAccessor headerAccessor) {
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(operateTimerMessage.getTokenId(), roomId);
+        //JwtUserDetails jwtUserDetails = jwtService.validateUserToken(operateTimerMessage.getTokenId(), roomId);
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+        /*if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+            throw new MessageDeliveryException("Unauthorized: Only admin can operate timer.");
+        }*/
+        if (isAdmin == null || !isAdmin) {
             throw new MessageDeliveryException("Unauthorized: Only admin can operate timer.");
         }
         MessageType type = operateTimerMessage.getMessageType();

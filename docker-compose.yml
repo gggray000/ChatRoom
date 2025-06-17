@@ -22,3 +22,19 @@ services:
       - JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
       - LANGCHAIN4J_OLLAMA_CHAT_MODEL_MODEL_NAME=gemma3:4b
     restart: unless-stopped
+
+  cap:
+    image: tiago2/cap:latest
+    container_name: cap-standalone
+    network_mode: "host"
+    ports:
+      - "3000:3000"
+    environment:
+      - KEY_ID=${KEY_ID}
+      - KEY_SECRET=${KEY_SECRET}
+    volumes:
+      - cap-data:/usr/src/app/.data
+    restart: unless-stopped
+
+volumes:
+  cap-data:

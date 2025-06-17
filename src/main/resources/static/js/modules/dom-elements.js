@@ -19,5 +19,11 @@ export const elements = {
     sidebarToggle: document.querySelector('.toggle-sidebar'),
     userListSidebar: document.querySelector('.user-list-sidebar'),
     buttonContainerAdmin: document.querySelector('.button-container-admin'),
-    buttonContainerUser: document.querySelector('.button-container-user')
+    buttonContainerUser: document.querySelector('.button-container-user'),
+    roomNameInput: document.getElementById('roomName'),
+    createRoomButton: document.getElementById('createRoom'),
+    systemPromptInput: document.getElementById('systemPrompt'),
+    timerSlider: document.getElementById('timerSlider'),
+    sliderLabels: document.querySelector('.slider-labels'),
+    capWidget: document.querySelector('.cap-widget')
 };

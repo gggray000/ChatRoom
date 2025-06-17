@@ -93,6 +93,21 @@ h4 {  /* Target all h4 elements */
     transition: opacity 0.2s;
 }
 
+.admin-container .create-room {
+    display: grid;
+    grid-template-rows: auto auto;
+    row-gap: 1rem;
+    justify-items: center;
+}
+
+.admin-container .create-room .cap-widget {
+    grid-row: 1/2;
+}
+
+.admin-container .create-room button {
+    grid-row: 2/3;
+}
+
 .admin-container button:hover {
     opacity: 0.9;
 }

@@ -1,7 +1,8 @@
 {
   "admin_page": {
     "enter_name": "请输入聊天室名称",
-    "fail_create": "未能创建聊天室，请重试。错误： {{error}}"
+    "fail_create": "未能创建聊天室，请重试。错误： {{error}}",
+    "cap_failed": "人机验证失败，请稍后重试。"
   },
   "admin_page_timer": {
     "display": "已选择时间： {{value}} 分钟",
@@ -19,7 +20,8 @@
   },
   "username_page": {
     "username_null": "请输入用户名或获取随机昵称",
-    "connect_fail": "连接失败，请稍后重试。"
+    "connect_fail": "连接失败，请稍后重试。",
+    "cap_failed": "人机验证失败，请稍后重试。"
   },
   "chat_page": {
     "disconnect_confirm": "确定要退出聊天室或者前往更改昵称？",

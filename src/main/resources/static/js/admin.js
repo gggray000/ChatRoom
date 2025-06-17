@@ -1,19 +1,34 @@
+import {elements} from './modules/dom-elements.js';
+
 document.addEventListener('DOMContentLoaded', function() {
-    const roomNameInput = document.getElementById('roomName');
-    const createRoomButton = document.getElementById('createRoom');
-    const systemPromptInput = document.getElementById('systemPrompt');
-    const timerSlider = document.getElementById('timerSlider');
-    const sliderLabels = document.querySelector('.slider-labels');
+    localStorage.setItem('isHuman', 'false');
+
+    elements.capWidget.addEventListener("solve", function (e) {
+        fetch('/captcha', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                token: e.detail.token
+            })
+        }).then(response => {
+            if (response.ok) localStorage.setItem('isHuman', 'true')
+        })
+    })
 
     async function createRoom() {
         const currentLocale = new URL(window.location.href).searchParams.get("locale") || "en";
-        const roomName = roomNameInput.value.trim();
-        const systemPrompt = systemPromptInput ? systemPromptInput.value.trim() : '';
-        const timerMinutes = parseInt(timerSlider.value);
+        const roomName = elements.roomNameInput.value.trim();
+        const systemPrompt = elements.systemPromptInput ? elements.systemPromptInput.value.trim() : '';
+        const timerMinutes = parseInt(elements.timerSlider.value);
 
         if (!roomName) {
             alert(i18next.t('admin_page.enter_name'));
             return;
+        }
+
+        if (localStorage.getItem('isHuman') === 'false') {
+            alert(i18next.t('admin_page.cap_failed'))
+            return
         }
 
         try {
@@ -66,21 +81,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    timerSlider.addEventListener('input', function () {
+    elements.timerSlider.addEventListener('input', function () {
         updateTimerDisplay(parseInt(timerSlider.value));
     });
 
-    sliderLabels.addEventListener('click', function (e) {
+    elements.sliderLabels.addEventListener('click', function (e) {
         if (e.target.tagName === 'SPAN') {
             const value = parseInt(e.target.textContent);
-            timerSlider.value = value;
+            elements.timerSlider.value = value;
             updateTimerDisplay(value);
         }
     });
 
-    createRoomButton.addEventListener('click', createRoom);
+    elements.createRoomButton.addEventListener('click', createRoom);
 
-    roomNameInput.addEventListener('keypress', function(event) {
+    elements.roomNameInput.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             createRoom();

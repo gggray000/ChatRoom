@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<script type="module" src="https://unpkg.com/@cap.js/widget@0.1.20/cap.min.js"></script>
+<script type="module" src="https://unpkg.com/@cap.js/widget@0.1.20/cap-floating.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <title th:text="#{config}"></title>
@@ -42,8 +44,20 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <button id="createRoom" class="accent" th:text="#{create-button}"></button>
+    <div class="form-group create-room">
+        <cap-widget
+                class="cap-widget"
+                id="cap"
+                th:attr="data-cap-api-endpoint=@{'/' + ${keyId} + '/api/'},
+                         data-cap-i18n-verifying-label=#{cap.verifying},
+                         data-cap-i18n-initial-state=#{cap.initial},
+                         data-cap-i18n-solved-label=#{cap.solved},
+                         data-cap-i18n-error-label=#{cap.error}"
+        ></cap-widget>
+        <button id="createRoom"
+                class="accent"
+                th:text="#{create-button}">
+        </button>
     </div>
 
 </div>
@@ -68,7 +82,7 @@
 <script src="https://unpkg.com/i18next-http-backend@3.0.2/i18nextHttpBackend.min.js"></script>
 <script src="https://unpkg.com/i18next-browser-languagedetector@8.2.0/i18nextBrowserLanguageDetector.min.js"></script>
 <script type="module" src="/js/modules/i18n.js"></script>
-<script src="/js/admin.js"></script>
+<script type="module" src="/js/admin.js"></script>
 
 </body>
 </html>

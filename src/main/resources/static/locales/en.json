@@ -1,7 +1,8 @@
 {
   "admin_page": {
     "enter_name": "Please enter a name for the room",
-    "fail_create": "Failed to create room. Please try again. Error: {{error}}"
+    "fail_create": "Failed to create room. Please try again. Error: {{error}}",
+    "cap_failed": "Failed at CAPTCHA, please try again later."
   },
   "admin_page_timer": {
     "display": "Selected time: {{value}} minutes",
@@ -19,7 +20,8 @@
   },
   "username_page": {
     "username_null": "Please enter a username or get a random nickname.",
-    "connect_fail": "Failed to connect. Please try again."
+    "connect_fail": "Failed to connect. Please try again.",
+    "cap_failed": "Failed at CAPTCHA, please try again later."
   },
   "chat_page": {
     "disconnect_confirm": "Are you sure to disconnect or change username?",

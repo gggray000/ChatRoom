@@ -7,9 +7,8 @@ import com.chatroom.chat.WebSocketMessageService;
 import com.chatroom.room.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,6 +18,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -27,10 +28,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class AppController {
 
+    @Value("${KEY_ID}")
+    private String capKeyId;
+    @Value("${KEY_SECRET}")
+    private String capKeySecret;
     private final RoomService roomService;
     private final UrlService urlService;
     private final QrCodeService qrCodeService;
@@ -65,7 +71,8 @@ public class AppController {
     }
 
     @GetMapping("/admin")
-    public String adminPage() {
+    public String adminPage(Model model) {
+        model.addAttribute("keyId", capKeyId);
         return "admin-page";
     }
 
@@ -82,6 +89,32 @@ public class AppController {
     @GetMapping("/landing")
     public String landingPage() {
         return "landing";
+    }
+
+    @PostMapping("/captcha")
+    @ResponseStatus(HttpStatus.OK)
+    public void captcha(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String capApi = "http://127.0.0.1:3000/" + capKeyId + "/siteverify";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            Map<String, String> body = Map.of(
+                    "secret", capKeySecret,
+                    "response", token
+            );
+            HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(capApi, entity, String.class);
+
+            if (!response.getStatusCode().is2xxSuccessful() ||
+                    !Objects.requireNonNull(response.getBody()).contains("\"success\":true")) {
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "CAPTCHA failed");
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "CAPTCHA failed");
+        }
     }
 
     @PostMapping("/admin/create-room")
@@ -207,6 +240,7 @@ public class AppController {
         if (room == null) {
             return "redirect:/denied?locale=" + locale.getLanguage();
         }
+        model.addAttribute("keyId", capKeyId);
         model.addAttribute("roomId", roomId);
         model.addAttribute("roomName", room.getName());
         model.addAttribute("timerMinutes", Integer.toString(timeService.getTimeForRoom(roomId) / 60));

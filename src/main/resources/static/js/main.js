@@ -13,12 +13,32 @@ const timerMinutes = window.TIMER_MINUTES || 0;
 const timerSeconds = window.TIMER_SECONDS || 0;
 const webSocketService = new WebSocketService(userListService);
 const inputHandler = new InputHandler(webSocketService);
+const isAdmin = document.referrer.includes('/admin') ||
+    localStorage.getItem('isAdmin') === 'true';
+
+localStorage.setItem('isHuman', 'false');
+
+if (isAdmin) {
+    elements.capWidget.style.display = "none";
+    localStorage.setItem('isHuman', 'true');
+} else {
+    elements.capWidget.addEventListener("solve", function (e) {
+        fetch('/captcha', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                token: e.detail.token
+            })
+        }).then(response => {
+            if (response.ok) localStorage.setItem('isHuman', 'true')
+        })
+    })
+}
 
 async function connect(event) {
     if (event) {
         event.preventDefault();
     }
-
     // Get username either from form or localStorage
     const username = event ?
         elements.usernameForm.querySelector('#name').value.trim() :
@@ -28,7 +48,11 @@ async function connect(event) {
         alert(i18next.t('username_page.username_null'));
         return;
     }
-    console.log("roomId: " + roomId);
+
+    if (localStorage.getItem('isHuman') === 'false') {
+        alert(i18next.t('username_page.cap_failed'))
+        return
+    }
 
     try {
         const verifyResponse = await fetch(`/chat/${roomId}/verifyUsername`, {
@@ -49,8 +73,6 @@ async function connect(event) {
         console.log("Verified username: " + verifiedUsername);
         localStorage.setItem('username', verifiedUsername);
 
-            const isAdmin = document.referrer.includes('/admin') ||
-                localStorage.getItem('isAdmin') === 'true';
 
             // Only get new token if we don't have one or if this is a new connection
             if (!localStorage.getItem('userToken') || event) {
