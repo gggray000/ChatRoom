@@ -37,8 +37,8 @@ public class AppController {
     private String capKeyId;
     @Value("${KEY_SECRET}")
     private String capKeySecret;
-    @Value("${CAP_API}")
-    private String capApi;
+    @Value("${CAP_ADDR}")
+    private String capAddr;
     private final RoomService roomService;
     private final UrlService urlService;
     private final QrCodeService qrCodeService;
@@ -75,7 +75,7 @@ public class AppController {
     @GetMapping("/admin")
     public String adminPage(Model model) {
         model.addAttribute("keyId", capKeyId);
-        model.addAttribute("capApi", capApi);
+        model.addAttribute("capAddr", capAddr);
         return "admin-page";
     }
 
@@ -100,7 +100,7 @@ public class AppController {
         String token = request.get("token");
         try {
             RestTemplate restTemplate = new RestTemplate();
-            String capApi = "http://127.0.0.1:3000/" + capKeyId + "/siteverify";
+            String capApi = capAddr + "/" + capKeyId + "/siteverify";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -243,7 +243,7 @@ public class AppController {
         if (room == null) {
             return "redirect:/denied?locale=" + locale.getLanguage();
         }
-        model.addAttribute("capApi", capApi);
+        model.addAttribute("capAddr", capAddr);
         model.addAttribute("keyId", capKeyId);
         model.addAttribute("roomId", roomId);
         model.addAttribute("roomName", room.getName());
