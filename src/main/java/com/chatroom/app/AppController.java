@@ -37,6 +37,8 @@ public class AppController {
     private String capKeyId;
     @Value("${KEY_SECRET}")
     private String capKeySecret;
+    @Value("${CAP_API}")
+    private String capApi;
     private final RoomService roomService;
     private final UrlService urlService;
     private final QrCodeService qrCodeService;
@@ -73,6 +75,7 @@ public class AppController {
     @GetMapping("/admin")
     public String adminPage(Model model) {
         model.addAttribute("keyId", capKeyId);
+        model.addAttribute("capApi", capApi);
         return "admin-page";
     }
 
@@ -240,6 +243,7 @@ public class AppController {
         if (room == null) {
             return "redirect:/denied?locale=" + locale.getLanguage();
         }
+        model.addAttribute("capApi", capApi);
         model.addAttribute("keyId", capKeyId);
         model.addAttribute("roomId", roomId);
         model.addAttribute("roomName", room.getName());

@@ -48,7 +48,7 @@
         <cap-widget
                 class="cap-widget"
                 id="cap"
-                th:attr="data-cap-api-endpoint=@{'/' + ${keyId} + '/api/'},
+                th:attr="data-cap-api-endpoint=@{${capApi} + '/' + ${keyId} + '/api/'},
                          data-cap-i18n-verifying-label=#{cap.verifying},
                          data-cap-i18n-initial-state=#{cap.initial},
                          data-cap-i18n-solved-label=#{cap.solved},
