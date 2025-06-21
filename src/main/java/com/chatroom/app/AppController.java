@@ -228,7 +228,7 @@ public class AppController {
     }
 
     @GetMapping("/chat/{input}")
-    public String enterChataRoom(@PathVariable String input, Model model, Locale locale) {
+    public String enterChatRoom(@PathVariable String input, Model model, Locale locale) {
         int urlNumber;
         try {
             urlNumber = Integer.parseInt(input);

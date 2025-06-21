@@ -24,6 +24,4 @@ public class LocaleConfig {
         localeChangeInterceptor.setParamName("locale");
         return localeChangeInterceptor;
     }
-
-
 }
