@@ -34,5 +34,4 @@ public class ChatroomApplication implements WebMvcConfigurer {
 	public static void main(String[] args) {
 		SpringApplication.run(ChatroomApplication.class, args);
 	}
-
 }

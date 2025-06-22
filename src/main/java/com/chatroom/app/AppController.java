@@ -284,8 +284,8 @@ public class AppController {
                                              @DestinationVariable String roomId,
                                              SimpMessageHeaderAccessor headerAccessor) {
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(shutdownRequest.getTokenId(), roomId);
-        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+        //JwtUserDetails jwtUserDetails = jwtService.validateUserToken(shutdownRequest.getTokenId(), roomId);
+        if (isAdmin == null || !isAdmin) {
             throw new MessageDeliveryException("Unauthorized: Only admin can shutdown chat room.");
         } else {
             Room roomToBeDeleted = roomService.getRoom(roomId);
@@ -311,8 +311,4 @@ public class AppController {
         }
     }
 
-    /*@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public String handleTypeMismatch(MethodArgumentTypeMismatchException e) {
-        return "redirect:/denied";
-    }*/
 }

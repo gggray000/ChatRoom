@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class ChatController {
@@ -175,8 +176,8 @@ public class ChatController {
                                             @DestinationVariable String roomId,
                                             SimpMessageHeaderAccessor headerAccessor) {
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(getSummaryMessage.getTokenId(), roomId);
-        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+        //JwtUserDetails jwtUserDetails = jwtService.validateUserToken(getSummaryMessage.getTokenId(), roomId);
+        if (isAdmin == null || !isAdmin) {
             throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
         }
         return getSummaryMessage;
@@ -188,8 +189,8 @@ public class ChatController {
                                             @DestinationVariable String roomId,
                                             SimpMessageHeaderAccessor headerAccessor) {
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(getSummaryMessage.getTokenId(), roomId);
-        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+        //JwtUserDetails jwtUserDetails = jwtService.validateUserToken(getSummaryMessage.getTokenId(), roomId);
+        if (isAdmin == null || !isAdmin) {
             throw new MessageDeliveryException("Unauthorized: Only admin can generate summary");
         }
 
@@ -213,7 +214,7 @@ public class ChatController {
             @RequestHeader(value = "roomId") String roomId,
             @RequestHeader(value = "token") String token) {
         JwtUserDetails userDetails = jwtService.validateUserToken(token, roomId);
-        if (userDetails == null) {
+        if (userDetails == null || !Objects.equals(userDetails.getRoomId(), roomId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -236,11 +237,10 @@ public class ChatController {
     public void setUpTimer(@Payload WebSocketMessage updateTimeMessage,
                            @DestinationVariable("roomId") String roomId,
                            SimpMessageHeaderAccessor headerAccessor) {
-        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(updateTimeMessage.getTokenId(), roomId);
+        //JwtUserDetails jwtUserDetails = jwtService.validateUserToken(updateTimeMessage.getTokenId(), roomId);
         Boolean isAdmin = (Boolean) headerAccessor.getSessionAttributes().get("isAdmin");
-
         int timeLimit = updateTimeMessage.getTimeInSeconds();
-        if (isAdmin == null || !isAdmin || !jwtUserDetails.isAdmin()) {
+        if (isAdmin == null || !isAdmin) {
             throw new MessageDeliveryException("Unauthorized: Only admin can set timer.");
         }
         timeService.setUpRoomTimer(roomId, timeLimit);
