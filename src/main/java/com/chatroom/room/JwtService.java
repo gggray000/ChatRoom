@@ -3,6 +3,7 @@ package com.chatroom.room;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,7 @@ public class JwtService {
     private String secret;
 
 
-    public String generateUserToken(String username, String roomId, boolean isAdmin) {
+    public String generateUserToken(String username, String roomId, boolean isAdmin, boolean isHuman) {
         long expirationInMs = 60 * 60 * 1000;
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationInMs);
@@ -29,13 +30,16 @@ public class JwtService {
                 .setId(UUID.randomUUID().toString())
                 .claim("roomId", roomId)
                 .claim("isAdmin", isAdmin)
+                .claim("isHuman", isHuman)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 
-    public JwtUserDetails validateUserToken(String tokenId, String roomId) {
+    public JwtUserDetails validateUserToken(@Nullable String tokenId, String roomId) {
+        if (tokenId == null) return null;
+
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secret)
@@ -45,15 +49,17 @@ public class JwtService {
             String roomIdInToken = claims.get("roomId", String.class);
             String username = claims.getSubject();
             boolean isAdmin = claims.get("isAdmin", Boolean.class);
+            boolean isHuman = claims.get("isHuman", Boolean.class);
 
-            logger.info("Token validation - Room: {}, User: {}, Admin: {}",
-                    roomIdInToken, username, isAdmin);
+            logger.info("Token validation - Room: {}, User: {}, Admin: {}, isHuman: {}",
+                    roomIdInToken, username, isAdmin, isHuman);
 
             JwtUserDetails jwtUserDetails = new JwtUserDetails(
                     claims.getSubject(),
                     claims.getId(),
                     claims.get("roomId", String.class),
-                    claims.get("isAdmin", Boolean.class));
+                    claims.get("isAdmin", Boolean.class),
+                    claims.get("isHuman", Boolean.class));
 
             if (!jwtUserDetails.getRoomId().equals(roomId)) {
                 logger.warn("Room ID mismatch: token has {}, but got {}", jwtUserDetails.getRoomId(), roomId);

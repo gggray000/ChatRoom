@@ -1,7 +1,8 @@
 import {elements} from './modules/dom-elements.js';
 
+var isHuman = false;
+
 document.addEventListener('DOMContentLoaded', function() {
-    localStorage.setItem('isHuman', 'false');
 
     elements.capWidget.addEventListener("solve", function (e) {
         fetch('/captcha', {
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 token: e.detail.token
             })
         }).then(response => {
-            if (response.ok) localStorage.setItem('isHuman', 'true')
+            if (response.ok) isHuman = true;
         })
     })
 
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        if (localStorage.getItem('isHuman') === 'false') {
+        if (!isHuman) {
             alert(i18next.t('admin_page.cap_failed'))
             return
         }
@@ -62,7 +63,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(setPromptResponse.statusText);
             }
 
-            localStorage.setItem('isAdmin', true);
+            localStorage.removeItem('userToken')
+            generateAdminJWT(roomData.roomId);
+
+
             const urlId = roomData.url.split('/').pop();
             const confirmUrl = `/admin/confirm?name=${roomName}&id=${roomData.roomId}&url=${urlId}&locale=${currentLocale}`;
             window.open(confirmUrl, '_blank');
@@ -71,6 +75,27 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(i18next.t('admin_page.fail_create', {error}));
         }
     }
+
+    async function generateAdminJWT(roomId) {
+        const response = await fetch('/admin/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: "admin",
+                roomId: roomId,
+                isAdmin: true,
+                isHuman: isHuman
+            })
+        });
+        if (!response.ok) {
+            throw new Error('Failed to get admin token');
+        }
+        const token = await response.text();
+        localStorage.setItem('userToken', token);
+    }
+
 
     function updateTimerDisplay(value) {
         const timerDisplay = document.getElementById('timer-display');

@@ -1,16 +1,18 @@
 package com.chatroom.room;
 
 public class JwtUserDetails {
-    private String username;
-    private String tokenId;
-    private String roomId;
+    private final String username;
+    private final String tokenId;
+    private final String roomId;
     private final boolean isAdmin;
+    private final boolean isHuman;
 
-    public JwtUserDetails(String username, String tokenId, String roomId, boolean isAdmin) {
+    public JwtUserDetails(String username, String tokenId, String roomId, boolean isAdmin, boolean isHuman) {
         this.username = username;
         this.tokenId = tokenId;
         this.roomId = roomId;
         this.isAdmin = isAdmin;
+        this.isHuman = isHuman;
     }
 
     public String getUsername() {
@@ -26,4 +28,8 @@ public class JwtUserDetails {
     }
 
     public boolean isAdmin() { return isAdmin; }
+
+    public boolean isHuman() {
+        return isHuman;
+    }
 }

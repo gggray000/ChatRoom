@@ -66,7 +66,6 @@ export class WebSocketService {
         const getHistoryRequest = {
             sender: this.username,
             messageType: 'GET_HISTORY',
-            tokenId: localStorage.getItem('userToken')
         };
 
         this.stompClient.send(
@@ -94,7 +93,7 @@ export class WebSocketService {
         if (this.stompClient) {
             this.stompClient.disconnect();
         }
-        localStorage.clear();
+        localStorage.removeItem('username');
 
         elements.chatPage.classList.add('hidden');
         elements.usernamePage.classList.remove('hidden');
@@ -117,7 +116,6 @@ export class WebSocketService {
                 sender: this.username,
                 content: messageContent,
                 messageType: 'CHAT',
-                tokenId: localStorage.getItem('userToken')
             };
             this.stompClient.send(
                 `/app/chat/${this.roomId}/sendMessage`,
@@ -132,7 +130,6 @@ export class WebSocketService {
             const typingMessage = {
                 sender: this.username,
                 messageType: isTyping ? 'TYPING' : 'TYPING_STOPPED',
-                tokenId: localStorage.getItem('userToken')
             };
             this.stompClient.send(
                 `/app/chat/${this.roomId}/sendMessage`,

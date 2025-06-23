@@ -13,26 +13,35 @@ const timerMinutes = window.TIMER_MINUTES || 0;
 const timerSeconds = window.TIMER_SECONDS || 0;
 const webSocketService = new WebSocketService(userListService);
 const inputHandler = new InputHandler(webSocketService);
-const isAdmin = document.referrer.includes('/admin') ||
-    localStorage.getItem('isAdmin') === 'true';
+var isAdmin = false;
+var isHuman = false;
+var userToken = (localStorage.getItem('userToken') === null ? "" : localStorage.getItem('userToken'));
 
-localStorage.setItem('isHuman', 'false');
+document.addEventListener('DOMContentLoaded', async () => {
+    await verifyIdentity();
+    initializeEventListeners();
+    if (userToken && isHuman && localStorage.getItem('roomId') === roomId && localStorage.getItem('username') !== null) {
+        await connect()
+    }
+    ;
+});
 
-if (isAdmin) {
-    elements.capWidget.style.display = "none";
-    localStorage.setItem('isHuman', 'true');
-} else {
-    elements.capWidget.addEventListener("solve", function (e) {
-        fetch('/captcha', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                token: e.detail.token
-            })
-        }).then(response => {
-            if (response.ok) localStorage.setItem('isHuman', 'true')
-        })
-    })
+async function verifyIdentity() {
+    const response = await fetch(`/admin/${roomId}/verifyIdentity`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${userToken}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to verify identity');
+    }
+
+    const parsedResponse = await response.json();
+    isAdmin = (parsedResponse.isAdmin === "true");
+    isHuman = (parsedResponse.isHuman === "true");
+
 }
 
 async function connect(event) {
@@ -49,13 +58,13 @@ async function connect(event) {
         return;
     }
 
-    if (localStorage.getItem('isHuman') === 'false') {
+    if (isHuman === false) {
         alert(i18next.t('username_page.cap_failed'))
         return
     }
 
     try {
-        const verifyResponse = await fetch(`/chat/${roomId}/verifyUsername`, {
+        const usernameResponse = await fetch(`/chat/${roomId}/verifyUsername`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,52 +74,51 @@ async function connect(event) {
             })
         });
 
-        if (!verifyResponse.ok) {
+        if (!usernameResponse.ok) {
             throw new Error('Failed to verify username.');
         }
 
-        const verifiedUsername = await verifyResponse.text();
+        const verifiedUsername = await usernameResponse.text();
         console.log("Verified username: " + verifiedUsername);
         localStorage.setItem('username', verifiedUsername);
 
+        // Admin already has token before. Only get new token for normal users. But no need to get token when users are refreshing the page.
+        if (!isAdmin && !localStorage.getItem('userToken')) {
+            const response = await fetch('/admin/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: verifiedUsername,
+                    roomId: roomId,
+                    isAdmin: false,
+                    isHuman: true
+                })
+            });
 
-            // Only get new token if we don't have one or if this is a new connection
-            if (!localStorage.getItem('userToken') || event) {
-                const response = await fetch('/admin/token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username: verifiedUsername,
-                        roomId: roomId,
-                        isAdmin: isAdmin
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to get token');
-                }
-
-                const token = await response.text();
-                localStorage.setItem('userToken', token);
-                localStorage.setItem('isAdmin', isAdmin.toString());
-                localStorage.setItem('roomId', roomId);
+            if (!response.ok) {
+                throw new Error('Failed to get token');
             }
 
-            elements.usernamePage.classList.add('hidden');
-            elements.chatPage.classList.remove('hidden');
-            document.querySelector('.chat-header h2').textContent = roomName;
+            const token = await response.text();
+            localStorage.setItem('userToken', token);
+        }
 
-            if (localStorage.getItem('isAdmin') === 'true') {
-                elements.buttonContainerAdmin.classList.remove('hidden');
-            } else {
-                elements.buttonContainerUser.classList.remove('hidden');
-            }
+        elements.usernamePage.classList.add('hidden');
+        elements.chatPage.classList.remove('hidden');
+        document.querySelector('.chat-header h2').textContent = roomName;
+
+        if (isAdmin) {
+            elements.buttonContainerAdmin.classList.remove('hidden');
+        } else {
+            elements.buttonContainerUser.classList.remove('hidden');
+        }
 
         await webSocketService.connect(verifiedUsername, roomId);
+        localStorage.setItem('roomId', roomId);
 
-        const timer = new Timer(roomId, parseInt(timerMinutes), parseInt(timerSeconds));
+        const timer = new Timer(roomId, parseInt(timerMinutes), parseInt(timerSeconds), isAdmin);
         timer.initialize();
         webSocketService.setTimer(timer);
 
@@ -118,7 +126,6 @@ async function connect(event) {
             timer.setOnTimerAction((actionType, timeInSeconds) => {
                 const message = {
                     sender: localStorage.getItem('username'),
-                    tokenId: localStorage.getItem('userToken'),
                     roomId: roomId,
                     messageType: actionType,
                     timeInSeconds: timeInSeconds
@@ -158,42 +165,45 @@ function initializeEventListeners() {
     elements.usernameForm.addEventListener('submit', connect, true);
     elements.nickNameButton.addEventListener('click', getRandomName);
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const roomId = window.ROOM_ID;
-        const existingUsername = localStorage.getItem('username');
-        const existingToken = localStorage.getItem('userToken');
-
-        if (existingUsername && existingToken && roomId === localStorage.getItem('roomId')) {
-            connect();
-        }
-
-        elements.sidebarToggle.addEventListener('click', () => {
-            elements.userListSidebar.classList.toggle('expanded');
-        });
-        elements.messageInput.addEventListener('input', (e) => inputHandler.autoResizeInput(e));
-        elements.messageInput.addEventListener('input', () => inputHandler.handleTyping());
-        elements.messageInput.addEventListener('keydown', (e) => inputHandler.handleKeyPress(e));
-        elements.messageForm.addEventListener('submit', sendMessage);
-        elements.summarizeButton.addEventListener('click', () => webSocketService.generateSummary());
-        elements.disconnectButton.addEventListener('click', () => {
-            let warning = i18next.t('chat_page.disconnect_confirm')
-            if (confirm(warning)) {
-                webSocketService.disconnect();
-            }
-        });
-        elements.disconnectButtonUser.addEventListener('click', () => {
-            let warning = i18next.t('chat_page.disconnect_confirm')
-            if (confirm(warning)) {
-                webSocketService.disconnect();
-            }
-        });
-        elements.shutdownButton.addEventListener('click', () => {
-            let warning = i18next.t('chat_page.shutdown_confirm')
-            if (confirm(warning)) {
-                webSocketService.shutdownRoom();
-            }
+    if (isAdmin) {
+        elements.capWidget.style.display = "none";
+    } else {
+        elements.capWidget.addEventListener("solve", function (e) {
+            fetch('/captcha', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    token: e.detail.token
+                })
+            }).then(response => {
+                if (response.ok) isHuman = true;
+            })
         })
+    }
+    elements.sidebarToggle.addEventListener('click', () => {
+        elements.userListSidebar.classList.toggle('expanded');
     });
-}
-
-initializeEventListeners();
+    elements.messageInput.addEventListener('input', (e) => inputHandler.autoResizeInput(e));
+    elements.messageInput.addEventListener('input', () => inputHandler.handleTyping());
+    elements.messageInput.addEventListener('keydown', (e) => inputHandler.handleKeyPress(e));
+    elements.messageForm.addEventListener('submit', sendMessage);
+    elements.summarizeButton.addEventListener('click', () => webSocketService.generateSummary());
+    elements.disconnectButton.addEventListener('click', () => {
+        let warning = i18next.t('chat_page.disconnect_confirm')
+        if (confirm(warning)) {
+            webSocketService.disconnect();
+        }
+    });
+    elements.disconnectButtonUser.addEventListener('click', () => {
+        let warning = i18next.t('chat_page.disconnect_confirm')
+        if (confirm(warning)) {
+            webSocketService.disconnect();
+        }
+    });
+    elements.shutdownButton.addEventListener('click', () => {
+        let warning = i18next.t('chat_page.shutdown_confirm')
+        if (confirm(warning)) {
+            webSocketService.shutdownRoom();
+        }
+    })
+};

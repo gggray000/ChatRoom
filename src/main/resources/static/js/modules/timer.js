@@ -1,12 +1,13 @@
 import i18next from "./i18n.js";
 
 export class Timer {
-    constructor(roomId, timerMinutes = 0, timerSeconds = 0) {
+    constructor(roomId, timerMinutes = 0, timerSeconds = 0, isAdmin) {
         this.totalSeconds = (timerMinutes * 60) + timerSeconds;
         this.timerButton = document.querySelector('#timerBtn');
         this.minutesDisplay = document.querySelector('.minutes');
         this.secondsDisplay = document.querySelector('.seconds');
         this.roomId = roomId;
+        this.isAdmin = isAdmin;
         this.timerState = null;
     }
 
@@ -14,7 +15,7 @@ export class Timer {
         if (this.totalSeconds === 0) {
             document.querySelector('.countdown').style.display = 'none';
             this.timerButton.style.display = 'none';
-        } else if (localStorage.getItem('isAdmin') === 'true') {
+        } else if (this.isAdmin) {
             this.timerButton.addEventListener('click', () => this.onClick());
 
             switch (this.timerState) {
@@ -82,7 +83,7 @@ export class Timer {
     }
 
     terminate() {
-        if (localStorage.getItem('isAdmin') === 'true') {
+        if (this.isAdmin) {
             this.onTimerAction('TIMES_UP', this.totalSeconds);
         }
         localStorage.setItem('timerState', 'terminated')

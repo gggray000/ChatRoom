@@ -81,10 +81,11 @@ public class RoomTests {
     void testJwtService() {
         JwtService jwtService = new JwtService();
         ReflectionTestUtils.setField(jwtService, "secret", "chat-room-validate");
-        String token1 = jwtService.generateUserToken("Admin", "001", true);
+        String token1 = jwtService.generateUserToken("Admin", "001", true, true);
         System.out.println(token1);
         JwtUserDetails jwtUserDetails = jwtService.validateUserToken(token1, "001");
         assertTrue(jwtUserDetails.isAdmin());
+        assertTrue(jwtUserDetails.isHuman());
         // test token forgery
         String token2 = token1 + "admin";
         assertNull(jwtService.validateUserToken(token2, "001"));

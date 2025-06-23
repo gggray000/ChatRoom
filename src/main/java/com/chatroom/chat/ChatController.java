@@ -80,7 +80,7 @@ public class ChatController {
                                     SimpMessageHeaderAccessor headerAccessor) {
 
         String tokenId = webSocketMessage.getTokenId();
-        logger.info("Adding user to room {} with token {}", roomId, tokenId);
+        logger.info("Adding user {} to room {} with token {}", webSocketMessage.getSender(), roomId, tokenId);
 
         JwtUserDetails userDetails = jwtService.validateUserToken(tokenId, roomId);
 
@@ -92,6 +92,7 @@ public class ChatController {
                     roomService.getRoom(roomId).getUsers().size());
 
             headerAccessor.getSessionAttributes().put("username", webSocketMessage.getSender());
+            System.out.println("Right now header is: " + headerAccessor.getSessionAttributes().get("username").toString());
             headerAccessor.getSessionAttributes().put("roomId", roomId);
             headerAccessor.getSessionAttributes().put("tokenId", tokenId);
             headerAccessor.getSessionAttributes().put("isAdmin", userDetails.isAdmin());
@@ -155,9 +156,12 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/{roomId}/history")
-    public void displayHistory(@DestinationVariable String roomId,
+    public void displayHistory(@Payload WebSocketMessage webSocketMessage,
+                               @DestinationVariable String roomId,
                                SimpMessageHeaderAccessor headerAccessor) {
-        String username = headerAccessor.getSessionAttributes().get("username").toString();
+        String username = webSocketMessage.getSender();
+        logger.info("User: {} trying to get history.", username);
+        logger.info("History sent to: {}", "/topic/private/" + roomId + "/" + username);
         List<WebSocketMessage> history = webSocketMessageService.exportMessages(roomId);
         if (!history.isEmpty()) {
             simpMessagingTemplate.convertAndSend(

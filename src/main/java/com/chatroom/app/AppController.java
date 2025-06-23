@@ -259,6 +259,7 @@ public class AppController {
             String username = request.get("username");
             String roomId = request.get("roomId");
             boolean isAdmin = request.get("isAdmin") != null && Boolean.parseBoolean(request.get("isAdmin"));
+            boolean isHuman = request.get("isHuman") != null && Boolean.parseBoolean(request.get("isHuman"));
 
             if (username == null || roomId == null) {
                 return ResponseEntity.badRequest().body("Username and roomId are required");
@@ -270,12 +271,25 @@ public class AppController {
             }
 
             // Generate token with isAdmin flag
-            String token = jwtService.generateUserToken(username, roomId, isAdmin);
+            String token = jwtService.generateUserToken(username, roomId, isAdmin, isHuman);
             return ResponseEntity.ok(token);
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body("Error generating token: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/admin/{roomId}/verifyIdentity")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> verifyIdentity(HttpServletRequest request,
+                                                              @PathVariable String roomId) {
+        String token = request.getHeader("Authorization").replace("Bearer", "").trim();
+        JwtUserDetails jwtUserDetails = jwtService.validateUserToken(token, roomId);
+        Map<String, String> response = new HashMap<>();
+
+        response.put("isAdmin", (jwtUserDetails == null || !jwtUserDetails.isAdmin()) ? "false" : "true");
+        response.put("isHuman", (jwtUserDetails == null || !jwtUserDetails.isHuman()) ? "false" : "true");
+        return ResponseEntity.ok(response);
     }
 
     @MessageMapping("/admin/{roomId}/shutdown")

@@ -72,6 +72,7 @@ public class TimeService {
             deleteRoomTime(roomId);
         } else {
             System.out.println("No active timer found for room: " + roomId);
+            return;
         }
 
         WebSocketMessage message = WebSocketMessage.builder()
