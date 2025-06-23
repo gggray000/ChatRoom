@@ -93,8 +93,6 @@ export class WebSocketService {
         if (this.stompClient) {
             this.stompClient.disconnect();
         }
-        localStorage.removeItem('username');
-
         elements.chatPage.classList.add('hidden');
         elements.usernamePage.classList.remove('hidden');
         elements.messageArea.innerHTML = '';
