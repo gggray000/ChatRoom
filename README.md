@@ -1,6 +1,19 @@
 # ChatRoom
 
-A web application for real-time anonymous group discussions with built-in AI summarization and PDF export capabilities, ideal for classroom discussions, brainstorming, and workshops.
+A web application for real-time, anonymous group discussions with built-in AI summarization, PDF export, admin controls, and other features—ideal for classroom discussions, brainstorming sessions, and workshops.
+
+This project is built using technologies such as Spring Boot, WebSocket, JWT, LangChain4j, Ollama, Docker, Nginx, and more (see acknowledgements below for details).
+
+<h2>Preview</h2>
+<h4>Set up and landing page</h4>
+<img width="300" alt="Screenshot 2025-06-30 at 16 10 34" src="https://github.com/user-attachments/assets/69c1772c-26fa-45fb-afac-efb68f715d25" />
+<img width="300" alt="Screenshot 2025-06-30 at 16 07 42" src="https://github.com/user-attachments/assets/eabaf58a-fe8e-4e7e-958c-a4957fc172c1" />
+<img width="300" alt="Screenshot 2025-06-30 at 16 08 01" src="https://github.com/user-attachments/assets/854bce20-d005-454a-86e8-a3c86328d4bb" />
+<img width="300" alt="Screenshot 2025-06-30 at 16 08 20" src="https://github.com/user-attachments/assets/739f130a-bba4-4228-b8a1-7b3c9ff7609f" />
+<h4>Inside the Chatroom</h4>
+<img width="1200" alt="Screenshot 2025-06-30 at 16 10 09" src="https://github.com/user-attachments/assets/548dbdef-f302-403d-bf7e-73125c163ed0" />
+
+
 
 <h2>TODO</h2>
 <h3>Short-term</h3>
