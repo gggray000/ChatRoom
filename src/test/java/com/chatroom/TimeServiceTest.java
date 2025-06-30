@@ -15,7 +15,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,17 +54,19 @@ class TimeServiceTest {
 
     @Test
     void testMultipleTimer() {
-        timeService.getTimersOfRooms().put(roomId, mock(ScheduledFuture.class));
+        timeService.getTimersOfRooms().put(roomId, mock(Thread.class));
         timeService.setUpRoomTimer(roomId, 60);
         verify(messagingTemplate, never()).convertAndSend((String) eq("/topic/public/" + roomId), (Object) any());
     }
 
     @Test
     void testStopRoomTimer() {
-        ScheduledFuture<?> mockFuture = mock(ScheduledFuture.class);
-        timeService.getTimersOfRooms().put(roomId, mockFuture);
+        Thread mockTimerThread = mock(Thread.class);
+        timeService.setTimeForRoom(roomId, 300);
+        timeService.getTimersOfRooms().put(roomId, mockTimerThread);
         timeService.stopRoomTimer(roomId, true);
-        verify(mockFuture).cancel(true);
+        verify(mockTimerThread).interrupt();
+        assertEquals(300, timeService.getTimeForRoom(roomId)); // Test if the time is still persisted after thread being interrupted.
 
         ArgumentCaptor<Object> messageCaptor = ArgumentCaptor.forClass(Object.class);
         verify(messagingTemplate).convertAndSend(eq("/topic/public/" + roomId), messageCaptor.capture());

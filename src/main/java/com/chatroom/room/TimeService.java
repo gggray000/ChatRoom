@@ -7,7 +7,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class TimeService {
@@ -15,17 +15,14 @@ public class TimeService {
     @Getter
     private Map<String, Integer> timesOfRooms;
     @Getter
-    private Map<String, ScheduledFuture<?>> timersOfRooms;
+    private Map<String, Thread> timersOfRooms;
     private final RoomService roomService;
-    private final int threadsLimit = Runtime.getRuntime().availableProcessors();
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(threadsLimit);
 
     public TimeService(RoomService roomService, SimpMessagingTemplate simpMessagingTemplate) {
         this.timesOfRooms = new ConcurrentHashMap<>();
         this.timersOfRooms = new ConcurrentHashMap<>();
         this.roomService = roomService;
         this.simpMessagingTemplate = simpMessagingTemplate;
-        System.out.println("Thread Limits: " + threadsLimit);
     }
 
     public void setUpRoomTimer(String roomId, int timeInSeconds) {
@@ -34,29 +31,25 @@ public class TimeService {
             return;
         }
 
-        final Runnable timer = new Runnable() {
-            @Override
-            public void run() {
-                int remainingTime = getTimeForRoom(roomId);
-                if (remainingTime == 0) {
-                    stopRoomTimer(roomId, true);
-                    return;
+        Thread timerThread = Thread.startVirtualThread(() -> {
+            try {
+                while (getTimeForRoom(roomId) > 0) {
+                    Thread.sleep(1000); // Wait 1 second
+                    int newTime = getTimeForRoom(roomId) - 1;
+                    setTimeForRoom(roomId, newTime);
+
+                    WebSocketMessage message = WebSocketMessage.builder()
+                            .messageType(MessageType.UPDATE_TIME)
+                            .timeInSeconds(newTime)
+                            .build();
+                    simpMessagingTemplate.convertAndSend("/topic/public/" + roomId, message);
                 }
-                int newTime = remainingTime - 1;
-                setTimeForRoom(roomId, newTime);
-
-                WebSocketMessage message = WebSocketMessage.builder()
-                        .messageType(MessageType.UPDATE_TIME)
-                        .timeInSeconds(newTime)
-                        .build();
-                simpMessagingTemplate.convertAndSend("/topic/public/" + roomId, message);
+                stopRoomTimer(roomId, true);
+            } catch (InterruptedException e) {
+                System.out.println("Timer for room " + roomId + " interrupted.");
             }
-        };
-        setTimeForRoom(roomId, timeInSeconds);
-
-        final ScheduledFuture<?> timerHandler =
-                scheduler.scheduleAtFixedRate(timer, 0, 1, TimeUnit.SECONDS);
-        timersOfRooms.put(roomId, timerHandler);
+        });
+        timersOfRooms.put(roomId, timerThread);
 
         WebSocketMessage message = WebSocketMessage.builder()
                 .messageType(MessageType.TIMER_START)
@@ -65,11 +58,10 @@ public class TimeService {
     }
 
     public void stopRoomTimer(String roomId, boolean ifTimesUp) {
-        ScheduledFuture<?> future = timersOfRooms.get(roomId);
-        if (future != null) {
-            future.cancel(true);
+        Thread timerThread = timersOfRooms.get(roomId);
+        if (timerThread != null) {
+            timerThread.interrupt();
             timersOfRooms.remove(roomId);
-            deleteRoomTime(roomId);
         } else {
             System.out.println("No active timer found for room: " + roomId);
             return;
@@ -80,7 +72,6 @@ public class TimeService {
                 .build();
         simpMessagingTemplate.convertAndSend("/topic/public/" + roomId, message);
     }
-
 
     public void setTimeForRoom(String roomId, int timeInSeconds) {
         if (roomService.getAllRooms().containsKey(roomId)) {

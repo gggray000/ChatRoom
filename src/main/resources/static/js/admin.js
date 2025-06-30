@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('userToken')
             generateAdminJWT(roomData.roomId);
 
-
             const urlId = roomData.url.split('/').pop();
             const confirmUrl = `/admin/confirm?name=${roomName}&id=${roomData.roomId}&url=${urlId}&locale=${currentLocale}`;
             window.open(confirmUrl, '_blank');
