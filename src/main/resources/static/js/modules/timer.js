@@ -8,7 +8,7 @@ export class Timer {
         this.secondsDisplay = document.querySelector('.seconds');
         this.roomId = roomId;
         this.isAdmin = isAdmin;
-        this.timerState = null;
+        this.timerState = localStorage.getItem('timerState') === null ? null : localStorage.getItem('timerState');
     }
 
     initialize() {
