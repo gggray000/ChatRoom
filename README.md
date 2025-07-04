@@ -23,6 +23,7 @@ This project is built using technologies such as Spring Boot, WebSocket, JWT, La
 
 <h3>Long-term</h3>
 
+1. Support image message type, using [open-source JS libraries](https://github.com/editor-js/image).<br>
 1. Timer improvement or re-implementation.<br>
 2. JPA implementation.<br>
 3. ChatBot Moderation.<br>
