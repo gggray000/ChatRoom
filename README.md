@@ -11,8 +11,7 @@ This project is built using technologies such as Spring Boot, WebSocket, JWT, La
 <img width="300" alt="Screenshot 2025-06-30 at 16 08 01" src="https://github.com/user-attachments/assets/854bce20-d005-454a-86e8-a3c86328d4bb" />
 <img width="300" alt="Screenshot 2025-06-30 at 16 08 20" src="https://github.com/user-attachments/assets/739f130a-bba4-4228-b8a1-7b3c9ff7609f" />
 <h4>Inside the Chatroom</h4>
-<img width="1200" alt="Screenshot 2025-06-30 at 16 10 09" src="https://github.com/user-attachments/assets/548dbdef-f302-403d-bf7e-73125c163ed0" />
-
+<img width="1200" alt="Screenshot 2025-06-30 at 16 10 09" src="https://github.com/user-attachments/assets/d7b72b04-9af7-4c43-beef-dd07809bb75f" />
 
 
 <h2>TODO</h2>
@@ -22,8 +21,6 @@ This project is built using technologies such as Spring Boot, WebSocket, JWT, La
 2. Configure the domain with Cloudflare again but with Nginx, and keep WebSocket working.<br>
 
 <h3>Long-term</h3>
-
-1. Support image message type, using [open-source JS libraries](https://github.com/editor-js/image).<br>
 1. Timer improvement or re-implementation.<br>
 2. JPA implementation.<br>
 3. ChatBot Moderation.<br>
@@ -32,6 +29,8 @@ This project is built using technologies such as Spring Boot, WebSocket, JWT, La
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
+<h3>v0,9.23</h3>
+Supported rich text messages.
 <h3>v0.9.22</h3>
 Implemented CAPTCHA features.<br>
 <h3>v0.9.21</h3>
@@ -176,6 +175,10 @@ Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=Tyw
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in <code>main.js</code>.
 
 <h2>Acknowledgement</h2>
+@KaTex<br>
+<URL>https://github.com/KaTeX/KaTeX</URL><br>
+@slab<br>
+<URL>https://github.com/slab/quill</URL><br>
 @tiagorangel1<br>
 <URL>https://github.com/tiagorangel1/cap</URL><br>
 @i18next<br>
