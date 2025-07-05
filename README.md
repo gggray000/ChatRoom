@@ -1,6 +1,6 @@
 # ChatRoom
 
-A web application for real-time, anonymous group discussions with built-in AI summarization, PDF export, admin controls, and other features—ideal for classroom discussions, brainstorming sessions, and workshops.
+A web application for real-time, anonymous group discussions with built-in rich text editor, AI summarization, PDF export, admin controls, and other features—ideal for classroom discussions, brainstorming sessions, and workshops.
 
 This project is built using technologies such as Spring Boot, WebSocket, JWT, LangChain4j, Ollama, Docker, Nginx, and more (see acknowledgements below for details).
 
