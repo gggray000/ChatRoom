@@ -4,7 +4,6 @@ export const elements = {
     usernameForm: document.querySelector('#usernameForm'),
     nickNameButton: document.querySelector('.nickname-generate'),
     messageForm: document.querySelector('#messageForm'),
-    messageInput: document.querySelector('#textArea'),
     messageArea: document.querySelector('#messageArea'),
     connectingElement: document.querySelector('.connecting'),
     userInfoRow: document.querySelector('#user-info'),

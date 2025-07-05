@@ -487,7 +487,6 @@ button:hover {
 .chat-message span {
     font-weight: 600;
     margin-bottom: 0.25rem;
-    display: block;
 }
 
 .chat-message p {
@@ -510,31 +509,37 @@ button:hover {
 
 .input-group {
     display: flex;
-    align-items: flex-end;
     gap: 12px;
 }
 
-#textArea {
-    resize: none;
-    min-height: 40px;
-    max-height: 120px;
-    overflow-y: auto;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+.quill {
+    display: grid;
+    grid-template-rows: auto auto;
+    background-color: white;
     width: calc(100% - 120px);
-    font-family: inherit;
-    font-size: 1rem;
-    margin-right: -1rem;
 }
 
-#messageForm button {
+.quill #toolbar {
+    max-height: 2.5rem;
+}
+
+.quill #editor {
+    min-height: 40px;
+    max-height: 120px;
+}
+
+#messageForm #toolbar button {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+#messageForm #send-button {
     width: 80px;
-    height: 40px;
+    height: fit-content;
     padding: 8px 16px;
     white-space: nowrap;
     flex-shrink: 0;
-    margin-left: 1.5rem;
+    margin-left: 1rem;
 }
 
 .hidden {
@@ -592,11 +597,6 @@ button:hover {
 
     #messageForm {
         padding: 0.5rem;
-    }
-
-    #textArea {
-        width: calc(100% - 90px);
-        min-height: 40px;
     }
 
     .input-group {

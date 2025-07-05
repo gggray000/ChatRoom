@@ -13,6 +13,17 @@ const timerMinutes = window.TIMER_MINUTES || 0;
 const timerSeconds = window.TIMER_SECONDS || 0;
 const webSocketService = new WebSocketService(userListService);
 const inputHandler = new InputHandler(webSocketService);
+const quillPlaceHolder = i18next.t('chat_page.editor');
+const quill = new Quill('#editor', {
+    modules: {
+        toolbar: {
+            container: '#toolbar',
+            handlers: {image: imageHandler}
+        }
+    },
+    placeholder: quillPlaceHolder,
+    theme: 'snow',
+});
 var isAdmin = false;
 var isHuman = false;
 var userToken = (localStorage.getItem('userToken') === null ? "" : localStorage.getItem('userToken'));
@@ -147,12 +158,77 @@ async function connect(event) {
 
 function sendMessage(event) {
     event.preventDefault();
-    const messageContent = elements.messageInput.value.trim();
+    const messageContent = quill.getSemanticHTML(0, quill.getLength());
     if (messageContent) {
-        webSocketService.sendMessage(messageContent);
-        elements.messageInput.value = '';
-        elements.messageInput.style.height = 'auto';
+        if (messageContent === "<p></p>") alert(i18next.t('chat_page.null_message'));
+        const transformed = messageContent.replace(
+            /<span>(.*?)<\/span>/g,
+            (_, formula) => `$${formula.trim()}$`
+        );
+        webSocketService.sendMessage(transformed);
+        quill.deleteText(0, quill.getLength());
     }
+}
+
+function imageHandler() {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const resizedBlob = await resizeImage(file, 400); // Resize to max 800px width
+        const formData = new FormData();
+        formData.append('file', resizedBlob, file.name);
+
+        try {
+            const res = await fetch(`/chat/${roomId}/uploadImage`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (data.url) {
+                const range = quill.getSelection();
+                quill.insertEmbed(range.index, 'image', data.url);
+            }
+        } catch (err) {
+            alert('Image upload failed');
+        }
+    };
+}
+
+function resizeImage(file, maxWidth) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                const scale = Math.min(1, maxWidth / img.width);
+                const width = img.width * scale;
+                const height = img.height * scale;
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob(blob => {
+                    if (blob) resolve(blob);
+                    else reject(new Error('Resize failed'));
+                }, file.type);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
 
 function getRandomName(){
@@ -183,9 +259,14 @@ function initializeEventListeners() {
     elements.sidebarToggle.addEventListener('click', () => {
         elements.userListSidebar.classList.toggle('expanded');
     });
-    elements.messageInput.addEventListener('input', (e) => inputHandler.autoResizeInput(e));
-    elements.messageInput.addEventListener('input', () => inputHandler.handleTyping());
-    elements.messageInput.addEventListener('keydown', (e) => inputHandler.handleKeyPress(e));
+
+    quill.on('text-change', () => {
+        inputHandler.handleTyping()
+    })
+
+    if (typeof renderMathInElement === 'function') {
+        window.renderMathInElement = renderMathInElement;
+    }
     elements.messageForm.addEventListener('submit', sendMessage);
     elements.summarizeButton.addEventListener('click', () => webSocketService.generateSummary());
     elements.disconnectButton.addEventListener('click', () => {

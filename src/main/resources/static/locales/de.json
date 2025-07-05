@@ -25,7 +25,9 @@
   },
   "chat_page": {
     "disconnect_confirm": "Möchten Sie sich wirklich trennen oder den Benutzernamen ändern?",
-    "shutdown_confirm": "Dies wird den Chatroom schließen und alle Benutzer trennen sowie den Chatverlauf löschen. Sind Sie sicher?"
+    "shutdown_confirm": "Dies wird den Chatroom schließen und alle Benutzer trennen sowie den Chatverlauf löschen. Sind Sie sicher?",
+    "null_message": "Bitte geben Sie den Inhalt ein, bevor Sie eine Naricht senden.",
+    "editor": "Bitte klicken Sie auf den Button „Senden“, um die Nachricht zu senden."
   },
   "ws_msg": {
     "error": "Verbindung zum WebSocket-Server fehlgeschlagen. Bitte erneut versuchen!",

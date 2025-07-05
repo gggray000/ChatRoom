@@ -20,10 +20,15 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @Controller
 public class ChatController {
@@ -111,12 +116,21 @@ public class ChatController {
 
     public void removeUser(String username, String roomId) {
         if (roomId != null && roomService.getRoom(roomId) != null) {
-            roomService.getRoom(roomId)
-                         .getUsers()
+            Room room = roomService.getRoom(roomId);
+            int oldUserCount = room.getUsers().size();
+            room.getUsers()
                     .remove(roomService.findUser(roomId, username));
-            WebSocketMessage userListMessage =  updateUserList(roomId);
-            simpMessagingTemplate.convertAndSend(
-                    "/topic/public/" + roomId, userListMessage);
+            room.getPropertyChangeSupport()
+                    .firePropertyChange(
+                            "userCount changes",
+                            oldUserCount,
+                            room.getUsers().size()
+                    );
+            if (oldUserCount > 1) {
+                WebSocketMessage userListMessage = updateUserList(roomId);
+                simpMessagingTemplate.convertAndSend(
+                        "/topic/public/" + roomId, userListMessage);
+            }
         }
     }
 
@@ -153,6 +167,38 @@ public class ChatController {
             textMessageService.saveMessage(roomId, textMessage);
         }
         return webSocketMessage;
+    }
+
+    @PostMapping("/chat/{roomId}/uploadImage")
+    public ResponseEntity<Map<String, String>> uploadImage(@PathVariable("roomId") String roomId, @RequestBody MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "No file provided"));
+        }
+
+        try {
+            Room room = roomService.getRoom(roomId);
+            if (room == null) throw new Exception("Room does not exists");
+            // Generate safe file name
+            String originalName = file.getOriginalFilename();
+            String extension = originalName.substring(originalName.lastIndexOf('.'));
+            String fileName = UUID.randomUUID() + extension;
+            room.getImages().add(fileName);
+
+            Path uploadPath = Paths.get("uploads");
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(file.getInputStream(), filePath);
+
+            // Return public URL
+            String imageUrl = "/uploads/" + fileName;
+            return ResponseEntity.ok(Map.of("url", imageUrl));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to upload image"));
+        }
     }
 
     @MessageMapping("/chat/{roomId}/history")

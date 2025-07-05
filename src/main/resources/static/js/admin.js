@@ -1,4 +1,5 @@
 import {elements} from './modules/dom-elements.js';
+import i18next from './modules/i18n.js';
 
 var isHuman = false;
 
@@ -62,6 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!setPromptResponse.ok) {
                 throw new Error(setPromptResponse.statusText);
             }
+
+            if (localStorage.getItem('timerState') !== null) localStorage.removeItem('timerState');
 
             localStorage.removeItem('userToken')
             generateAdminJWT(roomData.roomId);

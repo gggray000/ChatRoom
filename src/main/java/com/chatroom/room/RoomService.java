@@ -2,6 +2,11 @@ package com.chatroom.room;
 
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -22,6 +27,7 @@ public class RoomService {
             }
             Room room = new Room(roomId, name);
             rooms.put(roomId, room);
+            room.addPropertyChangeListener(new Cleaner(this, roomId));
             return room;
         }
         return null;
@@ -51,9 +57,17 @@ public class RoomService {
 
     public void deleteRoom(String roomId) {
         if(rooms.get(roomId) != null){
+            List<String> uploadedImage = rooms.get(roomId).images;
+            for (String fileName : uploadedImage) {
+                Path imagePath = Paths.get("uploads", fileName);
+                try {
+                    Files.deleteIfExists(imagePath);
+                } catch (IOException e) {
+                    System.err.println("Failed to delete image: " + fileName + " - " + e.getMessage());
+                }
+            }
             rooms.remove(roomId);
         }
-
     }
 
     public Map<String, Room> getAllRooms() {

@@ -25,7 +25,9 @@
   },
   "chat_page": {
     "disconnect_confirm": "确定要退出聊天室或者前往更改昵称？",
-    "shutdown_confirm": "此按钮将关闭聊天室、下线所有用户并删除聊天记录，是否确定？"
+    "shutdown_confirm": "此按钮将关闭聊天室、下线所有用户并删除聊天记录，是否确定？",
+    "null_message": "请不要发送空白信息。",
+    "editor": "请点击“发送”按钮发送信息。"
   },
   "ws_msg": {
     "error": "无法连接WebSocket服务器，请重新尝试!",

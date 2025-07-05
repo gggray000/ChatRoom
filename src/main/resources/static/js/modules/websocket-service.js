@@ -1,5 +1,6 @@
 import {elements} from './dom-elements.js';
 import {createUserInfo} from './avatar-service.js';
+import renderMathInElement from "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.mjs";
 
 export class WebSocketService {
     constructor(userListService) {
@@ -209,10 +210,14 @@ export class WebSocketService {
         }
 
         if (message.content) {
-            const textElement = document.createElement('p');
-            textElement.style.whiteSpace = 'pre-wrap';
-            textElement.textContent = message.content;
-            messageElement.appendChild(textElement);
+            const messageContentElement = document.createElement('div')
+            messageContentElement.classList.add('html-content');
+            messageContentElement.innerHTML = DOMPurify.sanitize(message.content);
+            messageElement.appendChild(messageContentElement);
+            renderMathInElement(messageElement, {
+                delimiters: [
+                    {left: "$", right: "$", display: false}]
+            })
             elements.messageArea.appendChild(messageElement);
             elements.messageArea.scrollTop = elements.messageArea.scrollHeight;
         }
@@ -260,17 +265,20 @@ export class WebSocketService {
                 if (msg.messageType === 'SUMMARY') {
                     await this.handleSummaryAndPdf(this.roomId, msg);
                 } else {
-                    // Default handling for other message types
                     const messageElement = document.createElement('li');
                     messageElement.classList.add('chat-message');
                     const {avatarElement, usernameElement} = createUserInfo(msg.sender);
                     messageElement.appendChild(avatarElement);
                     messageElement.appendChild(usernameElement);
 
-                    const textElement = document.createElement('p');
-                    textElement.style.whiteSpace = 'pre-wrap';
-                    textElement.textContent = msg.content;
-                    messageElement.appendChild(textElement);
+                    const messageContentElement = document.createElement('div')
+                    messageContentElement.classList.add('html-content');
+                    messageContentElement.innerHTML = DOMPurify.sanitize(msg.content);
+                    messageElement.appendChild(messageContentElement);
+                    renderMathInElement(messageElement, {
+                        delimiters: [
+                            {left: "$", right: "$", display: false}]
+                    })
 
                     elements.messageArea.appendChild(messageElement);
                 }

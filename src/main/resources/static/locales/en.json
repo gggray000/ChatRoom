@@ -25,7 +25,9 @@
   },
   "chat_page": {
     "disconnect_confirm": "Are you sure to disconnect or change username?",
-    "shutdown_confirm": "This will terminate the chat room, disconnecting all users and deleting chat history, are you sure?"
+    "shutdown_confirm": "This will terminate the chat room, disconnecting all users and deleting chat history, are you sure?",
+    "null_message": "Please enter content before sending messages.",
+    "editor": "Please click 'Send' button to send message."
   },
   "ws_msg": {
     "error": "Could not connect to WebSocket server. Please refresh this page to try again!",
