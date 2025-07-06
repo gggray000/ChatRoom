@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (userToken && isHuman && localStorage.getItem('roomId') === roomId && localStorage.getItem('username') !== null) {
         await connect()
     }
-    ;
 });
 
 async function verifyIdentity() {
