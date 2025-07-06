@@ -11,7 +11,7 @@ This project is built using technologies such as Spring Boot, WebSocket, JWT, La
 <img width="300" alt="Screenshot 2025-06-30 at 16 08 01" src="https://github.com/user-attachments/assets/854bce20-d005-454a-86e8-a3c86328d4bb" />
 <img width="300" alt="Screenshot 2025-06-30 at 16 08 20" src="https://github.com/user-attachments/assets/739f130a-bba4-4228-b8a1-7b3c9ff7609f" />
 <h4>Inside the Chatroom</h4>
-<img width="1200" alt="Screenshot 2025-06-30 at 16 10 09" src="https://github.com/user-attachments/assets/d7b72b04-9af7-4c43-beef-dd07809bb75f" />
+<img width="1200" alt="Screenshot 2025-06-30 at 16 10 09" src="https://github.com/user-attachments/assets/7fe2cb38-213d-4814-a61f-d648a36c6fb6" />
 
 
 <h2>TODO</h2>
