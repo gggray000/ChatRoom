@@ -29,7 +29,7 @@ This project is built using technologies such as Spring Boot, WebSocket, JWT, La
 Migrate frontend to <code>React.js</code>.<br>
 
 <h2>Update Log</h2>
-<h3>v0,9.23</h3>
+<h3>v0.9.23</h3>
 Supported rich text messages.
 <h3>v0.9.22</h3>
 Implemented CAPTCHA features.<br>

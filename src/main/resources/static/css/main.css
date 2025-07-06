@@ -584,7 +584,11 @@ button:hover {
 }
 
 .event-message .disconnect {
-    color: #e74c3c; /* Red color */
+    color: #e74c3c;
+}
+
+.toggle-sidebar {
+    display: none;
 }
 
 @keyframes spin {
@@ -593,7 +597,6 @@ button:hover {
     }
 }
 
-/* Media Queries */
 @media screen and (max-width: 768px) {
 
     #messageForm {
@@ -603,11 +606,6 @@ button:hover {
     .input-group {
         gap: 8px;
         padding: 0 0.5rem;
-    }
-
-    #messageForm button {
-        width: 80px;
-        height: 40px;
     }
 
     .user-list-header {
@@ -765,11 +763,5 @@ button:hover {
     .main-chat-area {
         width: 100%;
         height: 100%;
-    }
-}
-
-@media screen and (min-width: 769px) {
-    .toggle-sidebar {
-        display: none;
     }
 }
