@@ -9,6 +9,12 @@ services:
     restart: unless-stopped
     depends_on:
       - chatroom-app
+  app:
+    build: .
+    environment:
+      - CHATROOM_PDF_STORAGE=/data/pdf-storage
+    volumes:
+      - ./pdf-storage:/data/pdf-storage
 
   chatroom-app:
     image: gggray000/chatroom:latest

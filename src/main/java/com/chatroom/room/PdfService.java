@@ -1,27 +1,39 @@
 package com.chatroom.room;
 
+import com.chatroom.chat.WebSocketMessageService;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.pdf.converter.PdfConverterExtension;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class PdfService {
-    final private static DataHolder OPTIONS = new MutableDataSet();
+    private static final DataHolder OPTIONS = new MutableDataSet();
     private final Path pdfStorageLocation;
+    private final WebSocketMessageService webSocketMessageService;
 
-    public PdfService() {
-        this.pdfStorageLocation = Paths.get("/Users/ganruilin/IdeaProjects/ChatRoom/pdf-storage");
-        // Create directory if it doesn't exist
+    private static final DateTimeFormatter TS_FMT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                    .withZone(ZoneId.systemDefault());
+
+    public PdfService(
+            @Value("${chatroom.pdf.storage:pdf-storage}") String storageDir,
+            WebSocketMessageService webSocketMessageService
+    ) {
+        this.pdfStorageLocation = Paths.get(storageDir).toAbsolutePath().normalize();
         this.pdfStorageLocation.toFile().mkdirs();
+        this.webSocketMessageService = webSocketMessageService;
     }
 
     public String makePdf(String roomId, String content) {

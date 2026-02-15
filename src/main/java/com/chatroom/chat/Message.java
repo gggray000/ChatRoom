@@ -8,13 +8,13 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
+@Setter
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class Message {
     protected String sender;
     protected String content;
-    @Setter
     protected long timestamp;
-
+    protected MessageType type;
 }

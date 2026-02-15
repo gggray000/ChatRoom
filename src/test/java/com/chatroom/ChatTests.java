@@ -15,12 +15,13 @@ public class ChatTests {
     private TextMessageService textMessageService;
     private WebSocketMessageService webSocketMessageService;
     private RoomService roomService;
+    private MockValkey mockValkey;
 
     @BeforeEach
     void setUp() {
         roomService = new RoomService();
         textMessageService = new TextMessageService(roomService);
-        webSocketMessageService = new WebSocketMessageService(roomService);
+        webSocketMessageService = new WebSocketMessageService(roomService, mockValkey);
     }
 
     @Test

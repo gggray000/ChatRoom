@@ -1,6 +1,7 @@
 package com.chatroom.bot;
 
 import com.chatroom.chat.TextMessageService;
+import com.chatroom.chat.WebSocketMessageService;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.service.AiServices;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatBotController {
 
     private final ChatLanguageModel model;
-    private final TextMessageService textMessageService;
+    private final WebSocketMessageService webSocketMessageService;
     private ChatBot chatBot;
     private final ChatBotConfiguration chatBotConfiguration;
 
-    public ChatBotController(ChatLanguageModel model, ChatBotConfiguration configuration, TextMessageService textMessageService) {
+    public ChatBotController(ChatLanguageModel model, ChatBotConfiguration configuration, TextMessageService textMessageService, WebSocketMessageService webSocketMessageService) {
         this.model = model;
         this.chatBotConfiguration = configuration;
-        this.textMessageService = textMessageService;
+        this.webSocketMessageService = webSocketMessageService;
     }
 
     public String makeSummary(String roomId) {
@@ -30,6 +31,6 @@ public class ChatBotController {
                 .systemMessageProvider(memoryId -> systemPrompt)
                 .build();
 
-        return chatBot.summarize(textMessageService.messageHistoryToString(roomId));
+        return chatBot.summarize(webSocketMessageService.messageHistoryToString(roomId));
     }
 }

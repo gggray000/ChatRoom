@@ -22,13 +22,14 @@ This project is built using technologies such as Spring Boot, WebSocket, JWT, La
 
 <h3>Long-term</h3>
 1. Timer improvement or re-implementation.<br>
-2. JPA implementation.<br>
-3. ChatBot Moderation.<br>
+2. ChatBot improvement.<br>
 
 <br>**Pending**<br>
-Migrate frontend to <code>React.js</code>.<br>
+Migrate frontend to <code>Angular</code>.<br>
 
 <h2>Update Log</h2>
+<h3>v0.9.24</h3>
+Added Valkey for caching.
 <h3>v0.9.23</h3>
 Supported rich text messages.
 <h3>v0.9.22</h3>
@@ -175,6 +176,10 @@ Finished prototype based on this video: <URL>https://www.youtube.com/watch?v=Tyw
 There's a bug in his video, <code>message.type</code> should be <code>message.messageType</code> in <code>main.js</code>.
 
 <h2>Acknowledgement</h2>
+@jhy<br>
+<URL>https://github.com/jhy/jsoup</URL><br>
+@valkey-io<br>
+<URL>https://github.com/valkey-io/valkey</URL><br>
 @KaTex<br>
 <URL>https://github.com/KaTeX/KaTeX</URL><br>
 @slab<br>
